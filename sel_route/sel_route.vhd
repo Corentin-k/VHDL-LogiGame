@@ -20,7 +20,10 @@ entity sel_route_entity is
         -- Les mémoires Buffer_A, Buffer_B permettent de stocker les données directement liées au cœur de l’UAL, c'est-à-dire à la sous-fonction arithmétique et logique. 
         -- Elles seront chargées (activées sur front montant de l’entrée clk) suivant les valeurs de l’entrée SEL_ROUTE
         Buffer_A  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer A
+        Buffer_A_enable : out std_logic; -- Signal d'activation pour Buffer A
+        
         Buffer_B  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer B
+        Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
     );
 end sel_route_entity;
 
@@ -38,34 +41,63 @@ begin
 
             when "0000" =>  -- Stockage de l'entrée A_IN dans Buffer_A
                 Buffer_A <=A_IN;
+                Buffer_A_enable <= '1'; 
+
             when "0001" => -- Stockage de MEM_CACHE_1 dans Buffer_A (4 bits de poids faibles)
                 Buffer_A <= MEM_CACHE_1(3 downto 0);
+                Buffer_A_enable <= '1'; 
+
             when "0010" => -- Stockage de MEM_CACHE_1 dans Buffer_A (4 bits de poids forts)
                 Buffer_A <= MEM_CACHE_1(7 downto 4);
+                Buffer_A_enable <= '1'; 
+                
             when "0011" => -- Stockage de MEM_CACHE_2 dans Buffer_A (4 bits de poids faibles)
                 Buffer_A <= MEM_CACHE_2(3 downto 0);
+                Buffer_A_enable <= '1';
+
             when "0100" => -- Stockage de MEM_CACHE_2 dans Buffer_A (4 bits de poids forts)
                 Buffer_A <= MEM_CACHE_2(7 downto 4);
+                Buffer_A_enable <= '1'; 
+
             when "0101" => -- Stockage de S dans Buffer_A (4 bits de poids faibles)
                 Buffer_A <= S(3 downto 0);
+                Buffer_A_enable <= '1'; 
+
             when "0110" => -- Stockage de S dans Buffer_A (4 bits de poids forts)
                 Buffer_A <= S(7 downto 4);
+                Buffer_A_enable <= '1'; 
+
             when "0111" => -- Stockage de l'entrée B_IN dans Buffer_B
-                null;
+                Buffer_B <=b_IN;
+                Buffer_B_enable <= '1'; 
+
             when "1000" => -- Stockage de MEM_CACHE_1 dans Buffer_B (4 bits de poids faibles)
                 Buffer_B <= MEM_CACHE_1(3 downto 0);
+                Buffer_B_enable <= '1'; 
+
             when "1001" => -- Stockage de MEM_CACHE_1 dans Buffer_B (4 bits de poids forts)
                 Buffer_B <= MEM_CACHE_1(7 downto 4);
+                Buffer_B_enable <= '1'; 
+
             when "1010" => -- Stockage de MEM_CACHE_2 dans Buffer_B (4 bits de poids faibles)
                 Buffer_B <= MEM_CACHE_2(3 downto 0);
+                Buffer_B_enable <= '1'; 
+
             when "1011" => -- Stockage de MEM_CACHE_2 dans Buffer_B (4 bits de poids forts)
                 Buffer_B <= MEM_CACHE_2(7 downto 4);
+                Buffer_B_enable <= '1';
+
             when "1100" => -- Stockage de S dans Buffer_B (4 bits de poids faibles)
                 Buffer_B <= S(3 downto 0);
+                Buffer_B_enable <= '1'; 
+
             when "1101" => -- Stockage de S dans Buffer_B (4 bits de poids forts)
                 Buffer_B <= S(7 downto 4);
+                Buffer_B_enable <= '1'; 
+
             when "1110" => -- Stockage de S dans MEM_CACHE_1
                 S=> MEM_CACHE_1(3 downto 0);
+                
             when "1111" => -- Stockage de S dans MEM_CACHE_2
                 S=> MEM_CACHE_2(3 downto 0);
             
