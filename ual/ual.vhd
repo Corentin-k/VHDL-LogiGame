@@ -20,7 +20,7 @@ end Hearth_UAL;
 architecture HearthUAL_Arch of Hearth_UAL is
 begin
     myUALProcess : process(A, B, SR_IN_L, SR_IN_R, SEL_FCT)
-        -- Variables internes significatives
+        -- Variables internes
         variable grand_A         : std_logic_vector(7 downto 0);
         variable grand_B         : std_logic_vector(7 downto 0);
         variable carry_in_left   : std_logic;
