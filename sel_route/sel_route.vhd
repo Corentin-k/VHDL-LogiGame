@@ -24,6 +24,11 @@ entity sel_route_entity is
         
         Buffer_B  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer B
         Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
+
+        SEL_OUT : in std_logic_vector(1 downto 0); -- Sélecteur de sortie
+        RES_OUT : out std_logic_vector(7 downto 0); -- Sortie 
+
+
     );
 end sel_route_entity;
 
@@ -32,8 +37,8 @@ end sel_route_entity;
 
 architecture sel_route_arch of sel_route_entity is
 begin
+
     selRouteProcess : process(SEL_ROUTE, A_IN, B_IN, S, MEM_CACHE_1, MEM_CACHE_2) 
-        
     begin
 
 
@@ -150,5 +155,19 @@ begin
 
             end case;
     end process selRouteProcess;
+
+    selOutProcess : process(SEL_OUT, S, MEM_CACHE_1, MEM_CACHE_2)
+    begin
+        case SEL_OUT is
+            when "00" =>  -- Aucune sortie 
+                RES_OUT <= '0';
+            when "01" => -- Sortie vers MEM_CACHE_1
+                RES_OUT <= MEM_CACHE_1;
+            when "10" => -- Sortie vers MEM_CACHE_2
+                RES_OUT <= MEM_CACHE_2;
+            when "11" => -- Sortie vers S
+                RES_OUT <= S;
+        end case;
+    end process selOutProcess;
 end sel_route_arch;
     
