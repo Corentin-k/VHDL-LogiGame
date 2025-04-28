@@ -22,7 +22,7 @@ architecture mytbbuffernbits_Arch of mytbbuffernbits is
         port (
             e1 : in std_logic_vector (N-1 downto 0);
             reset : in std_logic;
-            preset : in std_logic;
+            enbale : in std_logic;
             clock : in std_logic;
             s1 : out std_logic_vector (N-1 downto 0)
         );
@@ -37,7 +37,7 @@ architecture mytbbuffernbits_Arch of mytbbuffernbits is
     -- Déclaration des signaux internes à l'architecture pour réaliser les simulations
     signal e1_sim : std_logic_vector(N-1 downto 0) := (others => '0'); 
     signal s1_sim : std_logic_vector(N-1 downto 0) := (others => '0'); 
-    signal reset_sim, preset_sim, clock_sim : std_logic := '0';
+    signal reset_sim, enable_sim, clock_sim : std_logic := '0';
 
 begin
 
@@ -50,7 +50,7 @@ begin
     port map ( 
     	e1 => e1_sim,
         reset => reset_sim,
-        preset => preset_sim,
+        enable => enable_sim,
         clock => clock_sim,
         s1 => s1_sim
     );
@@ -66,7 +66,7 @@ begin
         if now = (8*(2**N))*PERIOD then
         	wait;
         end if;
-    
+
     end process;
     
     -- Définition du process permettant de faire évoluer les signaux d'entrée du composant à tester	
@@ -77,10 +77,10 @@ begin
         	for j in 0 to 1 loop
             	for k in 0 to (2**N)-1 loop
                    	e1_sim <= std_logic_vector(to_unsigned(k,N));
-               		preset_sim <= to_unsigned(j,1)(0);
+               		enable_sim <= to_unsigned(j,1)(0);
                     reset_sim <= to_unsigned(i,1)(0);
                  	wait for 2*PERIOD;
-                    report "reset = " & integer'image(i) & " | preset = " & integer'image(j) & " | e1 = " & integer'image(k) & " || s1 = " & integer'image(to_integer(unsigned(s1_sim)));
+                    report "reset = " & integer'image(i) & " | enable = " & integer'image(j) & " | e1 = " & integer'image(k) & " || s1 = " & integer'image(to_integer(unsigned(s1_sim)));
           		end loop;
             end loop;
         end loop;        
