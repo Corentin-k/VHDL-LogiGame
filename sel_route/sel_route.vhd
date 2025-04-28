@@ -32,7 +32,7 @@ end sel_route_entity;
 
 architecture sel_route_arch of sel_route_entity is
 begin
-    selRouteProcess : process(SEL_ROUTE)    
+    selRouteProcess : process(SEL_ROUTE, A_IN, B_IN, S, MEM_CACHE_1, MEM_CACHE_2) 
         
     begin
 
@@ -43,61 +43,107 @@ begin
                 Buffer_A <=A_IN;
                 Buffer_A_enable <= '1'; 
 
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
+
             when "0001" => -- Stockage de MEM_CACHE_1 dans Buffer_A (4 bits de poids faibles)
                 Buffer_A <= MEM_CACHE_1(3 downto 0);
                 Buffer_A_enable <= '1'; 
+
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
 
             when "0010" => -- Stockage de MEM_CACHE_1 dans Buffer_A (4 bits de poids forts)
                 Buffer_A <= MEM_CACHE_1(7 downto 4);
                 Buffer_A_enable <= '1'; 
                 
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
+
+
             when "0011" => -- Stockage de MEM_CACHE_2 dans Buffer_A (4 bits de poids faibles)
                 Buffer_A <= MEM_CACHE_2(3 downto 0);
                 Buffer_A_enable <= '1';
+
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
+
 
             when "0100" => -- Stockage de MEM_CACHE_2 dans Buffer_A (4 bits de poids forts)
                 Buffer_A <= MEM_CACHE_2(7 downto 4);
                 Buffer_A_enable <= '1'; 
 
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
+
             when "0101" => -- Stockage de S dans Buffer_A (4 bits de poids faibles)
                 Buffer_A <= S(3 downto 0);
                 Buffer_A_enable <= '1'; 
+
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
 
             when "0110" => -- Stockage de S dans Buffer_A (4 bits de poids forts)
                 Buffer_A <= S(7 downto 4);
                 Buffer_A_enable <= '1'; 
 
+                Buffer_B <='0';
+                Buffer_B_enable <= '0'; 
+
+
             when "0111" => -- Stockage de l'entrée B_IN dans Buffer_B
                 Buffer_B <=b_IN;
                 Buffer_B_enable <= '1'; 
+                
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
+
 
             when "1000" => -- Stockage de MEM_CACHE_1 dans Buffer_B (4 bits de poids faibles)
                 Buffer_B <= MEM_CACHE_1(3 downto 0);
                 Buffer_B_enable <= '1'; 
 
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
+
             when "1001" => -- Stockage de MEM_CACHE_1 dans Buffer_B (4 bits de poids forts)
                 Buffer_B <= MEM_CACHE_1(7 downto 4);
                 Buffer_B_enable <= '1'; 
+
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
 
             when "1010" => -- Stockage de MEM_CACHE_2 dans Buffer_B (4 bits de poids faibles)
                 Buffer_B <= MEM_CACHE_2(3 downto 0);
                 Buffer_B_enable <= '1'; 
 
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
+
             when "1011" => -- Stockage de MEM_CACHE_2 dans Buffer_B (4 bits de poids forts)
                 Buffer_B <= MEM_CACHE_2(7 downto 4);
                 Buffer_B_enable <= '1';
+
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
 
             when "1100" => -- Stockage de S dans Buffer_B (4 bits de poids faibles)
                 Buffer_B <= S(3 downto 0);
                 Buffer_B_enable <= '1'; 
 
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
+
             when "1101" => -- Stockage de S dans Buffer_B (4 bits de poids forts)
                 Buffer_B <= S(7 downto 4);
                 Buffer_B_enable <= '1'; 
 
+                Buffer_A <='0';
+                Buffer_A_enable <= '0'; 
+
             when "1110" => -- Stockage de S dans MEM_CACHE_1
                 S=> MEM_CACHE_1(3 downto 0);
-                
+
             when "1111" => -- Stockage de S dans MEM_CACHE_2
                 S=> MEM_CACHE_2(3 downto 0);
             
