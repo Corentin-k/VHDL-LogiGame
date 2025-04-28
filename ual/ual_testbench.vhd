@@ -22,39 +22,39 @@ architecture behavior of ual_testbench is
         );
     end component;
 
-    signal A_s, B_s      : std_logic_vector(3 downto 0) := (others => '0');
-    signal SR_IN_L_s     : std_logic := '0';
-    signal SR_IN_R_s     : std_logic := '0';
-    signal SEL_s         : std_logic_vector(3 downto 0) := (others => '0');
-    signal SR_OUT_L_s    : std_logic;
-    signal SR_OUT_R_s    : std_logic;
-    signal S_s           : std_logic_vector(7 downto 0);
+    signal A_sim, B_sim      : std_logic_vector(3 downto 0) := (others => '0');
+    signal SR_IN_L_sim     : std_logic := '0';
+    signal SR_IN_R_sim     : std_logic := '0';
+    signal SEL_sim         : std_logic_vector(3 downto 0) := (others => '0');
+    signal SR_OUT_L_sim    : std_logic;
+    signal SR_OUT_R_sim    : std_logic;
+    signal S_sim           : std_logic_vector(7 downto 0);
 
 begin
 
     uut: Hearth_UAL
         port map (
-            A        => A_s,
-            B        => B_s,
-            SR_IN_L  => SR_IN_L_s,
-            SR_IN_R  => SR_IN_R_s,
-            SEL_FCT  => SEL_s,
-            SR_OUT_L => SR_OUT_L_s,
-            SR_OUT_R => SR_OUT_R_s,
-            S        => S_s
+            A        => A_sim,
+            B        => B_sim,
+            SR_IN_L  => SR_IN_L_sim,
+            SR_IN_R  => SR_IN_R_sim,
+            SEL_FCT  => SEL_sim,
+            SR_OUT_L => SR_OUT_L_sim,
+            SR_OUT_R => SR_OUT_R_sim,
+            S        => S_sim
         );
 
     stim_proc: process
         procedure display_case(name : string) is
         begin
-            report "Test: " & name & " | A=" & integer'image(to_integer(unsigned(A_s))) &
-                   " B=" & integer'image(to_integer(unsigned(B_s))) &
-                   " SR_IN_L=" & std_logic'image(SR_IN_L_s) &
-                   " SR_IN_R=" & std_logic'image(SR_IN_R_s) &
-                   " SEL_FCT=" & integer'image(to_integer(unsigned(SEL_s))) &
-                   " S=" & integer'image(to_integer(unsigned(S_s))) &
-                   " SR_OUT_L=" & std_logic'image(SR_OUT_L_s) &
-                   " SR_OUT_R=" & std_logic'image(SR_OUT_R_s);
+            report "Test: " & name & " | A=" & integer'image(to_integer(unsigned(A_sim))) &
+                   " B=" & integer'image(to_integer(unsigned(B_sim))) &
+                   " SR_IN_L=" & std_logic'image(SR_IN_L_sim) &
+                   " SR_IN_R=" & std_logic'image(SR_IN_R_sim) &
+                   " SEL_FCT=" & integer'image(to_integer(unsigned(SEL_sim))) &
+                   " S=" & integer'image(to_integer(unsigned(S_sim))) &
+                   " SR_OUT_L=" & std_logic'image(SR_OUT_L_sim) &
+                   " SR_OUT_R=" & std_logic'image(SR_OUT_R_sim);
         end procedure;
 
         procedure test_case(
@@ -66,11 +66,11 @@ begin
             expected_L, expected_R : std_logic := '0'
         ) is
         begin
-            SEL_s <= sel_val;
-            A_s <= a_val;
-            B_s <= b_val;
-            SR_IN_L_s <= sr_in_l;
-            SR_IN_R_s <= sr_in_r;
+            SEL_sim <= sel_val;
+            A_sim <= a_val;
+            B_sim <= b_val;
+            SR_IN_L_sim <= sr_in_l;
+            SR_IN_R_sim <= sr_in_r;
             wait for 10 ns;
             display_case(signal_name);
             assert S_s = expected_S report signal_name & ": S incorrect" severity error;
