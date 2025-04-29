@@ -7,7 +7,7 @@ use ieee.numeric_std.all;
 entity ual_testbench is
 end entity;
 
-architecture behavior of ual_testbench is
+architecture ual_testbench_arch of ual_testbench is
 
     component Hearth_UAL is
         port (
@@ -32,7 +32,7 @@ architecture behavior of ual_testbench is
 
 begin
 
-    uut: Hearth_UAL
+    Hearth_UAL_test: Hearth_UAL
         port map (
             A        => A_sim,
             B        => B_sim,
@@ -112,4 +112,4 @@ begin
 
     end process;
 
-end architecture behavior;
+end architecture ual_testbench_arch;
