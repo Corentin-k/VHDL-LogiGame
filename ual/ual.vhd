@@ -87,7 +87,7 @@ begin
             when "1110" =>  -- S = A - B (soustraction binaire)
                 resultat      := grand_A - grand_B;
             when "1111" =>  -- S = A * B (multiplication binaire)
-                resultat      := grand_A * grand_B;
+                resultat      := A * B;
             when others =>
                 resultat      := (others => '0');
         end case;
