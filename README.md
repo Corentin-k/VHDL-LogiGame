@@ -1,23 +1,35 @@
-# Rapport VHDL : LogicGame
+# 🎮 LogicGame – Rapport VHDL
 
-# Par :
+**Auteurs :**  
+Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 
-- Corentin KERVAGORET
-- Arnaud GRIVEL
-- Mathias BENOIT
+---
 
-# Introduction
+## 📝 Introduction
 
-Ce projet a pour but de réaliser un mini jeu sur un microcontroleur: ARTY A7. Le but est ainsi de réaliser un Megamind sur ce controleur utilsant les huit LEDs de la carte.
+Ce projet consiste à réaliser un mini-jeu de type **Megamind** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur.
 
-![alt text](./img/71YKkVSeLqL.webp)
+![Carte ARTY A7](./img/71YKkVSeLqL.webp)
 
-# 1. Réalisation d'un ALU
+## ⚡ Rappels : Simulation VHDL
+
+Pour lancer la configuration des fichiers VHDL :
+
+```bash
+ghdl -a --std=08 --ieee=synopsys ual.vhd ual_testbench.vhd
+ghdl -e --std=08 --ieee=synopsys ual_testbench
+ghdl -r --std=08 --ieee=synopsys ual_testbench --wave=ual_testbench.ghw
+gtkwave ual_testbench.ghw
+```
+
+---
+
+# 1️⃣ Réalisation d'un ALU
 
 L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
 Elle est composée de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection qui détermine quelle opération doit être effectuée sur les entrées.
 
-L'entité Hearth_UAL:
+### ✨ Entité `Hearth_UAL`
 
 ```vhdl
 entity Hearth_UAL is
@@ -38,22 +50,26 @@ end Hearth_UAL;
 
 L'ALU est capable de réaliser les opérations suivantes :
 
-- nop
-- A
-- B
-- not A
-- not B
-- A and B
-- A or B
-- A xor B
-- Décalage à droite de A
-- Décalage à gauche de A
-- Décalage à droite de B
-- Décalage à gauche de B
-- A+B avec retenue d'entrée
-- A+B
-- A-B
-- A\*B
+| Code | Opération           |
+| ---- | ------------------- |
+| 0000 | nop                 |
+| 0001 | A                   |
+| 0010 | B                   |
+| 0011 | not A               |
+| 0100 | not B               |
+| 0101 | A and B             |
+| 0110 | A or B              |
+| 0111 | A xor B             |
+| 1000 | Décalage à droite A |
+| 1001 | Décalage à gauche A |
+| 1010 | Décalage à droite B |
+| 1011 | Décalage à gauche B |
+| 1100 | A+B avec retenue    |
+| 1101 | A+B                 |
+| 1110 | A-B                 |
+| 1111 | A\*B                |
+
+### 🛠️ Variables internes
 
 On a également créé des variables internes pour :
 
@@ -73,6 +89,8 @@ On a également créé des variables internes pour :
         variable carry_out_right : std_logic;
         variable resultat        : std_logic_vector(7 downto 0);
 ```
+
+## 🧪 Test de l'ALU
 
 Pour valider le bon fonctionnement de l’ALU, nous avons développé un [testbench](./ual/ual_testbench.vhd) VHDL complet.
 Pour ce faire nous avons utilisé des procédures en VHDL pour balayer toutes les combinaisons possibles de l'ALU : `display_case(name:string)` et `test_case(name:string)`
@@ -116,13 +134,42 @@ end procedure;
 
 ![testbench](./img/ual_testbench.png)
 
-![schematic](./img/schematic.png)
+Ici nous avons un exemple de test de l'ALU :
+sel_s = "0110" se qui correspond à l'opération A or B. On peut voir que le résultat est bien le bon. A vaut 4 soit 0100 et B vaut 3 soit 0011. Le résultat est donc 0111 soit 7.
 
-# 2. Réalisation de l'interconnexion
+Ou directement par les asserts :
+
+```bash
+ghdl -r --std=08 --ieee=synopsys ual_testbench --wave=ual_testbench.ghw
+ual_testbench.vhd:50:13:@10ns:(report note): Test: NOP | A=0 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=0 S=0 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@20ns:(report note): Test: S=A | A=2 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=1 S=2 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@30ns:(report note): Test: S=B | A=0 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=2 S=3 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@40ns:(report note): Test: S=not A | A=5 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=3 S=10 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@50ns:(report note): Test: S=not B | A=0 B=9 SR_IN_L='0' SR_IN_R='0' SEL_FCT=4 S=6 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@60ns:(report note): Test: S=A and B | A=6 B=5 SR_IN_L='0' SR_IN_R='0' SEL_FCT=5 S=4 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@70ns:(report note): Test: S=A or B | A=4 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=6 S=7 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@80ns:(report note): Test: S=A xor B | A=7 B=2 SR_IN_L='0' SR_IN_R='0' SEL_FCT=7 S=5 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@90ns:(report note): Test: Shift droit A | A=10 B=0 SR_IN_L='1' SR_IN_R='0' SEL_FCT=8 S=13 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@100ns:(report note): Test: Shift gauche A | A=12 B=0 SR_IN_L='0' SR_IN_R='1' SEL_FCT=9 S=9 SR_OUT_L='1' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@110ns:(report note): Test: Shift droit B | A=0 B=6 SR_IN_L='1' SR_IN_R='0' SEL_FCT=10 S=11 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@120ns:(report note): Test: Shift gauche B | A=0 B=3 SR_IN_L='0' SR_IN_R='1' SEL_FCT=11 S=7 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@130ns:(report note): Test: Addition A+B+SR_IN_R | A=2 B=3 SR_IN_L='0' SR_IN_R='1' SEL_FCT=12 S=6 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@140ns:(report note): Test: Addition A+B | A=4 B=2 SR_IN_L='0' SR_IN_R='0' SEL_FCT=13 S=6 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:50:13:@150ns:(report note): Test: Soustraction A-B | A=7 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=14 S=4 SR_OUT_L='0' SR_OUT_R='0'
+ual_testbench.vhd:110:9:@150ns:(report note): Tous les tests passés avec succès.
+```
+
+## 🗺️ Schéma de l’ALU
+
+![Schematic ALU](./img/schematic.png)
+
+---
+
+# 2️⃣ Réalisation de l’interconnexion
 
 L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.
 
-L'entité interconnexion:
+### ✨ Entité `interconnexion`
 
 ```vhdl
 entity interconnexion is
@@ -160,23 +207,82 @@ entity interconnexion is
 end interconnexion;
 ```
 
+### 🔄 Opérations possibles
+
 L'interconnexion permet ainsi de réaliser les opérations suivantes :
 
-- A -> Buffer_A
-- MEM_CACHE_1 -> Buffer_A (4 bits de poids faible)
-- MEM_CACHE_1 -> Buffer_A (4 bits de poids fort)
-- MEM_CACHE_2 -> Buffer_A (4 bits de poids faible)
-- MEM_CACHE_2 -> Buffer_A (4 bits de poids fort)
-- S -> Buffer_A (4 bits de poids faible)
-- S -> Buffer_A (4 bits de poids fort)
+- **A -> Buffer_A**
+- **MEM_CACHE_1 -> Buffer_A** (4 bits de poids faible)
+- **MEM_CACHE_1 -> Buffer_A** (4 bits de poids fort)
+- **MEM_CACHE_2 -> Buffer_A** (4 bits de poids faible)
+- **MEM*CACHE_2 -> Buffer***A (4 bits de poids fort)
+- **S -> Buffer_A** (4 bits de poids faible)
+- **S -> Buffer_A** (4 bits de poids fort)
 
-- B -> Buffer_B
-- MEM_CACHE_1 -> Buffer_B (4 bits de poids faible)
-- MEM_CACHE_1 -> Buffer_B (4 bits de poids fort)
-- MEM_CACHE_2 -> Buffer_B (4 bits de poids faible)
-- MEM_CACHE_2 -> Buffer_B (4 bits de poids fort)
-- S -> Buffer_B (4 bits de poids faible)
-- S -> Buffer_B (4 bits de poids fort)
+- **B -> Buffer_B**
+- **MEM_CACHE_1 -> Buffer_B** (4 bits de poids faible)
+- **MEM_CACHE_1 -> Buffer_B** (4 bits de poids fort)
+- **MEM_CACHE_2 -> Buffer_B** (4 bits de poids faible)
+- **MEM_CACHE_2 -> Buffer_B** (4 bits de poids fort)
+- **S -> Buffer_B** (4 bits de poids faible)
+- **S -> Buffer_B** (4 bits de poids fort)
 
-- S -> MEM_CACHE_1_in
-- S -> MEM_CACHE_2_in
+- **S -> MEM_CACHE_1_in**
+- **S -> MEM_CACHE_2_in**
+
+# 🛠️ Vivado : Installation & Test de l’ALU
+
+## 📦 Installation de Vivado
+
+- Installer **Vivado ML Standard** (minimum requis pour ARTY A7).
+
+![alt text](/img/installationVivado.png)
+
+---
+
+## 🏗️ Création du projet
+
+Puis créer un nouveau projet et faire les configurations suivantes :
+
+1. **Créer un projet** :
+
+   - Type : RTL Project
+   - Composant : `XC7A35TCSG324-1`
+   - Target language : **VHDL**
+
+2. **Ajouter les sources** :
+   - Contraintes : `PRJ_24-25_Entite_TopLevel_Constraints.xdc`
+   - Design sources :
+     - `MCU_PRJ_2025_TopLevel_vide.vhd`
+     - **Votre ALU**
+
+Ajoutez votre entité ALU en tant que composant dans `MCU_PRJ_2025_TopLevel_vide` :
+
+```vhdl
+
+ -- Ajout de votre entité alu en tant que component
+    signal My_A,My_B, My_SEL_FCT : std_logic_vector(3 downto 0);
+    signal My_SR_IN_R , My_SR_IN_L, My_SR_OUT_L, My_SR_OUT_R: std_logic;
+    signal My_S  : std_logic_vector(7 downto 0);
+begin
+    MyUALCore : Nom_de_votre_entité
+    Port Map(
+        A=>sw,
+        B =>sw,
+        SR_IN_L => sw(3),
+        SR_IN_R=>sw(0),
+        S=> My_S,
+        SR_OUT_L=>led3_b,
+        SR_OUT_R=>led2_b,
+        SEL_FCT=>btn
+        );
+
+    led <= My_S(7 downto 4);
+    led0_g <= My_S(0);  led0_b <='0';
+    led1_g <= My_S(1);  led1_b <='0'; led1_r <='0';
+    led2_g <= My_S(2);  led2_b <='0';led2_r <='0';
+    led3_g <= My_S(3);  led3_b <='0';led3_r <='0';
+
+
+end MCU_PRJ_2021_TopLevel_Arch;
+```
