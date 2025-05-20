@@ -62,7 +62,7 @@ begin
             sel_val     : std_logic_vector(3 downto 0);
             a_val, b_val : std_logic_vector(3 downto 0);
             sr_in_l, sr_in_r : std_logic;
-            expected_S  : std_logic_vector(7 downto 0);
+            expected_Sim  : std_logic_vector(7 downto 0);
             expected_L, expected_R : std_logic := '0'
         ) is
         begin
@@ -73,9 +73,9 @@ begin
             SR_IN_R_sim <= sr_in_r;
             wait for 10 ns;
             display_case(signal_name);
-            assert S_s = expected_S report signal_name & ": S incorrect" severity error;
-            assert SR_OUT_L_s = expected_L report signal_name & ": SR_OUT_L incorrect" severity error;
-            assert SR_OUT_R_s = expected_R report signal_name & ": SR_OUT_R incorrect" severity error;
+            assert S_sim = expected_Sim report signal_name & ": S incorrect" severity error;
+            assert SR_OUT_L_sim = expected_L report signal_name & ": SR_OUT_L incorrect" severity error;
+            assert SR_OUT_R_sim = expected_R report signal_name & ": SR_OUT_R incorrect" severity error;
         end procedure;
 
     begin
@@ -90,19 +90,19 @@ begin
         test_case("S=A xor B",  "0111", "0111", "0010", '0', '0', "00000101");
 
         test_case("Shift droit A", "1000", "1010", "0000", '1', '0', "00001101", '0', '0');
-        SR_IN_L_s <= '0';
+        SR_IN_L_sim <= '0';
 
         test_case("Shift gauche A", "1001", "1100", "0000", '0', '1', "00001001", '1', '0');
-        SR_IN_R_s <= '0';
+        SR_IN_R_sim <= '0';
 
         test_case("Shift droit B", "1010", "0000", "0110", '1', '0', "00001011", '0', '0');
-        SR_IN_L_s <= '0';
+        SR_IN_L_sim <= '0';
 
         test_case("Shift gauche B", "1011", "0000", "0011", '0', '1', "00000111", '0', '0');
-        SR_IN_R_s <= '0';
+        SR_IN_R_sim <= '0';
 
         test_case("Addition A+B+SR_IN_R", "1100", "0010", "0011", '0', '1', "00000110");
-        SR_IN_R_s <= '0';
+        SR_IN_R_sim <= '0';
 
         test_case("Addition A+B", "1101", "0100", "0010", '0', '0', "00000110");
         test_case("Soustraction A-B", "1110", "0111", "0011", '0', '0', "00000100");
