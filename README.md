@@ -1,22 +1,20 @@
 # Rapport VHDL : LogicGame
 
 # Par :
-  - Corentin KERVAGORET
-  - Arnaud GRIVEL
-  - Mathias BENOIT
 
+- Corentin KERVAGORET
+- Arnaud GRIVEL
+- Mathias BENOIT
 
 # Introduction
 
-Ce projet a pour but de réaliser un mini jeu sur un microcontroleur: ARTY A7. Le but est ainsi de réaliser un Megamin sur ce controleur utilsant les huit LEDs de la carte.
+Ce projet a pour but de réaliser un mini jeu sur un microcontroleur: ARTY A7. Le but est ainsi de réaliser un Megamind sur ce controleur utilsant les huit LEDs de la carte.
 
 ![alt text](./img/71YKkVSeLqL.webp)
 
+# 1. Réalisation d'un ALU
 
-# 1. Réalisation d'un ALU 
-
-
-L'ALU  (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
+L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
 Elle est composée de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection qui détermine quelle opération doit être effectuée sur les entrées.
 
 L'entité Hearth_UAL:
@@ -38,8 +36,8 @@ entity Hearth_UAL is
 end Hearth_UAL;
 ```
 
-
 L'ALU est capable de réaliser les opérations suivantes :
+
 - nop
 - A
 - B
@@ -55,9 +53,7 @@ L'ALU est capable de réaliser les opérations suivantes :
 - A+B avec retenue d'entrée
 - A+B
 - A-B
-- A*B
-
-
+- A\*B
 
 On a également créé des variables internes pour :
 
@@ -78,7 +74,7 @@ On a également créé des variables internes pour :
         variable resultat        : std_logic_vector(7 downto 0);
 ```
 
-Pour valider le bon fonctionnement de l’ALU, nous avons développé un [testbench](./ual/ual_testbench.vhd) VHDL complet. 
+Pour valider le bon fonctionnement de l’ALU, nous avons développé un [testbench](./ual/ual_testbench.vhd) VHDL complet.
 Pour ce faire nous avons utilisé des procédures en VHDL pour balayer toutes les combinaisons possibles de l'ALU : `display_case(name:string)` et `test_case(name:string)`
 
 ```vhdl
@@ -94,6 +90,7 @@ begin
             " SR_OUT_R=" & std_logic'image(SR_OUT_R_sim);
 end procedure;
 ```
+
 ```vhdl
 procedure test_case(
     signal_name : string;
@@ -117,5 +114,69 @@ begin
 end procedure;
 ```
 
+![testbench](./img/ual_testbench.png)
+
+![schematic](./img/schematic.png)
+
 # 2. Réalisation de l'interconnexion
 
+L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.
+
+L'entité interconnexion:
+
+```vhdl
+entity interconnexion is
+    port(
+        -- SEL_ROUTE permet de définir le transfert de données qui sera effectué lors du prochain cycle horloge (prochain front montant de l’horloge).
+        SEL_ROUTE : in std_logic_vector(3 downto 0); -- Sélecteur de route
+
+        A_IN      : in std_logic_vector(3 downto 0); -- Entrée A
+        B_IN      : in std_logic_vector(3 downto 0); -- Entrée B
+        S         : in std_logic_vector(7 downto 0); -- Entrée S
+
+        -- La mémoire MEM_SEL_FCT permet de mémoriser la fonction arithmétique ou logique à réaliser.
+        -- Elle est systématiquement chargée à chaque front montant d’horloge.
+        MEM_CACHE_1_in: in std_logic_vector(7 downto 0); -- Mémoire cache 1
+        MEM_CACHE_1_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_1_ou
+        MEM_CACHE_1_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_1_out
+
+        MEM_CACHE_2_in : in std_logic_vector(7 downto 0); -- Mémoire cache 2
+        MEM_CACHE_2_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_2_out_enable
+        MEM_CACHE_2_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_2_out
+
+        -- Les mémoires Buffer_A, Buffer_B permettent de stocker les données directement liées au cœur de l’UAL, c'est-à-dire à la sous-fonction arithmétique et logique.
+        -- Elles seront chargées (activées sur front montant de l’entrée clk) suivant les valeurs de l’entrée SEL_ROUTE
+        Buffer_A  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer A
+        Buffer_A_enable : out std_logic; -- Signal d'activation pour Buffer A
+
+        Buffer_B  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer B
+        Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
+
+        SEL_OUT : in std_logic_vector(1 downto 0); -- Sélecteur de sortie
+        RES_OUT : out std_logic_vector(7 downto 0) -- Sortie
+
+
+    );
+end interconnexion;
+```
+
+L'interconnexion permet ainsi de réaliser les opérations suivantes :
+
+- A -> Buffer_A
+- MEM_CACHE_1 -> Buffer_A (4 bits de poids faible)
+- MEM_CACHE_1 -> Buffer_A (4 bits de poids fort)
+- MEM_CACHE_2 -> Buffer_A (4 bits de poids faible)
+- MEM_CACHE_2 -> Buffer_A (4 bits de poids fort)
+- S -> Buffer_A (4 bits de poids faible)
+- S -> Buffer_A (4 bits de poids fort)
+
+- B -> Buffer_B
+- MEM_CACHE_1 -> Buffer_B (4 bits de poids faible)
+- MEM_CACHE_1 -> Buffer_B (4 bits de poids fort)
+- MEM_CACHE_2 -> Buffer_B (4 bits de poids faible)
+- MEM_CACHE_2 -> Buffer_B (4 bits de poids fort)
+- S -> Buffer_B (4 bits de poids faible)
+- S -> Buffer_B (4 bits de poids fort)
+
+- S -> MEM_CACHE_1_in
+- S -> MEM_CACHE_2_in
