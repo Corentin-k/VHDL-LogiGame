@@ -287,7 +287,7 @@ end score_compteur;
 
 ---
 
-## 5️⃣ Vérificateur de réponse (ResponseChecker)
+## 5️⃣ Vérificateur de réponse
 
 Le module **verif_resultat** valide si le joueur a appuyé sur le bon bouton dans le temps imparti.
 

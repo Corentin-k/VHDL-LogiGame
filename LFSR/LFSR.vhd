@@ -20,7 +20,7 @@ begin
     process(CLK100MHZ, reset)
     begin
         if reset = '1' then
-            resultat <= "1011"; -- valeur initiale non nulle
+            resultat <= "1011"; 
         elsif rising_edge(CLK100MHZ) then
             if enable = '1' then
                  resultat <= resultat(2 downto 0) & (resultat(3) xor resultat(2));
