@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_signed.all;  -- arithmétique directe sur std_logic_vector
 
-entity Hearth_UAL is
+entity hearth_ual is
     port(
         A        : in  std_logic_vector(3 downto 0);
         B        : in  std_logic_vector(3 downto 0);
@@ -15,9 +15,9 @@ entity Hearth_UAL is
         SR_OUT_R : out std_logic;                    -- bit de retenue de sortie droite
         S        : out std_logic_vector(7 downto 0)   -- résultat ALU 8 bits
     );
-end Hearth_UAL;
+end hearth_ual;
 
-architecture HearthUAL_Arch of Hearth_UAL is
+architecture hearth_ual_arch of hearth_ual is
 begin
     myUALProcess : process(A, B, SR_IN_L, SR_IN_R, SEL_FCT)
         -- Variables internes
@@ -96,4 +96,4 @@ begin
         SR_OUT_L <= carry_out_left;
         SR_OUT_R <= carry_out_right;
     end process myUALProcess;
-end HearthUAL_Arch;
+end hearth_ual_arch;

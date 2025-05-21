@@ -5,6 +5,17 @@ Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 
 ---
 
+- ALU (`Hearth_UAL`) ✔️
+- Minuteur (`Minuteur`) ✔️
+- Compteur de score (`score`) ✔️
+- Interconnexion (`interconnexion`) ✔️
+- Des buffers pour la synchronisation et la mémorisation (`bufferCMs`et `bufferUAL`) ✔️
+- Générateur pseudo-aléatoire (`LFSR`) ✔️
+- Minuteur paramétrable (`minuteur`) ✔️
+- Vérification bouton/couleur/temps (`vérif_resultat`) ✔️
+
+---
+
 ## 📝 Introduction
 
 Ce projet consiste à réaliser un mini-jeu de type **Megamind** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur.
@@ -24,7 +35,7 @@ gtkwave ual_testbench.ghw
 
 ---
 
-# 1️⃣ Réalisation d'un ALU
+## 1️⃣ Réalisation d'un ALU
 
 L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
 Elle est composée de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection qui détermine quelle opération doit être effectuée sur les entrées.
@@ -165,7 +176,7 @@ ual_testbench.vhd:110:9:@150ns:(report note): Tous les tests passés avec succè
 
 ---
 
-# 2️⃣ Réalisation de l’interconnexion
+## 2️⃣ Réalisation de l’interconnexion
 
 L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.
 
@@ -230,9 +241,101 @@ L'interconnexion permet ainsi de réaliser les opérations suivantes :
 - **S -> MEM_CACHE_1_in**
 - **S -> MEM_CACHE_2_in**
 
-# 🛠️ Vivado : Installation & Test de l’ALU
+## 3️⃣ Minuteur
 
-## 📦 Installation de Vivado
+Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
+
+### ✨ Entité `Minuteur`
+
+```vhdl
+entity Minuteur is
+    port (
+        clk      : in std_logic;
+        reset    : in std_logic;
+        start    : in std_logic;
+        sw_level : in std_logic_vector(1 downto 0);
+        time_out : out std_logic
+    );
+end Minuteur;
+```
+
+- Le temps de réponse dépend de `sw_level` (niveau de difficulté).
+- Le signal `time_out` passe à '1' lorsque le temps est écoulé.
+
+---
+
+## 4️⃣ Compteur de score
+
+Le module **score_compteur** gère le score du joueur.
+
+### ✨ Entité `score_compteur`
+
+```vhdl
+entity score_compteur is
+    port (
+        clk       : in  std_logic; -- horloge système
+        reset     : in  std_logic; --remise à zéro du score
+        valid_hit : in  std_logic; -- indiquant la réussite (1) ou l’échec (0)
+        score     : out std_logic_vector(3 downto 0); -- score courant codé sur 4 bits
+        game_over : out std_logic -- signal indiquant la fin du jeu
+    );
+end score_compteur;
+```
+
+- Le score s’incrémente à chaque bonne réponse (`valid_hit = '1'`).
+- `game_over` passe à '1' lorsque le score atteint 15.
+
+---
+
+## 5️⃣ Vérificateur de réponse (ResponseChecker)
+
+Le module **verif_resultat** valide si le joueur a appuyé sur le bon bouton dans le temps imparti.
+
+### ✨ Entité `verif_resultat`
+
+```vhdl
+entity verif_resultat is
+    port (
+        clk       : in  std_logic; -- horloge système
+        reset     : in  std_logic; -- réinitialisation du module
+        timeout   : in  std_logic; -- signal de fin de délai
+        led_color : in  std_logic_vector(2 downto 0); -- couleur affichée sur LD3 (3 bits, R=100, G=010, B=001)
+        btn_r     : in  std_logic; -- boutons de réponse (BTN1, BTN2, BTN3)
+        btn_g     : in  std_logic;
+        btn_b     : in  std_logic;
+        valid_hit : out std_logic -- passe à '1' si la bonne réponse a été donnée dans les temps
+    );
+end verif_resultat;
+```
+
+- `valid_hit` passe à '1' uniquement si le bon bouton est pressé avant le timeout.
+- Un seul appui est comptabilisé par round.
+
+---
+
+## 6️⃣ Générateur pseudo-aléatoire (LFSR)
+
+Le module **LFSR** (Linear Feedback Shift Register) génère une séquence pseudo-aléatoire de 4 bits, utilisée pour le choix aléatoire des couleurs.
+
+### ✨ Entité `lfsr`
+
+```vhdl
+entity lfsr is
+    port(
+        CLK100MHZ : in std_logic;  -- horloge principale (100 MHz)
+        reset : in std_logic;  -- réinitialisation du registre à une valeur initiale non nulle «1011»
+        enable : in std_logic;  -- active l’évolution du LFSR à chaque front montant
+        rnd : out std_logic_vector(3 downto 0)  -- vecteur de 4 bits représentant la valeur pseudo-aléatoire courante
+    );
+end lfsr;
+```
+
+- À chaque front montant de l’horloge, si `enable='1'`, la sortie `rnd` change selon le polynôme X⁴ + X³ + 1.
+- La valeur initiale est fixée à `"1011"` pour éviter la séquence nulle.
+
+## 🛠️ Vivado : Installation & Test de l’ALU
+
+### 📦 Installation de Vivado
 
 - Installer **Vivado ML Standard** (minimum requis pour ARTY A7).
 
@@ -240,7 +343,7 @@ L'interconnexion permet ainsi de réaliser les opérations suivantes :
 
 ---
 
-## 🏗️ Création du projet
+### 🏗️ Création du projet
 
 Puis créer un nouveau projet et faire les configurations suivantes :
 

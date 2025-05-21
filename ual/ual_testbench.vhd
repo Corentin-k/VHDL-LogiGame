@@ -4,10 +4,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ual_testbench is
+entity hearth_ual_tb is
 end entity;
 
-architecture ual_testbench_arch of ual_testbench is
+architecture hearth_ual_tb_arch of hearth_ual_tb is
 
     component Hearth_UAL is
         port (
@@ -112,4 +112,4 @@ begin
 
     end process;
 
-end architecture ual_testbench_arch;
+end architecture hearth_ual_tb_arch;

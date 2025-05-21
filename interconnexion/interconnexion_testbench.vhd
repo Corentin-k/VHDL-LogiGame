@@ -3,10 +3,10 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity interconnexion_testbench is
-end interconnexion_testbench;
+entity interconnexion_tb is
+end interconnexion_tb;
 
-architecture interconnexion_testbench_arch of interconnexion_testbench is
+architecture interconnexion_tb_arch of interconnexion_tb is
 
     component interconnexion is
         port(
@@ -90,4 +90,4 @@ begin
         wait;
     end process;
 
-end interconnexion_testbench_arch;
+end interconnexion_tb_arch;

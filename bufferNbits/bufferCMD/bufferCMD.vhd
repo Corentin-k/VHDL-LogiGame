@@ -1,21 +1,18 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 
-entity bufferNbits is
-generic (
-	N : integer := 4
-);
-port (
-	e1 : in std_logic_vector (N-1 downto 0);
-    reset : in std_logic;
-   
-    clock : in std_logic;
-    SEL_FCT : in std_logic_vector (3 downto 0);
-    SEL_ROUTE : in std_logic_vector (3 downto 0);
-);
-end  bufferNbits;
+entity buffer_cmd is
 
-architecture bufferNbits_Arch of bufferNbits is
+port (
+	e1 : in std_logic_vector (3 downto 0);
+    reset : in std_logic;
+    clock : in std_logic;
+    SEL_FCT : out std_logic_vector (3 downto 0);
+    SEL_ROUTE : out std_logic_vector (3 downto 0);
+);
+end  buffer_cmd;
+
+architecture buffer_cmd_arch of buffer_cmd is
 	    
 begin
 	 
@@ -41,5 +38,5 @@ begin
         
     end process BufferSelRouteProc;
 
-end bufferNbits_Arch;
+end buffer_cmd_arch;
 

@@ -3,6 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_signed.all;
+
 entity interconnexion is
     port(
         -- SEL_ROUTE permet de définir le transfert de données qui sera effectué lors du prochain cycle horloge (prochain front montant de l’horloge).
@@ -253,8 +254,8 @@ begin
                 MEM_CACHE_1_out <= (others => '0');
                 MEM_CACHE_1_out_enable <= '0';
 
-                BUFFER_A <= (others => '0');
-                BUFFER_A_enable <= '0';
+                Buffer_A <= (others => '0');
+                Buffer_A_enable <= '0';
 
                 BUFFER_B <= (others => '0');
                 BUFFER_B_enable <= '0';
@@ -262,7 +263,7 @@ begin
 
             when others => -- Valeurs par défaut
                 Buffer_A <= (others => '0');
-                Buffer_A_enable <= '0';
+                BBuffer_A_enable <= '0';
 
                 Buffer_B <= (others => '0');
                 Buffer_B_enable <= '0';
