@@ -5,14 +5,18 @@ Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 
 ---
 
-- ALU (`Hearth_UAL`) ✔️
-- Minuteur (`Minuteur`) ✔️
-- Compteur de score (`score`) ✔️
-- Interconnexion (`interconnexion`) ✔️
-- Des buffers pour la synchronisation et la mémorisation (`bufferCMs`et `bufferUAL`) ✔️
-- Générateur pseudo-aléatoire (`LFSR`) ✔️
-- Minuteur paramétrable (`minuteur`) ✔️
-- Vérification bouton/couleur/temps (`vérif_resultat`) ✔️
+## 🗂️ Sommaire
+
+1. [📝 Introduction](#-introduction)
+2. [🚀 Démarrage rapide](#-démarrage-rapide)
+3. [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
+4. [2️⃣ Réalisation de l’interconnexion](#2️⃣-réalisation-de-linterconnexion)
+5. [3️⃣ Minuteur](#3️⃣-minuteur)
+6. [4️⃣ Compteur de score](#4️⃣-compteur-de-score)
+7. [5️⃣ Vérificateur de réponse](#5️⃣-vérificateur-de-réponse)
+8. [6️⃣ Générateur pseudo-aléatoire (LFSR)](#6️⃣-générateur-pseudo-aléatoire-lfsr)
+9. [7️⃣ Contrôleur principal (FSM)](#7️⃣-contrôleur-principal-fsm)
+10. [Vivado : Installation et Test de l’ALU](#vivado--installation-et-test-de-lalu)
 
 ---
 
@@ -22,16 +26,46 @@ Ce projet consiste à réaliser un mini-jeu de type **Megamind** sur la carte **
 
 ![Carte ARTY A7](./img/71YKkVSeLqL.webp)
 
-## ⚡ Rappels : Simulation VHDL
+---
 
-Pour lancer la configuration des fichiers VHDL :
+## 🚀 Démarrage rapide
 
-```bash
-ghdl -a --std=08 --ieee=synopsys ual.vhd ual_testbench.vhd
-ghdl -e --std=08 --ieee=synopsys ual_testbench
-ghdl -r --std=08 --ieee=synopsys ual_testbench --wave=ual_testbench.ghw
-gtkwave ual_testbench.ghw
-```
+### Prérequis
+
+- **Windows 10/11 avec WSL** (Windows Subsystem for Linux)
+- **VS Code** avec l’extension Remote - WSL
+- **GHDL** installé sous WSL (`sudo apt install ghdl gtkwave`)
+- **Vivado** (pour la synthèse sur carte, voir plus bas)
+
+### Installation et simulation sous WSL/VS Code
+
+1. **Clone le dépôt** :
+
+   ```bash
+   git clone https://github.com/Corentin-k/VHDL-LogiGame.git
+   cd VHDL-LogiGame
+   ```
+
+2. **Simule un module avec le script fourni** :
+
+   - Dans le dossier racine du projet.
+   - Lancer :
+
+     ```bash
+     ./run_vhdl.sh nom_module
+     ```
+
+     Par exemple pour tester le vérificateur de résultat :
+
+     ```bash
+     ./run_vhdl.sh verif_resultat
+     ```
+
+   - Pour ouvrir automatiquement GTKWave (visualisation des signaux) :
+
+     ```bash
+     ./run_vhdl.sh verif_resultat --g
+     ```
 
 ---
 
@@ -333,7 +367,39 @@ end lfsr;
 - À chaque front montant de l’horloge, si `enable='1'`, la sortie `rnd` change selon le polynôme X⁴ + X³ + 1.
 - La valeur initiale est fixée à `"1011"` pour éviter la séquence nulle.
 
-## 🛠️ Vivado : Installation & Test de l’ALU
+## 7️⃣ Contrôleur principal (FSM)
+
+Le module **FSM** (Finite State Machine) orchestre l’ensemble du jeu LogiGame : il gère la génération du stimulus, le lancement du timer, la vérification de la réponse, l’incrémentation du score et la détection de la fin de partie.
+
+### ✨ Entité `fsm`
+
+```vhdl
+entity fsm is
+    port (
+        clk        : in  std_logic; -- horloge système (100 MHz)
+        reset      : in  std_logic; -- remise à zéro globale
+        start      : in  std_logic; -- bouton de démarrage
+        sw_level   : in  std_logic_vector(1 downto 0); -- niveau de difficulté
+        btn_r      : in  std_logic; -- bouton rouge
+        btn_g      : in  std_logic; -- bouton vert
+        btn_b      : in  std_logic; -- bouton bleu
+        led_color  : out std_logic_vector(2 downto 0); -- couleur affichée sur LD3
+        score      : out std_logic_vector(3 downto 0); -- score courant
+        game_over  : out std_logic -- signal de fin de partie
+    );
+end fsm;
+```
+
+- L’état du jeu évolue selon un **automate à états finis** :
+  - **IDLE** : attente du bouton start
+  - **NEW_ROUND** : génération d’un nouveau stimulus et lancement du timer
+  - **WAIT_RESPONSE** : attente de la réponse ou du timeout
+  - **END_GAME** : blocage du jeu en cas de défaite ou score maximal
+- Le FSM pilote les modules internes : LFSR, minuteur, score_compteur, verif_resultat.
+
+---
+
+## Vivado : Installation et Test de l’ALU
 
 ### 📦 Installation de Vivado
 
