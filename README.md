@@ -7,15 +7,21 @@ Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 
 ## 🗂️ Sommaire
 
-1. [📝 Introduction](#-introduction)
-2. [🚀 Démarrage rapide](#-démarrage-rapide)
-3. [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
-4. [2️⃣ Réalisation de l’interconnexion](#2️⃣-réalisation-de-linterconnexion)
-5. [3️⃣ Minuteur](#3️⃣-minuteur)
-6. [4️⃣ Compteur de score](#4️⃣-compteur-de-score)
-7. [5️⃣ Vérificateur de réponse](#5️⃣-vérificateur-de-réponse)
-8. [6️⃣ Générateur pseudo-aléatoire (LFSR)](#6️⃣-générateur-pseudo-aléatoire-lfsr)
-9. [7️⃣ Contrôleur principal (FSM)](#7️⃣-contrôleur-principal-fsm)
+### 🧩 Cœur de contrôleur
+
+1. [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
+2. [2️⃣ Buffers de commande et de données](#2️⃣-buffers-de-commande-et-de-données)
+3. [3️⃣ Réalisation de l’interconnexion](#3️⃣-réalisation-de-linterconnexion)
+4. [4️⃣ Mémoire d'instructions](#4️⃣-mémoire-dinstructions)
+
+### 🎮 Le jeu
+
+5. [5️⃣ Minuteur](#5️⃣-minuteur)
+6. [6️⃣ Compteur de score](#6️⃣-compteur-de-score)
+7. [7️⃣ Vérificateur de réponse](#7️⃣-vérificateur-de-réponse)
+8. [8️⃣ Générateur pseudo-aléatoire (LFSR)](#8️⃣-générateur-pseudo-aléatoire-lfsr)
+9. [9️⃣ Contrôleur principal (FSM)](#9️⃣-contrôleur-principal-fsm)
+
 10. [Vivado : Installation et Test de l’ALU](#vivado--installation-et-test-de-lalu)
 
 ---
@@ -77,7 +83,7 @@ Elle est composée de plusieurs unités fonctionnelles, chacune étant responsab
 ### ✨ Entité `Hearth_UAL`
 
 ```vhdl
-entity Hearth_UAL is
+entity hearth_ual is
     port(
         A        : in  std_logic_vector(3 downto 0);
         B        : in  std_logic_vector(3 downto 0);
@@ -90,7 +96,7 @@ entity Hearth_UAL is
         SR_OUT_R : out std_logic;                    -- bit de retenue de sortie droite
         S        : out std_logic_vector(7 downto 0)   -- résultat ALU 8 bits
     );
-end Hearth_UAL;
+end hearth_ual;
 ```
 
 L'ALU est capable de réaliser les opérations suivantes :
@@ -210,7 +216,53 @@ ual_testbench.vhd:110:9:@150ns:(report note): Tous les tests passés avec succè
 
 ---
 
-## 2️⃣ Réalisation de l’interconnexion
+## 2️⃣ Buffers de commande et de données
+
+### ✨ Entité `buffer_cmd`
+
+Le buffer de commande permet de mémoriser les signaux de sélection de fonction (`SEL_FCT`) et de routage (`SEL_ROUTE`) à chaque front montant de l’horloge.
+
+```vhdl
+entity buffer_cmd is
+    port (
+        e1        : in  std_logic_vector(3 downto 0);
+        reset     : in  std_logic;
+        clock     : in  std_logic;
+        s1        : out std_logic_vector(3 downto 0)
+    );
+end buffer_cmd;
+```
+
+- **Usage** : Mémorisation synchrone de SEL_FCT ou SEL_ROUTE.
+- **Fonctionnement** : À chaque front montant de `clock`, si `reset` n'est pas actif, la valeur d'entrée `e1` est stockée et disponible sur `s1`.
+
+---
+
+### ✨ Entité `buffer_ual`
+
+Le bufferUAL permet de mémoriser des données sur 4 ou 8 bits (pour Buffer_A, Buffer_B, MEM_CACHE_1, MEM_CACHE_2).
+
+```vhdl
+entity buffer_ual is
+    generic (
+        N : integer := 4
+    );
+    port (
+        e1     : in  std_logic_vector(N-1 downto 0);
+        reset  : in  std_logic;
+        clock  : in  std_logic;
+        enable : in  std_logic;
+        s1     : out std_logic_vector(N-1 downto 0)
+    );
+end buffer_ual;
+```
+
+- **Usage** : Mémorisation synchrone de données (A, B, S, etc.) avec signal d’activation `enable`.
+- **Fonctionnement** : À chaque front montant de `clock`, si `enable='1'`, la valeur d'entrée `e1` est stockée et disponible sur `s1`.
+
+---
+
+## 3️⃣ Réalisation de l’interconnexion
 
 L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.
 
@@ -226,8 +278,7 @@ entity interconnexion is
         B_IN      : in std_logic_vector(3 downto 0); -- Entrée B
         S         : in std_logic_vector(7 downto 0); -- Entrée S
 
-        -- La mémoire MEM_SEL_FCT permet de mémoriser la fonction arithmétique ou logique à réaliser.
-        -- Elle est systématiquement chargée à chaque front montant d’horloge.
+
         MEM_CACHE_1_in: in std_logic_vector(7 downto 0); -- Mémoire cache 1
         MEM_CACHE_1_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_1_ou
         MEM_CACHE_1_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_1_out
@@ -275,7 +326,31 @@ L'interconnexion permet ainsi de réaliser les opérations suivantes :
 - **S -> MEM_CACHE_1_in**
 - **S -> MEM_CACHE_2_in**
 
-## 3️⃣ Minuteur
+---
+
+## 4️⃣ Mémoire d'instructions
+
+### ✨ Entité `mem_instructions`
+
+La mémoire d’instructions contient le programme à exécuter (suite d’instructions codées sur 10 bits).
+
+```vhdl
+entity mem_instructions is
+    port (
+        clk         : in  std_logic;
+        reset       : in  std_logic;
+        instruction : in  unsigned(6 downto 0); -- Adresse (7 bits)
+        donnee      : out std_logic_vector(9 downto 0) -- Instruction lue
+    );
+end mem_instructions;
+```
+
+- **Usage** : ROM contenant jusqu’à 128 instructions.
+- **Fonctionnement** : À chaque front montant de `clk`, l’instruction à l’adresse `instruction` est placée sur `donnee`.
+
+---
+
+## 5️⃣ Minuteur
 
 Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
 
@@ -298,7 +373,7 @@ end Minuteur;
 
 ---
 
-## 4️⃣ Compteur de score
+## 6️⃣ Compteur de score
 
 Le module **score_compteur** gère le score du joueur.
 
@@ -321,7 +396,7 @@ end score_compteur;
 
 ---
 
-## 5️⃣ Vérificateur de réponse
+## 7️⃣ Vérificateur de réponse
 
 Le module **verif_resultat** valide si le joueur a appuyé sur le bon bouton dans le temps imparti.
 
@@ -347,7 +422,7 @@ end verif_resultat;
 
 ---
 
-## 6️⃣ Générateur pseudo-aléatoire (LFSR)
+## 8️⃣ Générateur pseudo-aléatoire (LFSR)
 
 Le module **LFSR** (Linear Feedback Shift Register) génère une séquence pseudo-aléatoire de 4 bits, utilisée pour le choix aléatoire des couleurs.
 
@@ -367,7 +442,7 @@ end lfsr;
 - À chaque front montant de l’horloge, si `enable='1'`, la sortie `rnd` change selon le polynôme X⁴ + X³ + 1.
 - La valeur initiale est fixée à `"1011"` pour éviter la séquence nulle.
 
-## 7️⃣ Contrôleur principal (FSM)
+## 9️⃣ Contrôleur principal (FSM)
 
 Le module **FSM** (Finite State Machine) orchestre l’ensemble du jeu LogiGame : il gère la génération du stimulus, le lancement du timer, la vérification de la réponse, l’incrémentation du score et la détection de la fin de partie.
 
