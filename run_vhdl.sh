@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # chmod +x run_vhdl.sh
 # ./run_vhdl.sh nom_dossier [--g]
 
@@ -20,9 +20,9 @@ fi
 
 cd "$DIR" || { echo "Dossier $DIR introuvable"; exit 1; }
 
-ghdl -a "$VHD" "$TB_VHD" || exit 1
-ghdl -e "$TB_ENTITY" || exit 1
-ghdl -r "$TB_ENTITY" --vcd="$VCD" || exit 1
+ghdl -a -fsynopsys "$VHD" "$TB_VHD" || exit 1
+ghdl -e -fsynopsys "$TB_ENTITY" || exit 1
+ghdl -r  -fsynopsys "$TB_ENTITY" --vcd="$VCD" || exit 1
 
 if [ $GTK -eq 1 ]; then
   gtkwave "$VCD"
