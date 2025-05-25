@@ -8,7 +8,7 @@ port (
     reset : in std_logic;
     clock : in std_logic;
     SEL_FCT : out std_logic_vector (3 downto 0);
-    SEL_ROUTE : out std_logic_vector (3 downto 0);
+    SEL_ROUTE : out std_logic_vector (3 downto 0)
 );
 end  buffer_cmd;
 

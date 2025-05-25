@@ -9,7 +9,7 @@ end entity;
 
 architecture hearth_ual_tb_arch of hearth_ual_tb is
 
-    component Hearth_UAL is
+    component hearth_ual is
         port (
             A        : in  std_logic_vector(3 downto 0);
             B        : in  std_logic_vector(3 downto 0);
@@ -32,7 +32,7 @@ architecture hearth_ual_tb_arch of hearth_ual_tb is
 
 begin
 
-    Hearth_UAL_test: Hearth_UAL
+    hearth_ual_inst: hearth_ual
         port map (
             A        => A_sim,
             B        => B_sim,
