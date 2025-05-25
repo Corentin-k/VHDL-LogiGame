@@ -13,8 +13,7 @@ entity interconnexion is
         B_IN      : in std_logic_vector(3 downto 0); -- Entrée B
         S         : in std_logic_vector(7 downto 0); -- Entrée S
         
-        -- La mémoire MEM_SEL_FCT permet de mémoriser la fonction arithmétique ou logique à réaliser.
-        -- Elle est systématiquement chargée à chaque front montant d’horloge.
+       
         MEM_CACHE_1_in: in std_logic_vector(7 downto 0); -- Mémoire cache 1
         MEM_CACHE_1_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_1_ou
         MEM_CACHE_1_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_1_out
@@ -257,13 +256,13 @@ begin
                 Buffer_A <= (others => '0');
                 Buffer_A_enable <= '0';
 
-                BUFFER_B <= (others => '0');
-                BUFFER_B_enable <= '0';
+                Buffer_B  <= (others => '0');
+                Buffer_B_enable <= '0';
 
 
             when others => -- Valeurs par défaut
                 Buffer_A <= (others => '0');
-                BBuffer_A_enable <= '0';
+                Buffer_A_enable <= '0';
 
                 Buffer_B <= (others => '0');
                 Buffer_B_enable <= '0';

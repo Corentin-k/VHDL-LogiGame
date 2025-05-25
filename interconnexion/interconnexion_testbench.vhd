@@ -47,7 +47,7 @@ architecture interconnexion_tb_arch of interconnexion_tb is
     signal RES_OUT_sim                : std_logic_vector(7 downto 0);
 
 begin
-    UUT: interconnexion
+    interconnexion_inst: interconnexion
         port map (
             SEL_ROUTE              => SEL_ROUTE_sim,
             A_IN                   => A_IN_sim,
@@ -66,8 +66,7 @@ begin
             SEL_OUT                => SEL_OUT_sim,
             RES_OUT                => RES_OUT_sim
         );
-
-    stimulus: process
+    process
     begin
         -- Test routage A_IN vers Buffer_A
         A_IN_sim <= "1010";
