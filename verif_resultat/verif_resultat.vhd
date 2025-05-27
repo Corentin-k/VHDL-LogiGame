@@ -15,10 +15,9 @@ entity verif_resultat is
 end verif_resultat;
 
 architecture verif_resultat_arch of verif_resultat is
-    signal user_pressed : std_logic := '0';
+    signal user_pressed  : std_logic := '0';
     signal valid_hit_reg : std_logic := '0';
 begin
-
     process(clk, reset)
     begin
         if reset = '1' then
@@ -35,15 +34,15 @@ begin
                    (led_color = "001" and btn_b = '1') then
                     valid_hit_reg <= '1';
                     user_pressed  <= '1';
-                elsif (btn_r = '1' or btn_g = '1' or btn_b = '1') then -- Mauvais bouton
-                    
+                else
                     valid_hit_reg <= '0';
-                    user_pressed  <= '1';
+                    -- user_pressed reste à '0' pour permettre une nouvelle tentative
                 end if;
+            else
+                valid_hit_reg <= '0';
             end if;
         end if;
     end process;
 
     valid_hit <= valid_hit_reg;
-
-end  verif_resultat_arch;
+end verif_resultat_arch;

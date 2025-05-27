@@ -8,25 +8,35 @@ end interconnexion_tb;
 
 architecture interconnexion_tb_arch of interconnexion_tb is
 
-    component interconnexion is
-        port(
-            SEL_ROUTE              : in  std_logic_vector(3 downto 0);
-            A_IN                   : in  std_logic_vector(3 downto 0);
-            B_IN                   : in  std_logic_vector(3 downto 0);
-            S                      : in  std_logic_vector(7 downto 0);
-            MEM_CACHE_1_in         : in  std_logic_vector(7 downto 0);
-            MEM_CACHE_1_out_enable : out std_logic;
-            MEM_CACHE_1_out        : out std_logic_vector(7 downto 0);
-            MEM_CACHE_2_in         : in  std_logic_vector(7 downto 0);
-            MEM_CACHE_2_out_enable : out std_logic;
-            MEM_CACHE_2_out        : out std_logic_vector(7 downto 0);
-            Buffer_A               : out std_logic_vector(3 downto 0);
-            Buffer_A_enable        : out std_logic;
-            Buffer_B               : out std_logic_vector(3 downto 0);
-            Buffer_B_enable        : out std_logic;
-            SEL_OUT                : in  std_logic_vector(1 downto 0);
-            RES_OUT                : out std_logic_vector(7 downto 0)
-        );
+    component  interconnexion 
+    port(
+       
+        SEL_ROUTE : in std_logic_vector(3 downto 0); -- Sélecteur de route
+        
+        A_IN      : in std_logic_vector(3 downto 0); -- Entrée A
+        B_IN      : in std_logic_vector(3 downto 0); -- Entrée B
+        S         : in std_logic_vector(7 downto 0); -- Entrée S
+        
+       
+        MEM_CACHE_1_in: in std_logic_vector(7 downto 0); -- Mémoire cache 1
+        MEM_CACHE_1_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_1_ou
+        MEM_CACHE_1_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_1_out
+
+        MEM_CACHE_2_in : in std_logic_vector(7 downto 0); -- Mémoire cache 2
+        MEM_CACHE_2_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_2_out_enable
+        MEM_CACHE_2_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_2_out
+        
+        Buffer_A  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer A
+        Buffer_A_enable : out std_logic; -- Signal d'activation pour Buffer A
+        
+        Buffer_B  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer B
+        Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
+
+        SEL_OUT : in std_logic_vector(1 downto 0); -- Sélecteur de sortie
+        RES_OUT : out std_logic_vector(7 downto 0); -- Sortie
+        ready   : out std_logic
+    );
+
     end component;
 
     signal SEL_ROUTE_sim              : std_logic_vector(3 downto 0) := (others => '0');
@@ -45,7 +55,7 @@ architecture interconnexion_tb_arch of interconnexion_tb is
     signal Buffer_B_enable_sim        : std_logic;
     signal SEL_OUT_sim                : std_logic_vector(1 downto 0) := (others => '0');
     signal RES_OUT_sim                : std_logic_vector(7 downto 0);
-
+    signal ready_sim                  : std_logic;
 begin
     interconnexion_inst: interconnexion
         port map (
@@ -64,7 +74,8 @@ begin
             Buffer_B               => Buffer_B_sim,
             Buffer_B_enable        => Buffer_B_enable_sim,
             SEL_OUT                => SEL_OUT_sim,
-            RES_OUT                => RES_OUT_sim
+            RES_OUT                => RES_OUT_sim,
+            ready   => ready_sim 
         );
     process
     begin
@@ -72,12 +83,15 @@ begin
         A_IN_sim <= "1010";
         SEL_ROUTE_sim <= "0000";
         wait for 10 ns;
-        
+        report "A_IN = " & integer'image(to_integer(unsigned(A_IN_sim))) & 
+               " Buffer_A: " & integer'image(to_integer(unsigned(Buffer_A_sim)));
+
         -- Test S vers MEM_CACHE_1_out
         S_sim <= "00000001";
         SEL_ROUTE_sim <= "1110";
         wait for 10 ns;
-    
+        report "S = " & integer'image(to_integer(unsigned(S_sim))) & 
+               " MEM_CACHE_1_out: " & integer'image(to_integer(unsigned(MEM_CACHE_1_out_sim)));
 
         -- Test S vers RES_OUT via SEL_OUT
         SEL_ROUTE_sim <= "0000";
@@ -85,7 +99,10 @@ begin
         
         SEL_OUT_sim <= "11";
         wait for 10 ns;
-      
+        report "S = " & integer'image(to_integer(unsigned(S_sim))) & 
+               " RES_OUT: " & integer'image(to_integer(unsigned(RES_OUT_sim))) & 
+               " ready = " & std_logic'image(ready_sim);
+
         wait;
     end process;
 

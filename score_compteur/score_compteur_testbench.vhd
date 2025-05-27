@@ -24,7 +24,7 @@ architecture score_compteur_tb_arch of score_compteur_tb is
     end component;
 begin
 
-    score_process: score_compteur
+    score_inst: score_compteur
         port map (
             clk       => clk_sim,
             reset     => reset_sim,
@@ -43,7 +43,7 @@ begin
     end process;
 
  
-    stim_proc: process
+    score_proc: process
     begin
         -- Reset
         reset_sim <= '1';

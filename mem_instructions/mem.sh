@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ghdl -a -fsynopsys ../mem_instructions/mem_instructions.vhd
-ghdl -a -fsynopsys ../ual/ual.vhd
+ghdl -a -fsynopsys ../hearth_ual/hearth_ual.vhd
 ghdl -a -fsynopsys ../interconnexion/interconnexion.vhd
-ghdl -a -fsynopsys ../bufferNbits/bufferCMD/bufferCMD.vhd
-ghdl -a -fsynopsys ../bufferNbits/bufferUAL/bufferUAL.vhd
+ghdl -a -fsynopsys ../bufferNbits/buffer_cmd/buffer_cmd.vhd
+ghdl -a -fsynopsys ../bufferNbits/buffer_ual/buffer_ual.vhd
 ghdl -a -fsynopsys mem_instructions_testbench.vhd
 
 # Élaboration du testbench

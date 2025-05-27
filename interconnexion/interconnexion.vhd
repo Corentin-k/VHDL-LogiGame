@@ -1,4 +1,3 @@
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -31,9 +30,9 @@ entity interconnexion is
         Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
 
         SEL_OUT : in std_logic_vector(1 downto 0); -- Sélecteur de sortie
-        RES_OUT : out std_logic_vector(7 downto 0) -- Sortie 
-
-
+        RES_OUT : out std_logic_vector(7 downto 0); -- Sortie 
+        
+        ready : out std_logic
     );
 end interconnexion;
 
@@ -282,14 +281,18 @@ begin
         case SEL_OUT is
             when "00" => 
                 RES_OUT <= (others => '0');
+                ready <= '0';
             when "01" => -- Sortie vers MEM_CACHE_1_in
                 RES_OUT <= MEM_CACHE_1_in;
+                 ready <= '1';
             when "10" => -- Sortie vers MEM_CACHE_2
                 RES_OUT <= MEM_CACHE_2_in;
+                ready <= '1';
             when "11" => -- Sortie vers S
                 RES_OUT <= S;
-            when others => RES_OUT <= (others => '0'); 
+                ready <= '1';
+            when others => RES_OUT <= (others => '0');  ready <= '0';
         end case;
     end process selOutProcess;
 end interconnexion_arch;
-    
+

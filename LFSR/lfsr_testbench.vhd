@@ -13,7 +13,7 @@ architecture lfsr_tb_arch of lfsr_tb is
     signal enable_sim : std_logic := '0';
     signal rnd_sim    : std_logic_vector(3 downto 0);
 
-    component LFSR
+    component lfsr
         port (
             CLK100MHZ : in std_logic;
             reset     : in std_logic;
@@ -22,8 +22,8 @@ architecture lfsr_tb_arch of lfsr_tb is
         );
     end component;
 begin
-    
-    LFSR_test: LFSR
+
+    lfsr_inst: lfsr
         port map (
             CLK100MHZ => clk_sim,
             reset     => reset_sim,
@@ -40,7 +40,7 @@ begin
         wait;
     end process;
 
-    procLFSR: process
+    process_lfsr: process
     begin
 
         reset_sim <= '1';

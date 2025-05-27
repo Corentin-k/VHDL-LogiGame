@@ -7,7 +7,7 @@ port (
 	e1 : in std_logic_vector (3 downto 0);
     reset : in std_logic;
     clock : in std_logic;
-    s1 : out std_logic_vector (3 downto 0);
+    s1 : out std_logic_vector (3 downto 0)
 
 );
 end  buffer_cmd;

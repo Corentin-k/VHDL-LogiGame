@@ -1,0 +1,194 @@
+$date
+  Mon May 26 20:23:41 2025
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$scope module standard $end
+$upscope $end
+$scope module std_logic_1164 $end
+$upscope $end
+$scope module numeric_std $end
+$upscope $end
+$scope module std_logic_arith $end
+$upscope $end
+$scope module std_logic_signed $end
+$upscope $end
+$scope module hearth_ual_tb $end
+$var reg 4 ! a_sim[3:0] $end
+$var reg 4 " b_sim[3:0] $end
+$var reg 1 # sr_in_l_sim $end
+$var reg 1 $ sr_in_r_sim $end
+$var reg 4 % sel_sim[3:0] $end
+$var reg 1 & sr_out_l_sim $end
+$var reg 1 ' sr_out_r_sim $end
+$var reg 8 ( s_sim[7:0] $end
+$scope module hearth_ual_inst $end
+$var reg 4 ) a[3:0] $end
+$var reg 4 * b[3:0] $end
+$var reg 1 + sr_in_l $end
+$var reg 1 , sr_in_r $end
+$var reg 4 - sel_fct[3:0] $end
+$var reg 1 . sr_out_l $end
+$var reg 1 / sr_out_r $end
+$var reg 8 0 s[7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+b0000 !
+b0000 "
+0#
+0$
+b0000 %
+0&
+0'
+b00000000 (
+b0000 )
+b0000 *
+0+
+0,
+b0000 -
+0.
+0/
+b00000000 0
+#10000000
+b0010 !
+b0001 %
+b00000010 (
+b0010 )
+b0001 -
+b00000010 0
+#20000000
+b0000 !
+b0011 "
+b0010 %
+b00000011 (
+b0000 )
+b0011 *
+b0010 -
+b00000011 0
+#30000000
+b0101 !
+b0000 "
+b0011 %
+b00001010 (
+b0101 )
+b0000 *
+b0011 -
+b00001010 0
+#40000000
+b0000 !
+b1001 "
+b0100 %
+b00000110 (
+b0000 )
+b1001 *
+b0100 -
+b00000110 0
+#50000000
+b0110 !
+b0101 "
+b0101 %
+b00000100 (
+b0110 )
+b0101 *
+b0101 -
+b00000100 0
+#60000000
+b0100 !
+b0011 "
+b0110 %
+b00000111 (
+b0100 )
+b0011 *
+b0110 -
+b00000111 0
+#70000000
+b0111 !
+b0010 "
+b0111 %
+b00000101 (
+b0111 )
+b0010 *
+b0111 -
+b00000101 0
+#80000000
+b1010 !
+b0000 "
+1#
+b1000 %
+b00001101 (
+b1010 )
+b0000 *
+1+
+b1000 -
+b00001101 0
+#90000000
+b1100 !
+0#
+1$
+b1001 %
+1&
+b00001001 (
+b1100 )
+0+
+1,
+b1001 -
+1.
+b00001001 0
+#100000000
+b0000 !
+b0110 "
+1#
+0$
+b1010 %
+0&
+b00001011 (
+b0000 )
+b0110 *
+1+
+0,
+b1010 -
+0.
+b00001011 0
+#110000000
+b0011 "
+0#
+1$
+b1011 %
+b00000111 (
+b0011 *
+0+
+1,
+b1011 -
+b00000111 0
+#120000000
+b0010 !
+b1100 %
+b00000110 (
+b0010 )
+b1100 -
+b00000110 0
+#130000000
+b0100 !
+b0010 "
+0$
+b1101 %
+b0100 )
+b0010 *
+0,
+b1101 -
+#140000000
+b0111 !
+b0011 "
+b1110 %
+b00000100 (
+b0111 )
+b0011 *
+b1110 -
+b00000100 0
+#150000000
