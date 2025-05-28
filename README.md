@@ -22,17 +22,26 @@ Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 8. [8️⃣ Générateur pseudo-aléatoire (LFSR)](#8️⃣-générateur-pseudo-aléatoire-lfsr)
 9. [9️⃣ Contrôleur principal (FSM)](#9️⃣-contrôleur-principal-fsm)
 
+### 📎 Annexes
+
 10. [Vivado : Installation et Test de l’ALU](#vivado--installation-et-test-de-lalu)
 
 ---
 
+<div class="page"/>
+
 ## 📝 Introduction
 
 Ce projet consiste à réaliser un mini-jeu de type **Megamind** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur.
+L’ensemble du projet a été développé sous **VS Code** avec **WSL** et simulé avec **GHDL** et **GTKWave**.
 
 ![Carte ARTY A7](./img/71YKkVSeLqL.webp)
 
+Les composants réalisés : ALU, Buffers, Interconnexion, Mémoire d'instructions et un top Level qui réunis tous les composants.
+
 ---
+
+<div class="page"/>
 
 ## 🚀 Démarrage rapide
 
@@ -52,28 +61,41 @@ Ce projet consiste à réaliser un mini-jeu de type **Megamind** sur la carte **
    cd VHDL-LogiGame
    ```
 
-2. **Simule un module avec le script fourni** :
+2. **Simuler un module avec le script fourni** :
+
+   Plusieurs scripts bash sont fournis pour faciliter la simulation et la compilation des différents modules :
 
    - Dans le dossier racine du projet.
-   - Lancer :
+   - Pour tester un component qui ne dépend pas d'autres modules, utilisez :
 
      ```bash
      ./run_vhdl.sh nom_module
      ```
 
-     Par exemple pour tester le vérificateur de résultat :
+     Par exemple pour tester le test de l'interconnexion :
 
      ```bash
-     ./run_vhdl.sh verif_resultat
+     ./run_vhdl.sh interconnexion
      ```
 
    - Pour ouvrir automatiquement GTKWave (visualisation des signaux) :
 
      ```bash
-     ./run_vhdl.sh verif_resultat --g
+     ./run_vhdl.sh interconnexion --g
      ```
 
+- Pour le test de la mémoire d'instruction et le top level deux scripts ont été réalisé :
+
+  Les scripts compilent tous les modules nécessaires et lancent la simulation avec génération d’un fichier VCD pour GTKWave.
+
+  ```bash
+      ./test_mem.sh
+      ./test_top.sh
+  ```
+
 ---
+
+<div class="page"/>
 
 ## 1️⃣ Réalisation d'un ALU
 
@@ -81,6 +103,17 @@ L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il 
 Elle est composée de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection qui détermine quelle opération doit être effectuée sur les entrées.
 
 ### ✨ Entité `Hearth_UAL`
+
+L’ALU prend en entrée :
+
+- Deux valeurs A et B sur 4 bits (std_logic_vector(3 downto 0))
+- Deux bits de retenue (SR_IN_L et SR_IN_R) pour les opérations de décalage et d’addition
+- Un code de fonction (SEL_FCT) sur 4 bits qui sélectionne l’opération à effectuer
+
+Elle fournit en sortie :
+
+- Le résultat S sur 8 bits (std_logic_vector(7 downto 0))
+- Deux bits de retenue de sortie (SR_OUT_L et SR_OUT_R)
 
 ```vhdl
 entity hearth_ual is
@@ -98,6 +131,8 @@ entity hearth_ual is
     );
 end hearth_ual;
 ```
+
+### 🔢 Opérations prises en charge
 
 L'ALU est capable de réaliser les opérations suivantes :
 
@@ -122,28 +157,28 @@ L'ALU est capable de réaliser les opérations suivantes :
 
 ### 🛠️ Variables internes
 
-On a également créé des variables internes pour :
+Pour certaines opérations (addition, soustraction, multiplication), il est nécessaire de travailler sur des vecteurs plus larges que les entrées d’origine pour éviter les erreurs de débordement et permettre une gestion correcte du signe (signed/unsigned).
 
-- Étendre A et B de 4 à 8 bits (grand_A, grand_B)
+On a donc créé des variables internes grand_A et grand_B :
 
-- Stocker les retenues d’entrée et de sortie (carry_in_left, carry_out_right, etc.)
-
-- Construire le résultat 8 bits (resultat)
+Ces variables étendent A et B de 4 à 8 bits.
+Les 4 bits de poids fort sont remplis avec le bit de signe (A(3) ou B(3)), ce qui permet de conserver le signe lors des opérations arithmétiques (extension de signe pour signed).
+Les 4 bits de poids faible reprennent la valeur d’origine.
 
 ```vhdl
- -- Variables internes
+
         variable grand_A         : std_logic_vector(7 downto 0);
         variable grand_B         : std_logic_vector(7 downto 0);
-        variable carry_in_left   : std_logic;
-        variable carry_in_right  : std_logic;
-        variable carry_out_left  : std_logic;
-        variable carry_out_right : std_logic;
-        variable resultat        : std_logic_vector(7 downto 0);
+
+        grand_A(7 downto 4) := (others => A(3));
+        grand_A(3 downto 0) := A;
+        grand_B(7 downto 4) := (others => B(3));
+        grand_B(3 downto 0) := B;
 ```
 
 ## 🧪 Test de l'ALU
 
-Pour valider le bon fonctionnement de l’ALU, nous avons développé un [testbench](./ual/ual_testbench.vhd) VHDL complet.
+Pour valider le bon fonctionnement de l’ALU, nous avons développé un [testbench](./hearth_ual/hearth_ual_testbench.vhd) VHDL complet.
 Pour ce faire nous avons utilisé des procédures en VHDL pour balayer toutes les combinaisons possibles de l'ALU : `display_case(name:string)` et `test_case(name:string)`
 
 ```vhdl
@@ -215,31 +250,26 @@ hearth_ual_testbench.vhd:110:9:@150ns:(report note): Tous les tests passés avec
 
 ---
 
-## 2️⃣ Buffers de commande et de données
+<div class="page"/>
 
-### ✨ Entité `buffer_cmd`
-
-Le buffer de commande permet de mémoriser les signaux de sélection de fonction (`SEL_FCT`) et de routage (`SEL_ROUTE`) à chaque front montant de l’horloge.
-
-```vhdl
-entity buffer_cmd is
-    port (
-        e1        : in  std_logic_vector(3 downto 0);
-        reset     : in  std_logic;
-        clock     : in  std_logic;
-        s1        : out std_logic_vector(3 downto 0)
-    );
-end buffer_cmd;
-```
-
-- **Usage** : Mémorisation synchrone de SEL_FCT ou SEL_ROUTE.
-- **Fonctionnement** : À chaque front montant de `clock`, si `reset` n'est pas actif, la valeur d'entrée `e1` est stockée et disponible sur `s1`.
-
----
+## 2️⃣ Buffers
 
 ### ✨ Entité `buffer_ual`
 
-Le bufferUAL permet de mémoriser des données sur 4 ou 8 bits (pour Buffer_A, Buffer_B, MEM_CACHE_1, MEM_CACHE_2).
+Au début du projet, deux types de buffers étaient envisagés :
+
+- **Buffer avec signal d’activation (`enable`)** : la sortie **est modifiée uniquement si `enable` est à '1'** ; sinon, la valeur précédente est conservée (la modification est empêchée).
+- **Buffer sans signal d’activation** : la sortie **est modifiée à chaque front d’horloge**, sans condition.
+
+Après expérimentation, il s’est avéré plus simple et flexible d’utiliser uniquement le buffer avec signal `enable`.  
+Pour obtenir le comportement d’un buffer "sans enable", il suffit de connecter `enable` à `'1'` lors de l’instanciation.
+
+Le composant `buffer_ual` est **générique** grâce au paramètre `N`, ce qui permet de créer des buffers de n’importe quelle taille (4 bits, 8 bits, etc.) selon les besoins du module (`Buffer_A`, `Buffer_B`, `MEM_CACHE_1`, `MEM_CACHE_2`…).
+
+**Fonctionnement** :  
+À chaque front montant de l’horloge, si `enable = '1'`, la valeur d’entrée `e1` est mémorisée et disponible sur la sortie `s1`.  
+Si `enable = '0'`, la sortie conserve sa valeur précédente (la modification est empêchée).  
+Le reset asynchrone permet de remettre la sortie à zéro à tout moment.
 
 ```vhdl
 entity buffer_ual is
@@ -247,17 +277,14 @@ entity buffer_ual is
         N : integer := 4
     );
     port (
-        e1     : in  std_logic_vector(N-1 downto 0);
+        e1     : in  std_logic_vector (N-1 downto 0);
         reset  : in  std_logic;
         clock  : in  std_logic;
         enable : in  std_logic;
-        s1     : out std_logic_vector(N-1 downto 0)
+        s1     : out std_logic_vector (N-1 downto 0)
     );
 end buffer_ual;
 ```
-
-- **Usage** : Mémorisation synchrone de données (A, B, S, etc.) avec signal d’activation `enable`.
-- **Fonctionnement** : À chaque front montant de `clock`, si `enable='1'`, la valeur d'entrée `e1` est stockée et disponible sur `s1`.
 
 ---
 
@@ -466,7 +493,7 @@ end lfsr;
 
 ## 9️⃣ Contrôleur principal (FSM)
 
-Le module **FSM** (Finite State Machine) orchestre l’ensemble du jeu LogiGame : il gère la génération du stimulus, le lancement du timer, la vérification de la réponse, l’incrémentation du score et la détection de la fin de partie.
+Le module **FSM** (Finite State Machine) orchestre l’ensemble du jeu LogiGame : il gère le lancement du timer, la vérification de la réponse, l’incrémentation du score et la détection de la fin de partie.
 
 ### ✨ Entité `fsm`
 

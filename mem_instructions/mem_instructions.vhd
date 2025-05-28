@@ -7,7 +7,7 @@ entity mem_instructions is
     port (
         clk      : in  std_logic;
         reset    : in  std_logic;
-        instruction     : in  unsigned(6 downto 0); -- 7 bits pour 128 instructions 
+        instruction : in std_logic_vector(6 downto 0);-- 7 bits pour 128 instructions 
         donnee : out std_logic_vector(9 downto 0)
     );
 end mem_instructions;
@@ -41,13 +41,26 @@ architecture mem_instructions_arch of mem_instructions is
 
         others => (others => '0')
     );
+   function slv_to_integer(slv : std_logic_vector) return integer is
+    variable result : integer := 0;
 begin
+    for i in slv'range loop
+        result := result * 2;
+        if slv(i) = '1' then
+            result := result + 1;
+        end if;
+    end loop;
+    return result;
+end function;
+    
+    begin
     process(clk)
     begin
         if rising_edge(clk) then
-            donnee <= memoire(to_integer(instruction));
+            donnee <= memoire(slv_to_integer(instruction));
         end if;
     end process;
 
+   
     
 end mem_instructions_arch;

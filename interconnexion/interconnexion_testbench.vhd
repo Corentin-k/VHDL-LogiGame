@@ -93,7 +93,7 @@ begin
         report "S = " & integer'image(to_integer(unsigned(S_sim))) & 
                " MEM_CACHE_1_out: " & integer'image(to_integer(unsigned(MEM_CACHE_1_out_sim)));
 
-        -- Test S vers RES_OUT via SEL_OUT
+        -- Test S vers RES_OUT
         SEL_ROUTE_sim <= "0000";
         S_sim <= "00000011";
         

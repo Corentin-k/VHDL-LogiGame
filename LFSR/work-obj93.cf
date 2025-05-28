@@ -1,7 +1,0 @@
-v 4
-file . "lfsr_testbench.vhd" "2ca226d00e22f10e2b6cdbeebe8e59146153fa04" "20250522104528.056":
-  entity lfsr_tb at 3( 4) + 0 on 21;
-  architecture lfsr_tb_arch of lfsr_tb at 10( 113) + 0 on 22;
-file . "lfsr.vhd" "64d33c7bb0443a27e6a352894335adb1445f3eb2" "20250522104528.044":
-  entity lfsr at 1( 0) + 0 on 19;
-  architecture lfsr_arch of lfsr at 17( 812) + 0 on 20;

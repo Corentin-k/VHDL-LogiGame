@@ -1,0 +1,109 @@
+$date
+  Wed May 28 14:17:43 2025
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$scope module standard $end
+$upscope $end
+$scope module std_logic_1164 $end
+$upscope $end
+$scope module buffer_ual_tb $end
+$var reg 1 ! clk_sim $end
+$var reg 1 " reset_sim $end
+$var reg 1 # enable_sim1 $end
+$var reg 1 $ enable_sim2 $end
+$var reg 4 % e_sim1[3:0] $end
+$var reg 3 & e_sim2[2:0] $end
+$var reg 4 ' s1_sim1[3:0] $end
+$var reg 3 ( s1_sim2[2:0] $end
+$scope module buf1 $end
+$var reg 4 ) e1[3:0] $end
+$var reg 1 * reset $end
+$var reg 1 + clock $end
+$var reg 1 , enable $end
+$var reg 4 - s1[3:0] $end
+$upscope $end
+$scope module buf2 $end
+$var reg 3 . e1[2:0] $end
+$var reg 1 / reset $end
+$var reg 1 0 clock $end
+$var reg 1 1 enable $end
+$var reg 3 2 s1[2:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+0"
+1#
+0$
+b1010 %
+b000 &
+bUUUU '
+bUUU (
+b1010 )
+0*
+0+
+1,
+bUUUU -
+b000 .
+0/
+00
+01
+bUUU 2
+#5000000
+1!
+b1010 '
+1+
+b1010 -
+10
+#10000000
+0!
+b0101 %
+b0101 )
+0+
+00
+#15000000
+1!
+b0101 '
+1+
+b0101 -
+10
+#20000000
+0!
+b111 &
+0+
+b111 .
+00
+#25000000
+1!
+1+
+10
+#30000000
+0!
+b001 &
+0+
+b001 .
+00
+#35000000
+1!
+1+
+10
+#40000000
+0!
+1$
+b101 &
+0+
+b101 .
+00
+11
+#45000000
+1!
+b101 (
+1+
+10
+b101 2
