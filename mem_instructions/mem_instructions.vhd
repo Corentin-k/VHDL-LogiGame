@@ -38,6 +38,28 @@ architecture mem_instructions_arch of mem_instructions is
         14 => "0000000100", --  MEM_CACHE_1 → Buffer_A
         15 => "0000101000", --  MEM_CACHE_2 → Buffer_B
         16 => "0110000011", -- A OR B, sortie S
+        
+
+        -- LFSR 4 bits (X⁴ + X³ + 1), début à l'adresse 17
+    17 => "0000000111", -- no-op ; SEL_ROUTE=0111 = B_IN → Buffer_B
+    18 => "0010111000", -- S = B      ; SEL_ROUTE=1110 = S → MEM_CACHE_1 (on initialise à sw="1011")
+
+    19 => "0000000100", -- no-op ; SEL_ROUTE=0001 = MEM_CACHE_1 → Buffer_A
+    20 => "1001000000", -- shift_left A, SR_OUT_L = bit3
+    21 => "0000001010", -- no-op ; SEL_ROUTE=1010 = SR_OUT_L → Buffer_B
+    22 => "0000111100", -- no-op ; SEL_ROUTE=1111 = Buffer_B → MEM_CACHE_2
+
+    23 => "0000000100", -- no-op ; MEM_CACHE_1 → Buffer_A
+    24 => "1001000000", -- shift_left A, SR_OUT_L = bit2
+    25 => "0000001010", -- no-op ; SR_OUT_L → Buffer_B
+    26 => "0011111100", -- S = A xor B  ; S → MEM_CACHE_2
+
+    27 => "0000000100", -- no-op ; MEM_CACHE_1 → Buffer_A
+    28 => "1000000000", -- shift_right A (prépare A≫1)
+    29 => "0000110000", -- no-op ; SEL_ROUTE=1100 = MEM_CACHE_2 → Buffer_B (feedback)
+    30 => "1001000000", -- shift_left A avec SR_IN_R = feedback
+    31 => "0000011000", -- no-op ; SEL_ROUTE=1100 = Buffer_A → MEM_CACHE_1 (nouvel état)
+    32 => "0000000011", -- no-op ; RES_OUT = S
 
         others => (others => '0')
     );

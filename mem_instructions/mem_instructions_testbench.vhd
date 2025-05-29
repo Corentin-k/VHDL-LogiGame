@@ -293,8 +293,8 @@ begin
         reset_sim <= '0'; wait for 10 ns;
 
         -- Charger A et B via les entrées de l'interconnexion
-        A_IN_sim <= "1111";
-        B_IN_sim <= "0010"; 
+        A_IN_sim <= "1011"; --1111
+        B_IN_sim <= "1011";  --0010
 
         wait for 2 ns;
 

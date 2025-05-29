@@ -360,7 +360,7 @@ end process;
                         FSM_Main <= FUNCT_2; 
                         led0_g <= '0';
                     elsif(btn(3) = '1') then
-                        MyCounter <= "0001010";
+                        MyCounter <= "0010001";--0001010
                         FSM_Main <= FUNCT_3; 
                         led0_g <= '0';
                    

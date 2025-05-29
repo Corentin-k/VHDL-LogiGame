@@ -284,10 +284,10 @@ begin
                 ready <= '0';
             when "01" => -- Sortie vers MEM_CACHE_1_in
                 RES_OUT <= MEM_CACHE_1_in;
-                 ready <= '1';
+                ready <= '0';
             when "10" => -- Sortie vers MEM_CACHE_2
                 RES_OUT <= MEM_CACHE_2_in;
-                ready <= '1';
+                ready <= '0';
             when "11" => -- Sortie vers S
                 RES_OUT <= S;
                 ready <= '1';
