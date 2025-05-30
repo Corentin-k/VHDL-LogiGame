@@ -35,7 +35,6 @@ architecture mem_instructions_tb_arch of mem_instructions_tb is
     signal SEL_FCT_reg   : std_logic_vector(3 downto 0);
     signal SEL_ROUTE_reg : std_logic_vector(3 downto 0);
     signal SEL_OUT_reg   : std_logic_vector(1 downto 0);
-    signal SR_IN_L_reg, SR_IN_R_reg : std_logic;
 
     -- UAL
     signal S_sim : std_logic_vector(7 downto 0);
@@ -293,8 +292,8 @@ begin
         reset_sim <= '0'; wait for 10 ns;
 
         -- Charger A et B via les entrées de l'interconnexion
-        A_IN_sim <= "1011"; --1111
-        B_IN_sim <= "1011";  --0010
+        A_IN_sim <= "0011"; --0010
+        B_IN_sim <= "0011";  --0010
 
         wait for 2 ns;
 
@@ -310,7 +309,7 @@ begin
         addr_sim <= "0000010"; wait until rising_edge(clk_sim); -- index 2
         wait until ready_sim = '1';
         wait until rising_edge(clk_sim);
-        report "RES_OUT = " & integer'image(to_integer(signed(RES_OUT_sim)));
+        report "RES_OUT = " & integer'image(to_integer(unsigned(RES_OUT_sim)));
 
         -- (A+B) xnor A
         reset_sim <= '1'; wait for 10 ns;
@@ -328,11 +327,12 @@ begin
         wait until rising_edge(clk_sim);
         report "RES_OUT (A+B xnor A) = " & integer'image(to_integer(signed(RES_OUT_sim)));
 
-        -- (A0 and B1) or (A1 and B0)
+        -- (A0 and B1) or (A1 and B0)        -- - (A0 and B1) or (A1 and B0)
+     
         reset_sim <= '1'; wait for 10 ns;
         reset_sim <= '0'; wait for 10 ns;
         A_IN_sim <= "1111";
-        B_IN_sim <= "0111";
+        B_IN_sim <= "1111";
         addr_sim <= "0001010"; wait until rising_edge(clk_sim); -- 10
         addr_sim <= "0001011"; wait until rising_edge(clk_sim); -- 11
         addr_sim <= "0001100"; wait until rising_edge(clk_sim); -- 12
@@ -340,8 +340,13 @@ begin
         addr_sim <= "0001110"; wait until rising_edge(clk_sim); -- 14
         addr_sim <= "0001111"; wait until rising_edge(clk_sim); -- 15
         addr_sim <= "0010000"; wait until rising_edge(clk_sim); -- 16
+        addr_sim <= "0010001"; wait until rising_edge(clk_sim); -- 17
+        addr_sim <= "0010010"; wait until rising_edge(clk_sim); -- 18
+        addr_sim <= "0010011"; wait until rising_edge(clk_sim); -- 19
+        
+        wait until ready_sim = '1';
         wait until rising_edge(clk_sim);
-        wait for 2 ns;
+     
         report "RES_OUT (A0 and B1) or (A1 and B0) = " & integer'image(to_integer(signed(RES_OUT_sim)));
 
         wait;

@@ -18,7 +18,22 @@ entity top_level is
 end top_level;
 
 architecture top_level_arch of top_level is
-signal reset_sim : std_logic;
+
+    
+    
+    type state_t is (IDLE, FUNCT_1, FUNCT_2, FUNCT_3);
+    signal FSM_Main : state_t := IDLE; -- Etat de départ
+
+    signal MyCounter : std_logic_vector(6 downto 0) := (others => '0');
+
+
+    signal RES_OUT_reg : std_logic_vector(7 downto 0) := (others => '0');
+    signal ready_reg   : std_logic := '0';
+    signal btn_prev : std_logic_vector(3 downto 0) := (others => '0');
+    signal ready_prev : std_logic := '0';
+    signal calcul_en_cours : std_logic := '0';
+
+    signal reset_sim : std_logic;
     signal addr_sim : std_logic_vector(6 downto 0) := (others => '0');
     signal instr_sim : std_logic_vector(9 downto 0);
 
@@ -116,11 +131,7 @@ signal reset_sim : std_logic;
             s1 : out std_logic_vector (N-1 downto 0)
         );
     end  component; 
-    type state_t is (IDLE, FUNCT_1, FUNCT_2, FUNCT_3);
-    signal FSM_Main : state_t := IDLE; -- Etat de départ
-
-    signal MyCounter : std_logic_vector(6 downto 0) := (others => '0');
-
+    
     -- Fonction d'incrémentation sans unsigned
     function slv_inc(slv : std_logic_vector) return std_logic_vector is
         variable tmp : integer := 0;
@@ -143,11 +154,7 @@ signal reset_sim : std_logic;
         end loop;
         return res;
     end function;
-signal RES_OUT_reg : std_logic_vector(7 downto 0) := (others => '0');
-    signal ready_reg   : std_logic := '0';
-    signal btn_prev : std_logic_vector(3 downto 0) := (others => '0');
-    signal ready_prev : std_logic := '0';
-    signal calcul_en_cours : std_logic := '0';
+
 begin
 
     -- Buffer A
@@ -302,40 +309,40 @@ begin
         );
 
     process(instr_sim)
-        begin
+    begin
             SEL_FCT_sim   <= instr_sim(9 downto 6);
             SEL_ROUTE_sim <= instr_sim(5 downto 2);
             SEL_OUT_sim   <= instr_sim(1 downto 0);
-        end process;
+    end process;
 
     process(CLK100MHZ, reset_sim)
-begin
-    if reset_sim = '1' then
-        RES_OUT_reg      <= (others => '0');
-        ready_reg        <= '0';
-        btn_prev         <= (others => '0');
-        ready_prev       <= '0';
-        calcul_en_cours  <= '0';
-    elsif rising_edge(CLK100MHZ) then
-        -- Détection du front montant sur un bouton (nouveau calcul)
-        if ((btn(1) = '1' and btn_prev(1) = '0') or
-            (btn(2) = '1' and btn_prev(2) = '0') or
-            (btn(3) = '1' and btn_prev(3) = '0')) then
-            ready_reg        <= '0'; -- Nouveau calcul en cours, on remet ready à zéro
-            calcul_en_cours  <= '1'; -- On autorise la capture du prochain résultat
-        end if;
+    begin
+        if reset_sim = '1' then
+            RES_OUT_reg      <= (others => '0');
+            ready_reg        <= '0';
+            btn_prev         <= (others => '0');
+            ready_prev       <= '0';
+            calcul_en_cours  <= '0';
+        elsif rising_edge(CLK100MHZ) then
+            -- Détection du front montant sur un bouton (nouveau calcul)
+            if ((btn(1) = '1' and btn_prev(1) = '0') or
+                (btn(2) = '1' and btn_prev(2) = '0') or
+                (btn(3) = '1' and btn_prev(3) = '0')) then
+                ready_reg        <= '0'; -- Nouveau calcul en cours, on remet ready à zéro
+                calcul_en_cours  <= '1'; -- On autorise la capture du prochain résultat
+            end if;
 
-        -- Capture du résultat UNIQUEMENT sur front montant de ready_sim ET si un calcul était en cours
-        if (ready_sim = '1' and ready_prev = '0' and calcul_en_cours = '1') then
-            RES_OUT_reg      <= RES_OUT_sim;
-            ready_reg        <= '1';
-            calcul_en_cours  <= '0'; -- On bloque la capture jusqu'à un nouveau calcul
-        end if;
+            -- Capture du résultat UNIQUEMENT sur front montant de ready_sim ET si un calcul était en cours
+            if (ready_sim = '1' and ready_prev = '0' and calcul_en_cours = '1') then
+                RES_OUT_reg      <= RES_OUT_sim;
+                ready_reg        <= '1';
+                calcul_en_cours  <= '0'; -- On bloque la capture jusqu'à un nouveau calcul
+            end if;
 
-        btn_prev   <= btn;        -- mémorise l'état courant pour le prochain cycle
-        ready_prev <= ready_sim;  -- mémorise l'état courant de ready_sim
-    end if;
-end process;
+            btn_prev   <= btn;        -- mémorise l'état courant pour le prochain cycle
+            ready_prev <= ready_sim;  -- mémorise l'état courant de ready_sim
+        end if;
+    end process;
 
     SR_OUT_L_vec(0) <= SR_OUT_L_sim;
     SR_OUT_R_vec(0) <= SR_OUT_R_sim;
@@ -343,98 +350,92 @@ end process;
     -- Gestion des 3 algorithmes
     MyAlgoProc : process (btn(3 downto 0),CLK100MHZ)
     begin
-    if (btn(0)= '1') then
-        MyCounter <= (others => '0');
-        led0_g <= '0';
-        FSM_Main <= IDLE;
-    elsif rising_edge(CLK100MHZ) then
-        case FSM_Main is 
-            when IDLE =>
-                    if (btn(1) = '1') then
-                        MyCounter <= (others => '0');
-                        FSM_Main <= FUNCT_1; 
-                        led0_g <= '0';
-                   
-                    elsif (btn(2) = '1') then
-                        MyCounter <= "0000011";
-                        FSM_Main <= FUNCT_2; 
-                        led0_g <= '0';
-                    elsif(btn(3) = '1') then
-                        MyCounter <= "0010001";--0001010
-                        FSM_Main <= FUNCT_3; 
-                        led0_g <= '0';
-                   
+        if (btn(0)= '1') then
+            MyCounter <= (others => '0');
+            led0_r <= '0';
+            FSM_Main <= IDLE;
+        elsif rising_edge(CLK100MHZ) then
+            case FSM_Main is 
+                when IDLE =>
+                        if (btn(1) = '1') then
+                            MyCounter <= (others => '0');
+                            FSM_Main <= FUNCT_1; 
+                            led0_r <= '0';
+                    
+                        elsif (btn(2) = '1') then
+                            MyCounter <= "0000011";
+                            FSM_Main <= FUNCT_2; 
+                            led0_r <= '0';
+                        elsif(btn(3) = '1') then
+                            MyCounter <= "0001010";--0001010
+                            FSM_Main <= FUNCT_3; 
+                            led0_r <= '0';
+                    
+                        else
+                            MyCounter <= (others => '0');
+                            FSM_Main <= IDLE; 
+                            led0_r <= '0';
+                        end if;
+                when FUNCT_1 =>
+                    if(btn(1) = '1') then
+                        FSM_Main <= FUNCT_1;
+                        if ready_sim = '1' then 
+                            MyCounter <= MyCounter;
+                            led0_r <= '1';
+                        else
+                            addr_sim <= MyCounter;
+                            MyCounter <= slv_inc(MyCounter);
+                            led0_r <= '0';
+                        end if;
                     else
                         MyCounter <= (others => '0');
+                        led0_r <= '0';
                         FSM_Main <= IDLE; 
-                        led0_g <= '0';
                     end if;
-            when FUNCT_1 =>
-                if(btn(1) = '1') then
-                    FSM_Main <= FUNCT_1;
-                    if ready_sim = '1' then 
-                        MyCounter <= MyCounter;
-                        led0_g <= '1';
+                when FUNCT_2 =>
+                    if (btn(2) = '1') then
+                        FSM_Main <= FUNCT_2;
+                        if ready_sim = '1' then 
+                            MyCounter <= MyCounter;
+                            led0_r <= '1';
+                        else
+                            addr_sim <= MyCounter;
+                            MyCounter <= slv_inc(MyCounter);
+                            led0_r <= '0';
+                        end if;
                     else
-                        addr_sim <= MyCounter;
-                        MyCounter <= slv_inc(MyCounter);
-                        led0_g <= '0';
+                        MyCounter <= (others => '0');
+                        led0_r <= '0';
+                        FSM_Main <= IDLE; 
                     end if;
-                else
-                    MyCounter <= (others => '0');
-                    led0_g <= '0';
-                    FSM_Main <= IDLE; 
-                end if;
-            when FUNCT_2 =>
-                if (btn(2) = '1') then
-                    FSM_Main <= FUNCT_2;
-                    if ready_sim = '1' then 
-                        MyCounter <= MyCounter;
-                        led0_g <= '1';
+                when FUNCT_3 =>
+                    if (btn(3) = '1') then
+                        FSM_Main <= FUNCT_3;
+                        if ready_sim = '1' then 
+                            MyCounter <= MyCounter;
+                            led0_r <= '1';
+                        else
+                            addr_sim <= MyCounter;
+                            MyCounter <= slv_inc(MyCounter);
+                            led0_r <= '0';
+                        end if;
                     else
-                        addr_sim <= MyCounter;
-                        MyCounter <= slv_inc(MyCounter);
-                        led0_g <= '0';
+                        MyCounter <= (others => '0');
+                        led0_r <= '0';
+                        FSM_Main <= IDLE; 
                     end if;
-                else
-                    MyCounter <= (others => '0');
-                    led0_g <= '0';
-                    FSM_Main <= IDLE; 
-                end if;
-            when FUNCT_3 =>
-                if (btn(3) = '1') then
-                    FSM_Main <= FUNCT_3;
-                    if ready_sim = '1' then 
-                        MyCounter <= MyCounter;
-                        led0_g <= '1';
-                    else
-                        addr_sim <= MyCounter;
-                        MyCounter <= slv_inc(MyCounter);
-                        led0_g <= '0';
-                    end if;
-                else
-                    MyCounter <= (others => '0');
-                    led0_g <= '0';
-                    FSM_Main <= IDLE; 
-                end if;
-            when others =>
-                FSM_Main <= IDLE;
-            end case;
-    end if;
+                when others =>
+                    FSM_Main <= IDLE;
+                end case;
+        end if;
    
-end process MyAlgoProc;
+    end process MyAlgoProc;
 
-     -- Affichage du résultat sur les LED rouges
-    led0_r <= RES_OUT_reg(7);
-    led1_r <= RES_OUT_reg(6);
-    led2_r <= RES_OUT_reg(5);
-    led3_r <= RES_OUT_reg(4);
-
-    -- Affichage du résultat sur les LED bleues
-    led0_b <= RES_OUT_reg(3);
-    led1_b <= RES_OUT_reg(2);
-    led2_b <= RES_OUT_reg(1);
-    led3_b <= RES_OUT_reg(0);
+     -- Affichage du résultat sur les LED vertes
+    led0_g <= RES_OUT_reg(0);
+    led1_g <= RES_OUT_reg(1);
+    led2_g <= RES_OUT_reg(2);
+    led3_g <= RES_OUT_reg(3);
 
     led <= RES_OUT_reg(7 downto 4);
 

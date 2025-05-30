@@ -66,46 +66,42 @@ begin
     stim_proc : process
     begin
         -- Initialisation
-        sw <= "1011"; -- A = 3, B = 3
-        btn <= "0000";
+        sw <= "1111"; -- A = 3, B = 3
+        btn <= "1111";
         wait for 20 ns;
 
-        -- Premier calcul : appui long sur bouton 1
-        btn <= "1000";
+        
+        btn <= "0001";
         wait for 1000 ns;
         btn <= "0000";
         wait for 100 ns;
 
-        -- Observe les LED juste après le calcul
-        report "LSFR:" 
-             & std_ulogic'image(led0_r)
-            & std_ulogic'image(led1_r)
-             & std_ulogic'image(led2_r)
-             & std_ulogic'image(led3_r)
-             & std_ulogic'image(led0_b)
-             & std_ulogic'image(led1_b)
-             & std_ulogic'image(led2_b)
-             & std_ulogic'image(led3_b)
-           
+        report "BTN 0 reset:" 
+               & std_ulogic'image(led(3))
+            & std_ulogic'image(led(2))
+             & std_ulogic'image(led(1))
+             & std_ulogic'image(led(0))
+             & std_ulogic'image(led3_g)
+             & std_ulogic'image(led2_g)
+             & std_ulogic'image(led1_g)
+             & std_ulogic'image(led0_g)
             & " | sw=" & to_string(sw);
 
-        -- Attendre sans rien faire, vérifier que la sortie reste stable
         wait for 300 ns;
         btn <= "0010";
         wait for 500 ns;
         btn <= "0000";
         wait for 100 ns;
-        -- Observe les LED juste après le calcul
+    
         report "A*B : " 
-            & std_ulogic'image(led0_r)
-            & std_ulogic'image(led1_r)
-            & std_ulogic'image(led2_r)
-            & std_ulogic'image(led3_r)
-            & std_ulogic'image(led0_b)
-            & std_ulogic'image(led1_b)
-            & std_ulogic'image(led2_b)
-            & std_ulogic'image(led3_b)
-           
+               & std_ulogic'image(led(3))
+            & std_ulogic'image(led(2))
+             & std_ulogic'image(led(1))
+             & std_ulogic'image(led(0))
+             & std_ulogic'image(led3_g)
+             & std_ulogic'image(led2_g)
+             & std_ulogic'image(led1_g)
+             & std_ulogic'image(led0_g)
             & " | sw=" & to_string(sw);
             
         wait for 300 ns;
@@ -113,16 +109,16 @@ begin
         wait for 500 ns;
         btn <= "0000";
         wait for 100 ns;
-        -- Observe les LED juste après le calcul
+        
         report "(A + B) xnor  A =" 
-             & std_ulogic'image(led0_r)
-             & std_ulogic'image(led1_r)
-             & std_ulogic'image(led2_r)
-             & std_ulogic'image(led3_r)
-             & std_ulogic'image(led0_b)
-            & std_ulogic'image(led1_b)
-            & std_ulogic'image(led2_b)
-            & std_ulogic'image(led3_b)
+                & std_ulogic'image(led(3))
+            & std_ulogic'image(led(2))
+             & std_ulogic'image(led(1))
+             & std_ulogic'image(led(0))
+             & std_ulogic'image(led3_g)
+             & std_ulogic'image(led2_g)
+             & std_ulogic'image(led1_g)
+             & std_ulogic'image(led0_g)
            
             & " | sw=" & to_string(sw);
         wait for 300 ns;
@@ -130,16 +126,16 @@ begin
         wait for 500 ns;
         btn <= "0000";
         wait for 100 ns;
-        -- Observe les LED juste après le calcul
+    
         report "A + B and A + B ="
-            & std_ulogic'image(led0_r)
-            & std_ulogic'image(led1_r)
-             & std_ulogic'image(led2_r)
-             & std_ulogic'image(led3_r)
-             & std_ulogic'image(led0_b)
-             & std_ulogic'image(led1_b)
-             & std_ulogic'image(led2_b)
-             & std_ulogic'image(led3_b)
+            & std_ulogic'image(led(3))
+            & std_ulogic'image(led(2))
+             & std_ulogic'image(led(1))
+             & std_ulogic'image(led(0))
+             & std_ulogic'image(led3_g)
+             & std_ulogic'image(led2_g)
+             & std_ulogic'image(led1_g)
+             & std_ulogic'image(led0_g)
             
             & " | sw=" & to_string(sw);
         assert false report "Fin de simulation à 5000 ns" severity failure;

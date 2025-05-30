@@ -29,51 +29,31 @@ architecture mem_instructions_arch of mem_instructions is
         8 => "0000001100", -- NOP, MEM_CACHE_2 → Buffer_A
         9 => "0011000011", -- not A (A=Buffer_A), sortie S
 
-       -- (A0 and B1) or (A1 and B0)
-
-       10 => "0000000000", --  A_IN → Buffer_A
-        11 => "0000011100", --  B_IN → Buffer_B
-        12 => "0101111000", -- A0 and B1,  S → MEM_CACHE_1
-        13 => "0101111100", -- A1 and B0,  S dans MEM_CACHE_2
-        14 => "0000000100", --  MEM_CACHE_1 → Buffer_A
-        15 => "0000101000", --  MEM_CACHE_2 → Buffer_B
-        16 => "0110000011", -- A OR B, sortie S
-        
-
-        -- LFSR 4 bits (X⁴ + X³ + 1), début à l'adresse 17
-    17 => "0000000111", -- no-op ; SEL_ROUTE=0111 = B_IN → Buffer_B
-    18 => "0010111000", -- S = B      ; SEL_ROUTE=1110 = S → MEM_CACHE_1 (on initialise à sw="1011")
-
-    19 => "0000000100", -- no-op ; SEL_ROUTE=0001 = MEM_CACHE_1 → Buffer_A
-    20 => "1001000000", -- shift_left A, SR_OUT_L = bit3
-    21 => "0000001010", -- no-op ; SEL_ROUTE=1010 = SR_OUT_L → Buffer_B
-    22 => "0000111100", -- no-op ; SEL_ROUTE=1111 = Buffer_B → MEM_CACHE_2
-
-    23 => "0000000100", -- no-op ; MEM_CACHE_1 → Buffer_A
-    24 => "1001000000", -- shift_left A, SR_OUT_L = bit2
-    25 => "0000001010", -- no-op ; SR_OUT_L → Buffer_B
-    26 => "0011111100", -- S = A xor B  ; S → MEM_CACHE_2
-
-    27 => "0000000100", -- no-op ; MEM_CACHE_1 → Buffer_A
-    28 => "1000000000", -- shift_right A (prépare A≫1)
-    29 => "0000110000", -- no-op ; SEL_ROUTE=1100 = MEM_CACHE_2 → Buffer_B (feedback)
-    30 => "1001000000", -- shift_left A avec SR_IN_R = feedback
-    31 => "0000011000", -- no-op ; SEL_ROUTE=1100 = Buffer_A → MEM_CACHE_1 (nouvel état)
-    32 => "0000000011", -- no-op ; RES_OUT = S
+        --(A0 and B1) or (A1 and B0)
+        10 => "0000000000", -- A_IN → Buffer_A ok
+        11 => "0000011100", -- B_IN → Buffer_B ok
+        12 => "1010110000", -- shift right B, S-> buffer B ok
+        13 => "0101111000", -- A0 AND B1, S-> mem_cache_1 ok
+        14 => "0000000000", -- A_IN → Buffer_A ok
+        15 => "0000011100", -- B_IN → Buffer_B ok
+        16 => "1000010100", -- decal d A, S -> buffer_A ok
+        17 => "0101010100", -- A1 AND B0, S → BUFFER A ok 
+        18 => "0000100000", -- NO , MEM_CACHE_1 → Buffer_B ok
+        19 => "0110111011", -- or, S-> MEM_CACHE_1, sortir S ok
 
         others => (others => '0')
     );
-   function slv_to_integer(slv : std_logic_vector) return integer is
+    function slv_to_integer(slv : std_logic_vector) return integer is
     variable result : integer := 0;
-begin
-    for i in slv'range loop
-        result := result * 2;
-        if slv(i) = '1' then
-            result := result + 1;
-        end if;
-    end loop;
-    return result;
-end function;
+    begin
+        for i in slv'range loop
+            result := result * 2;
+            if slv(i) = '1' then
+                result := result + 1;
+            end if;
+        end loop;
+        return result;
+    end function;
     
     begin
     process(clk)
@@ -83,6 +63,4 @@ end function;
         end if;
     end process;
 
-   
-    
 end mem_instructions_arch;
