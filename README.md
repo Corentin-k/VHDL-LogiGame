@@ -1,4 +1,4 @@
-# 🎮 LogicGame – Rapport VHDL
+# 🎮 LogiGame – Rapport VHDL
 
 **Auteurs :**  
 Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
@@ -32,7 +32,7 @@ Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 
 ## 📝 Introduction
 
-Ce projet consiste à réaliser un mini-jeu de type **Megamind** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur.
+Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur.
 L’ensemble du projet a été développé sous **VS Code** avec **WSL** et simulé avec **GHDL** et **GTKWave**.
 
 ![Carte ARTY A7](./img/71YKkVSeLqL.webp)
