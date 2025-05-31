@@ -1,7 +1,8 @@
 # 🎮 LogiGame – Rapport VHDL
 
-**Auteurs :**  
-Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
+**Auteurs :**
+
+[Corentin KERVAGORET](https://github.com/Corentin-k) • [Arnaud GRIVEL](https://github.com/Arn7516) • [Mathias BENOIT](https://github.com/mat15tc)
 
 ---
 
@@ -10,17 +11,18 @@ Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT
 ### 🧩 Cœur de contrôleur
 
 1. [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
-2. [2️⃣ Buffers de commande et de données](#2️⃣-buffers-de-commande-et-de-données)
+2. [2️⃣ Buffers](#2️⃣-buffers)
 3. [3️⃣ Réalisation de l’interconnexion](#3️⃣-réalisation-de-linterconnexion)
 4. [4️⃣ Mémoire d'instructions](#4️⃣-mémoire-dinstructions)
+5. [5️⃣ Top Level](#5️⃣-top-level)
 
 ### 🎮 Le jeu
 
-5. [5️⃣ Minuteur](#5️⃣-minuteur)
-6. [6️⃣ Compteur de score](#6️⃣-compteur-de-score)
-7. [7️⃣ Vérificateur de réponse](#7️⃣-vérificateur-de-réponse)
-8. [8️⃣ Générateur pseudo-aléatoire (LFSR)](#8️⃣-générateur-pseudo-aléatoire-lfsr)
-9. [9️⃣ Contrôleur principal (FSM)](#9️⃣-contrôleur-principal-fsm)
+5. [6️⃣ Minuteur](#6️⃣-minuteur)
+6. [7️⃣ Compteur de score](#7️⃣-compteur-de-score)
+7. [8️⃣ Vérificateur de réponse](#8️⃣-vérificateur-de-réponse)
+8. [9️⃣ Générateur pseudo-aléatoire (LFSR)](#9️⃣-générateur-pseudo-aléatoire-lfsr)
+9. [🔟 Contrôleur principal (FSM)](#🔟-contrôleur-principal-fsm)
 
 ### 📎 Annexes
 
@@ -50,7 +52,8 @@ Les composants réalisés : ALU, Buffers, Interconnexion, Mémoire d'instruction
 - **Windows 10/11 avec WSL** (Windows Subsystem for Linux)
 - **VS Code** avec l’extension Remote - WSL
 - **GHDL** installé sous WSL (`sudo apt install ghdl gtkwave`)
-- **Vivado** (pour la synthèse sur carte, voir plus bas)
+- **GTKWave** pour visualiser les signaux (`sudo apt install gtkwave`)
+- **Vivado** (pour la synthèse sur carte, voir : [Installation de Vivado](#vivado--installation-et-test-de-lalu))
 
 ### Installation et simulation sous WSL/VS Code
 
@@ -72,7 +75,7 @@ Les composants réalisés : ALU, Buffers, Interconnexion, Mémoire d'instruction
      ./run_vhdl.sh nom_module
      ```
 
-     Par exemple pour tester le test de l'interconnexion :
+     Par exemple pour tester le testbench de l'interconnexion :
 
      ```bash
      ./run_vhdl.sh interconnexion
@@ -100,7 +103,7 @@ Les composants réalisés : ALU, Buffers, Interconnexion, Mémoire d'instruction
 ## 1️⃣ Réalisation d'un ALU
 
 L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
-Elle est composée de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection qui détermine quelle opération doit être effectuée sur les entrées.
+Il est composé de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection `SEL_FCT` qui détermine quelle opération doit être effectuée sur les entrées `A` et `B` .
 
 ### ✨ Entité `Hearth_UAL`
 
@@ -116,6 +119,7 @@ Elle fournit en sortie :
 - Deux bits de retenue de sortie (SR_OUT_L et SR_OUT_R)
 
 ```vhdl
+
 entity hearth_ual is
     port(
         A        : in  std_logic_vector(3 downto 0);
@@ -218,31 +222,36 @@ begin
 end procedure;
 ```
 
-![testbench](./img/ual_testbench.png)
+![testbench](./hearth_ual/hearth_ual_waves.png)
 
 Ici nous avons un exemple de test de l'ALU :
-sel_s = "0110" se qui correspond à l'opération A or B. On peut voir que le résultat est bien le bon. A vaut 4 soit 0100 et B vaut 3 soit 0011. Le résultat est donc 0111 soit 7.
+sel_s = "1000" se qui correspond à l'opération shift droit de A avec une entrée de retenue qui vaut 1. On peut voir que le résultat est bien le bon. A vaut 10 soit 1010 et le résultat est donc 0D soit 1101.
 
 Ou directement par les asserts :
 
 ```bash
 ghdl -r --std=08 --ieee=synopsys ual_testbench --wave=ual_testbench.ghw
-hearth_ual_testbench.vhd:50:13:@10ns:(report note): Test: NOP | A=0 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=0 S=0 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@20ns:(report note): Test: S=A | A=2 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=1 S=2 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@30ns:(report note): Test: S=B | A=0 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=2 S=3 SR_OUT_L='0' SR_OUT_R='0'
+
+Test: NOP | A=0 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=0 S=0 SR_OUT_L='0' SR_OUT_R='0'
+Test: S=A | A=2 B=0 SR_IN_L='0' SR_IN_R='0' SEL_FCT=1 S=2 SR_OUT_L='0' SR_OUT_R='0'
+Test: S=B | A=0 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=2 S=3 SR_OUT_L='0' SR_OUT_R='0'
 R='0'
-hearth_ual_testbench.vhd:50:13:@60ns:(report note): Test: S=A and B | A=6 B=5 SR_IN_L='0' SR_IN_R='0' SEL_FCT=5 S=4 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@70ns:(report note): Test: S=A or B | A=4 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=6 S=7 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@80ns:(report note): Test: S=A xor B | A=7 B=2 SR_IN_L='0' SR_IN_R='0' SEL_FCT=7 S=5 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@90ns:(report note): Test: Shift droit A | A=10 B=0 SR_IN_L='1' SR_IN_R='0' SEL_FCT=8 S=13 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@100ns:(report note): Test: Shift gauche A | A=12 B=0 SR_IN_L='0' SR_IN_R='1' SEL_FCT=9 S=9 SR_OUT_L='1' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@110ns:(report note): Test: Shift droit B | A=0 B=6 SR_IN_L='1' SR_IN_R='0' SEL_FCT=10 S=11 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@120ns:(report note): Test: Shift gauche B | A=0 B=3 SR_IN_L='0' SR_IN_R='1' SEL_FCT=11 S=7 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@130ns:(report note): Test: Addition A+B+SR_IN_R | A=2 B=3 SR_IN_L='0' SR_IN_R='1' SEL_FCT=12 S=6 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@140ns:(report note): Test: Addition A+B | A=4 B=2 SR_IN_L='0' SR_IN_R='0' SEL_FCT=13 S=6 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:50:13:@150ns:(report note): Test: Soustraction A-B | A=7 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=14 S=4 SR_OUT_L='0' SR_OUT_R='0'
-hearth_ual_testbench.vhd:110:9:@150ns:(report note): Tous les tests passés avec succès.
+Test: S=A and B | A=6 B=5 SR_IN_L='0' SR_IN_R='0' SEL_FCT=5 S=4 SR_OUT_L='0' SR_OUT_R='0'
+Test: S=A or B | A=4 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=6 S=7 SR_OUT_L='0' SR_OUT_R='0'
+Test: S=A xor B | A=7 B=2 SR_IN_L='0' SR_IN_R='0' SEL_FCT=7 S=5 SR_OUT_L='0' SR_OUT_R='0'
+Test: Shift droit A | A=10 B=0 SR_IN_L='1' SR_IN_R='0' SEL_FCT=8 S=13 SR_OUT_L='0' SR_OUT_R='0'
+Test: Shift gauche A | A=12 B=0 SR_IN_L='0' SR_IN_R='1' SEL_FCT=9 S=9 SR_OUT_L='1' SR_OUT_R='0'
+Test: Shift droit B | A=0 B=6 SR_IN_L='1' SR_IN_R='0' SEL_FCT=10 S=11 SR_OUT_L='0' SR_OUT_R='0'
+Test: Shift gauche B | A=0 B=3 SR_IN_L='0' SR_IN_R='1' SEL_FCT=11 S=7 SR_OUT_L='0' SR_OUT_R='0'
+Test: Addition A+B+SR_IN_R | A=2 B=3 SR_IN_L='0' SR_IN_R='1' SEL_FCT=12 S=6 SR_OUT_L='0' SR_OUT_R='0'
+Test: Addition A+B | A=4 B=2 SR_IN_L='0' SR_IN_R='0' SEL_FCT=13 S=6 SR_OUT_L='0' SR_OUT_R='0'
+Test: Soustraction A-B | A=7 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=14 S=4 SR_OUT_L='0' SR_OUT_R='0'
+
+Tous les tests passés avec succès.
 ```
+
+> [!NOTE]  
+> Note : pour la lecutre nous avons supprimé chqaue 'hearth_ual_testbench.vhd:50:13:@60ns:(report note):' devant les tests pour une meilleure lisibilité.
 
 ## 🗺️ Schéma de l’ALU
 
@@ -432,7 +441,7 @@ mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) o
 
 ---
 
-## Top Level
+## 5️⃣ Top Level
 
 Réunis tous les composants précédents, le top level est l'entité principale qui orchestre le fonctionnement du microcontrôleur.
 
@@ -458,7 +467,7 @@ top_level_testbench.vhd:141:9:@3820ns:(report note): (A0 and  B1) or (A1 and B0)
 top_level_testbench.vhd:152:9:@3820ns:(assertion failure): Fin de simulation à 5000 ns
 ```
 
-## 5️⃣ Minuteur
+## 6️⃣ Minuteur
 
 Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
 
@@ -481,7 +490,7 @@ end Minuteur;
 
 ---
 
-## 6️⃣ Compteur de score
+## 7️⃣ Compteur de score
 
 Le module **score_compteur** gère le score du joueur.
 
@@ -504,7 +513,7 @@ end score_compteur;
 
 ---
 
-## 7️⃣ Vérificateur de réponse
+## 8️⃣ Vérificateur de réponse
 
 Le module **verif_resultat** valide si le joueur a appuyé sur le bon bouton dans le temps imparti.
 
@@ -530,7 +539,7 @@ end verif_resultat;
 
 ---
 
-## 8️⃣ Générateur pseudo-aléatoire (LFSR)
+## 9️⃣ Générateur pseudo-aléatoire (LFSR)
 
 Le module **LFSR** (Linear Feedback Shift Register) génère une séquence pseudo-aléatoire de 4 bits, utilisée pour le choix aléatoire des couleurs.
 
@@ -550,7 +559,7 @@ end lfsr;
 - À chaque front montant de l’horloge, si `enable='1'`, la sortie `rnd` change selon le polynôme X⁴ + X³ + 1.
 - La valeur initiale est fixée à `"1011"` pour éviter la séquence nulle.
 
-## 9️⃣ Contrôleur principal (FSM)
+## 🔟 Contrôleur principal (FSM)
 
 Le module **FSM** (Finite State Machine) orchestre l’ensemble du jeu LogiGame : il gère le lancement du timer, la vérification de la réponse, l’incrémentation du score et la détection de la fin de partie.
 
