@@ -1,0 +1,8 @@
+{
+  "markdown-pdf.displayHeaderFooter": false,
+  "markdown-preview-github-styles.colorTheme": "dark",
+  "markdown-preview-github-styles.lightTheme": "dark",
+  "markdown-pdf.stylesRelativePathFile": true,
+  "markdown-pdf.styles": ["markdown-pdf.css"],
+  "markdown-pdf.emoji": true
+}

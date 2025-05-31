@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+<link rel="stylesheet" href="file:///c%3A/Users/ckerv/OneDrive%20-%20Efrei/EFREI/L3/Semestre%206/VHDL2/markdown-pdf.css" type="text/css">
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%F0%9F%8E%AE-logicgame-%E2%80%93-rapport-vhdl">🎮 LogicGame – Rapport VHDL</h1>
+<p><strong>Auteurs :</strong><br>
+Corentin KERVAGORET • Arnaud GRIVEL • Mathias BENOIT 😄</p>
+<hr>
+<h2 id="%F0%9F%97%82%EF%B8%8F-sommaire">🗂️ Sommaire</h2>
+<h3 id="%F0%9F%A7%A9-c%C5%93ur-de-contr%C3%B4leur">🧩 Cœur de contrôleur</h3>
+<ol>
+<li><a href="#1%EF%B8%8F%E2%83%A3-r%C3%A9alisation-dun-alu">1️⃣ Réalisation d'un ALU</a></li>
+<li><a href="#2%EF%B8%8F%E2%83%A3-buffers-de-commande-et-de-donn%C3%A9es">2️⃣ Buffers de commande et de données</a></li>
+<li><a href="#3%EF%B8%8F%E2%83%A3-r%C3%A9alisation-de-linterconnexion">3️⃣ Réalisation de l’interconnexion</a></li>
+<li><a href="#4%EF%B8%8F%E2%83%A3-m%C3%A9moire-dinstructions">4️⃣ Mémoire d'instructions</a></li>
+</ol>
+<h3 id="%F0%9F%8E%AE-le-jeu">🎮 Le jeu</h3>
+<ol start="5">
+<li>
+<p><a href="#5%EF%B8%8F%E2%83%A3-minuteur">5️⃣ Minuteur</a></p>
+</li>
+<li>
+<p><a href="#6%EF%B8%8F%E2%83%A3-compteur-de-score">6️⃣ Compteur de score</a></p>
+</li>
+<li>
+<p><a href="#7%EF%B8%8F%E2%83%A3-v%C3%A9rificateur-de-r%C3%A9ponse">7️⃣ Vérificateur de réponse</a></p>
+</li>
+<li>
+<p><a href="#8%EF%B8%8F%E2%83%A3-g%C3%A9n%C3%A9rateur-pseudo-al%C3%A9atoire-lfsr">8️⃣ Générateur pseudo-aléatoire (LFSR)</a></p>
+</li>
+<li>
+<p><a href="#9%EF%B8%8F%E2%83%A3-contr%C3%B4leur-principal-fsm">9️⃣ Contrôleur principal (FSM)</a></p>
+</li>
+<li>
+<p><a href="#vivado--installation-et-test-de-lalu">Vivado : Installation et Test de l’ALU</a></p>
+</li>
+</ol>
+<hr>
+<div class="page"/>
+<h2 id="%F0%9F%93%9D-introduction">📝 Introduction</h2>
+<p>Ce projet consiste à réaliser un mini-jeu de type <strong>Megamind</strong> sur la carte <strong>ARTY A7</strong> en utilisant les huit LEDs du microcontrôleur.</p>
+<p><img src="./img/71YKkVSeLqL.webp" alt="Carte ARTY A7"></p>
+<hr>
+<div class="page"/>
+<h2 id="%F0%9F%9A%80-d%C3%A9marrage-rapide">🚀 Démarrage rapide</h2>
+<h3 id="pr%C3%A9requis">Prérequis</h3>
+<ul>
+<li><strong>Windows 10/11 avec WSL</strong> (Windows Subsystem for Linux)</li>
+<li><strong>VS Code</strong> avec l’extension Remote - WSL</li>
+<li><strong>GHDL</strong> installé sous WSL (<code>sudo apt install ghdl gtkwave</code>)</li>
+<li><strong>Vivado</strong> (pour la synthèse sur carte, voir plus bas)</li>
+</ul>
+<h3 id="installation-et-simulation-sous-wslvs-code">Installation et simulation sous WSL/VS Code</h3>
+<ol>
+<li>
+<p><strong>Clone le dépôt</strong> :</p>
+<pre class="hljs"><code><div>git <span class="hljs-built_in">clone</span> https://github.com/Corentin-k/VHDL-LogiGame.git
+<span class="hljs-built_in">cd</span> VHDL-LogiGame
+</div></code></pre>
+</li>
+<li>
+<p><strong>Simule un module avec le script fourni</strong> :</p>
+<ul>
+<li>
+<p>Dans le dossier racine du projet.</p>
+</li>
+<li>
+<p>Lancer :</p>
+<pre class="hljs"><code><div>./run_vhdl.sh nom_module
+</div></code></pre>
+<p>Par exemple pour tester le vérificateur de résultat :</p>
+<pre class="hljs"><code><div>./run_vhdl.sh verif_resultat
+</div></code></pre>
+</li>
+<li>
+<p>Pour ouvrir automatiquement GTKWave (visualisation des signaux) :</p>
+<pre class="hljs"><code><div>./run_vhdl.sh verif_resultat --g
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<div class="page"/>
+<h2 id="1%EF%B8%8F%E2%83%A3-r%C3%A9alisation-dun-alu">1️⃣ Réalisation d'un ALU</h2>
+<p>L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
+Elle est composée de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection qui détermine quelle opération doit être effectuée sur les entrées.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-hearthual">✨ Entité <code>Hearth_UAL</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> hearth_ual <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span>(
+        A        : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        B        : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        SR_IN_L  : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;                    <span class="hljs-comment">-- bit de retenue d'entrée pour décalage à droite</span>
+        SR_IN_R  : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;                    <span class="hljs-comment">-- bit de retenue d'entrée pour décalage à gauche et addition</span>
+
+        SEL_FCT  : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- SEL_FCT est le code de la fonction à réaliser</span>
+
+        SR_OUT_L : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>;                    <span class="hljs-comment">-- bit de retenue de sortie gauche</span>
+        SR_OUT_R : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>;                    <span class="hljs-comment">-- bit de retenue de sortie droite</span>
+        S        : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>)   <span class="hljs-comment">-- résultat ALU 8 bits</span>
+    );
+<span class="hljs-keyword">end</span> hearth_ual;
+</div></code></pre>
+<p>L'ALU est capable de réaliser les opérations suivantes :</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Opération</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0000</td>
+<td>nop</td>
+</tr>
+<tr>
+<td>0001</td>
+<td>A</td>
+</tr>
+<tr>
+<td>0010</td>
+<td>B</td>
+</tr>
+<tr>
+<td>0011</td>
+<td>not A</td>
+</tr>
+<tr>
+<td>0100</td>
+<td>not B</td>
+</tr>
+<tr>
+<td>0101</td>
+<td>A and B</td>
+</tr>
+<tr>
+<td>0110</td>
+<td>A or B</td>
+</tr>
+<tr>
+<td>0111</td>
+<td>A xor B</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>Décalage à droite A</td>
+</tr>
+<tr>
+<td>1001</td>
+<td>Décalage à gauche A</td>
+</tr>
+<tr>
+<td>1010</td>
+<td>Décalage à droite B</td>
+</tr>
+<tr>
+<td>1011</td>
+<td>Décalage à gauche B</td>
+</tr>
+<tr>
+<td>1100</td>
+<td>A+B avec retenue</td>
+</tr>
+<tr>
+<td>1101</td>
+<td>A+B</td>
+</tr>
+<tr>
+<td>1110</td>
+<td>A-B</td>
+</tr>
+<tr>
+<td>1111</td>
+<td>A*B</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%F0%9F%9B%A0%EF%B8%8F-variables-internes">🛠️ Variables internes</h3>
+<p>On a également créé des variables internes pour :</p>
+<ul>
+<li>
+<p>Étendre A et B de 4 à 8 bits (grand_A, grand_B)</p>
+</li>
+<li>
+<p>Stocker les retenues d’entrée et de sortie (carry_in_left, carry_out_right, etc.)</p>
+</li>
+<li>
+<p>Construire le résultat 8 bits (resultat)</p>
+</li>
+</ul>
+<pre class="hljs"><code><div> <span class="hljs-comment">-- Variables internes</span>
+        <span class="hljs-keyword">variable</span> grand_A         : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">variable</span> grand_B         : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">variable</span> carry_in_left   : <span class="hljs-built_in">std_logic</span>;
+        <span class="hljs-keyword">variable</span> carry_in_right  : <span class="hljs-built_in">std_logic</span>;
+        <span class="hljs-keyword">variable</span> carry_out_left  : <span class="hljs-built_in">std_logic</span>;
+        <span class="hljs-keyword">variable</span> carry_out_right : <span class="hljs-built_in">std_logic</span>;
+        <span class="hljs-keyword">variable</span> resultat        : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+</div></code></pre>
+<h2 id="%F0%9F%A7%AA-test-de-lalu">🧪 Test de l'ALU</h2>
+<p>Pour valider le bon fonctionnement de l’ALU, nous avons développé un <a href="./ual/ual_testbench.vhd">testbench</a> VHDL complet.
+Pour ce faire nous avons utilisé des procédures en VHDL pour balayer toutes les combinaisons possibles de l'ALU : <code>display_case(name:string)</code> et <code>test_case(name:string)</code></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">procedure</span> display_case(name : <span class="hljs-built_in">string</span>) <span class="hljs-keyword">is</span>
+<span class="hljs-keyword">begin</span>
+    <span class="hljs-keyword">report</span> <span class="hljs-string">"Test: "</span> &amp; name &amp; <span class="hljs-string">" | A="</span> &amp; <span class="hljs-built_in">integer</span><span class="hljs-symbol">'image</span>(to_integer(<span class="hljs-built_in">unsigned</span>(A_sim))) &amp;
+            <span class="hljs-string">" B="</span> &amp; <span class="hljs-built_in">integer</span><span class="hljs-symbol">'image</span>(to_integer(<span class="hljs-built_in">unsigned</span>(B_sim))) &amp;
+            <span class="hljs-string">" SR_IN_L="</span> &amp; <span class="hljs-built_in">std_logic</span><span class="hljs-symbol">'image</span>(SR_IN_L_sim) &amp;
+            <span class="hljs-string">" SR_IN_R="</span> &amp; <span class="hljs-built_in">std_logic</span><span class="hljs-symbol">'image</span>(SR_IN_R_sim) &amp;
+            <span class="hljs-string">" SEL_FCT="</span> &amp; <span class="hljs-built_in">integer</span><span class="hljs-symbol">'image</span>(to_integer(<span class="hljs-built_in">unsigned</span>(SEL_sim))) &amp;
+            <span class="hljs-string">" S="</span> &amp; <span class="hljs-built_in">integer</span><span class="hljs-symbol">'image</span>(to_integer(<span class="hljs-built_in">unsigned</span>(S_sim))) &amp;
+            <span class="hljs-string">" SR_OUT_L="</span> &amp; <span class="hljs-built_in">std_logic</span><span class="hljs-symbol">'image</span>(SR_OUT_L_sim) &amp;
+            <span class="hljs-string">" SR_OUT_R="</span> &amp; <span class="hljs-built_in">std_logic</span><span class="hljs-symbol">'image</span>(SR_OUT_R_sim);
+<span class="hljs-keyword">end</span> <span class="hljs-keyword">procedure</span>;
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">procedure</span> test_case(
+    signal_name : <span class="hljs-built_in">string</span>;
+    sel_val     : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+    a_val, b_val : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+    sr_in_l, sr_in_r : <span class="hljs-built_in">std_logic</span>;
+    expected_S  : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+    expected_L, expected_R : <span class="hljs-built_in">std_logic</span> := <span class="hljs-string">'0'</span>
+) <span class="hljs-keyword">is</span>
+<span class="hljs-keyword">begin</span>
+    SEL_sim &lt;= sel_val;
+    A_sim &lt;= a_val;
+    B_sim &lt;= b_val;
+    SR_IN_L_sim &lt;= sr_in_l;
+    SR_IN_R_sim &lt;= sr_in_r;
+    <span class="hljs-keyword">wait</span> <span class="hljs-keyword">for</span> <span class="hljs-number">10</span> ns;
+    display_case(signal_name);
+    <span class="hljs-keyword">assert</span> S_s = expected_S <span class="hljs-keyword">report</span> signal_name &amp; <span class="hljs-string">": S incorrect"</span> <span class="hljs-keyword">severity</span> <span class="hljs-literal">error</span>;
+    <span class="hljs-keyword">assert</span> SR_OUT_L_s = expected_L <span class="hljs-keyword">report</span> signal_name &amp; <span class="hljs-string">": SR_OUT_L incorrect"</span> <span class="hljs-keyword">severity</span> <span class="hljs-literal">error</span>;
+    <span class="hljs-keyword">assert</span> SR_OUT_R_s = expected_R <span class="hljs-keyword">report</span> signal_name &amp; <span class="hljs-string">": SR_OUT_R incorrect"</span> <span class="hljs-keyword">severity</span> <span class="hljs-literal">error</span>;
+<span class="hljs-keyword">end</span> <span class="hljs-keyword">procedure</span>;
+</div></code></pre>
+<p><img src="./img/ual_testbench.png" alt="testbench"></p>
+<p>Ici nous avons un exemple de test de l'ALU :
+sel_s = &quot;0110&quot; se qui correspond à l'opération A or B. On peut voir que le résultat est bien le bon. A vaut 4 soit 0100 et B vaut 3 soit 0011. Le résultat est donc 0111 soit 7.</p>
+<p>Ou directement par les asserts :</p>
+<pre class="hljs"><code><div>ghdl -r --std=08 --ieee=synopsys ual_testbench --wave=ual_testbench.ghw
+hearth_ual_testbench.vhd:50:13:@10ns:(report note): Test: NOP | A=0 B=0 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=0 S=0 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@20ns:(report note): Test: S=A | A=2 B=0 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=1 S=2 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@30ns:(report note): Test: S=B | A=0 B=3 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=2 S=3 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@60ns:(report note): Test: S=A and B | A=6 B=5 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=5 S=4 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@70ns:(report note): Test: S=A or B | A=4 B=3 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=6 S=7 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@80ns:(report note): Test: S=A xor B | A=7 B=2 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=7 S=5 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@90ns:(report note): Test: Shift droit A | A=10 B=0 SR_IN_L=<span class="hljs-string">'1'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=8 S=13 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@100ns:(report note): Test: Shift gauche A | A=12 B=0 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'1'</span> SEL_FCT=9 S=9 SR_OUT_L=<span class="hljs-string">'1'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@110ns:(report note): Test: Shift droit B | A=0 B=6 SR_IN_L=<span class="hljs-string">'1'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=10 S=11 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@120ns:(report note): Test: Shift gauche B | A=0 B=3 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'1'</span> SEL_FCT=11 S=7 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@130ns:(report note): Test: Addition A+B+SR_IN_R | A=2 B=3 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'1'</span> SEL_FCT=12 S=6 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@140ns:(report note): Test: Addition A+B | A=4 B=2 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=13 S=6 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:50:13:@150ns:(report note): Test: Soustraction A-B | A=7 B=3 SR_IN_L=<span class="hljs-string">'0'</span> SR_IN_R=<span class="hljs-string">'0'</span> SEL_FCT=14 S=4 SR_OUT_L=<span class="hljs-string">'0'</span> SR_OUT_R=<span class="hljs-string">'0'</span>
+hearth_ual_testbench.vhd:110:9:@150ns:(report note): Tous les tests passés avec succès.
+</div></code></pre>
+<h2 id="%F0%9F%97%BA%EF%B8%8F-sch%C3%A9ma-de-lalu">🗺️ Schéma de l’ALU</h2>
+<p><img src="./img/schematic.png" alt="Schematic ALU"></p>
+<hr>
+<div class="page"/>
+<h2 id="2%EF%B8%8F%E2%83%A3-buffers-de-commande-et-de-donn%C3%A9es">2️⃣ Buffers de commande et de données</h2>
+<h3 id="%E2%9C%A8-entit%C3%A9-buffercmd">✨ Entité <code>buffer_cmd</code></h3>
+<p>Le buffer de commande permet de mémoriser les signaux de sélection de fonction (<code>SEL_FCT</code>) et de routage (<code>SEL_ROUTE</code>) à chaque front montant de l’horloge.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> buffer_cmd <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span> (
+        e1        : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        reset     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        clock     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        s1        : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>)
+    );
+<span class="hljs-keyword">end</span> buffer_cmd;
+</div></code></pre>
+<ul>
+<li><strong>Usage</strong> : Mémorisation synchrone de SEL_FCT ou SEL_ROUTE.</li>
+<li><strong>Fonctionnement</strong> : À chaque front montant de <code>clock</code>, si <code>reset</code> n'est pas actif, la valeur d'entrée <code>e1</code> est stockée et disponible sur <code>s1</code>.</li>
+</ul>
+<hr>
+<h3 id="%E2%9C%A8-entit%C3%A9-bufferual">✨ Entité <code>buffer_ual</code></h3>
+<p>Le bufferUAL permet de mémoriser des données sur 4 ou 8 bits (pour Buffer_A, Buffer_B, MEM_CACHE_1, MEM_CACHE_2).</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> buffer_ual <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">generic</span> (
+        N : <span class="hljs-built_in">integer</span> := <span class="hljs-number">4</span>
+    );
+    <span class="hljs-keyword">port</span> (
+        e1     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(N-<span class="hljs-number">1</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        reset  : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        clock  : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        enable : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        s1     : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(N-<span class="hljs-number">1</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>)
+    );
+<span class="hljs-keyword">end</span> buffer_ual;
+</div></code></pre>
+<ul>
+<li><strong>Usage</strong> : Mémorisation synchrone de données (A, B, S, etc.) avec signal d’activation <code>enable</code>.</li>
+<li><strong>Fonctionnement</strong> : À chaque front montant de <code>clock</code>, si <code>enable='1'</code>, la valeur d'entrée <code>e1</code> est stockée et disponible sur <code>s1</code>.</li>
+</ul>
+<hr>
+<h2 id="3%EF%B8%8F%E2%83%A3-r%C3%A9alisation-de-linterconnexion">3️⃣ Réalisation de l’interconnexion</h2>
+<p>L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-interconnexion">✨ Entité <code>interconnexion</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> interconnexion <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span>(
+        <span class="hljs-comment">-- SEL_ROUTE permet de définir le transfert de données qui sera effectué lors du prochain cycle horloge (prochain front montant de l’horloge).</span>
+        SEL_ROUTE : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Sélecteur de route</span>
+
+        A_IN      : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Entrée A</span>
+        B_IN      : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Entrée B</span>
+        S         : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Entrée S</span>
+
+
+        MEM_CACHE_1_in: <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Mémoire cache 1</span>
+        MEM_CACHE_1_out_enable : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- Signal d'activation pour MEM_CACHE_1_ou</span>
+        MEM_CACHE_1_out : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Sortie vers MEM_CACHE_1_out</span>
+
+        MEM_CACHE_2_in : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Mémoire cache 2</span>
+        MEM_CACHE_2_out_enable : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- Signal d'activation pour MEM_CACHE_2_out_enable</span>
+        MEM_CACHE_2_out : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Sortie vers MEM_CACHE_2_out</span>
+
+        <span class="hljs-comment">-- Les mémoires Buffer_A, Buffer_B permettent de stocker les données directement liées au cœur de l’UAL, c'est-à-dire à la sous-fonction arithmétique et logique.</span>
+        <span class="hljs-comment">-- Elles seront chargées (activées sur front montant de l’entrée clk) suivant les valeurs de l’entrée SEL_ROUTE</span>
+        Buffer_A  : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Sortie vers Buffer A</span>
+        Buffer_A_enable : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- Signal d'activation pour Buffer A</span>
+
+        Buffer_B  : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Sortie vers Buffer B</span>
+        Buffer_B_enable : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- Signal d'activation pour Buffer B</span>
+
+        SEL_OUT : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Sélecteur de sortie</span>
+        RES_OUT : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>) <span class="hljs-comment">-- Sortie</span>
+
+
+    );
+<span class="hljs-keyword">end</span> interconnexion;
+</div></code></pre>
+<h3 id="test-de-linterconnexion">Test de l'interconnexion</h3>
+<blockquote>
+<p>Fichier de test : <a href="./interconnexion_testbench.vhd">interconnexion_testbench.vhd</a></p>
+</blockquote>
+<pre class="hljs"><code><div>./run_vhdl.sh interconnexion
+interconnexion_testbench.vhd:86:9:@10ns:(report note): A_IN = 10 Buffer_A: 10
+interconnexion_testbench.vhd:93:9:@20ns:(report note): S = 1 MEM_CACHE_1_out: 1
+interconnexion_testbench.vhd:102:9:@30ns:(report note): S = 3 RES_OUT: 3
+</div></code></pre>
+<h3 id="%F0%9F%94%84-op%C3%A9rations-possibles">🔄 Opérations possibles</h3>
+<p>L'interconnexion permet ainsi de réaliser les opérations suivantes :</p>
+<ul>
+<li>
+<p><strong>A -&gt; Buffer_A</strong></p>
+</li>
+<li>
+<p><strong>MEM_CACHE_1 -&gt; Buffer_A</strong> (4 bits de poids faible)</p>
+</li>
+<li>
+<p><strong>MEM_CACHE_1 -&gt; Buffer_A</strong> (4 bits de poids fort)</p>
+</li>
+<li>
+<p><strong>MEM_CACHE_2 -&gt; Buffer_A</strong> (4 bits de poids faible)</p>
+</li>
+<li>
+<p><strong>MEM<em>CACHE_2 -&gt; Buffer</em></strong>A (4 bits de poids fort)</p>
+</li>
+<li>
+<p><strong>S -&gt; Buffer_A</strong> (4 bits de poids faible)</p>
+</li>
+<li>
+<p><strong>S -&gt; Buffer_A</strong> (4 bits de poids fort)</p>
+</li>
+<li>
+<p><strong>B -&gt; Buffer_B</strong></p>
+</li>
+<li>
+<p><strong>MEM_CACHE_1 -&gt; Buffer_B</strong> (4 bits de poids faible)</p>
+</li>
+<li>
+<p><strong>MEM_CACHE_1 -&gt; Buffer_B</strong> (4 bits de poids fort)</p>
+</li>
+<li>
+<p><strong>MEM_CACHE_2 -&gt; Buffer_B</strong> (4 bits de poids faible)</p>
+</li>
+<li>
+<p><strong>MEM_CACHE_2 -&gt; Buffer_B</strong> (4 bits de poids fort)</p>
+</li>
+<li>
+<p><strong>S -&gt; Buffer_B</strong> (4 bits de poids faible)</p>
+</li>
+<li>
+<p><strong>S -&gt; Buffer_B</strong> (4 bits de poids fort)</p>
+</li>
+<li>
+<p><strong>S -&gt; MEM_CACHE_1_in</strong></p>
+</li>
+<li>
+<p><strong>S -&gt; MEM_CACHE_2_in</strong></p>
+</li>
+</ul>
+<hr>
+<h2 id="4%EF%B8%8F%E2%83%A3-m%C3%A9moire-dinstructions">4️⃣ Mémoire d'instructions</h2>
+<h3 id="%E2%9C%A8-entit%C3%A9-meminstructions">✨ Entité <code>mem_instructions</code></h3>
+<p>La mémoire d’instructions contient le programme à exécuter (suite d’instructions codées sur 10 bits).</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> mem_instructions <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span> (
+        clk         : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        reset       : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        instruction : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">unsigned</span>(<span class="hljs-number">6</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- Adresse (7 bits)</span>
+        donnee      : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">9</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>) <span class="hljs-comment">-- Instruction lue</span>
+    );
+<span class="hljs-keyword">end</span> mem_instructions;
+</div></code></pre>
+<p><strong>Fonctionnement</strong> : À chaque front montant de <code>clk</code>, l’instruction à l’adresse <code>instruction</code> est placée sur <code>donnee</code>.</p>
+<h3 id="test-de-la-m%C3%A9moire-dinstructions">Test de la mémoire d'instructions</h3>
+<blockquote>
+<p>Fichier de test : <a href="./mem_instructions_testbench.vhd">mem_instructions_testbench.vhd</a></p>
+</blockquote>
+<pre class="hljs"><code><div>coco@MSI:/mnt/c/Users/ckerv/OneDrive - Efrei/EFREI/L3/Semestre 6/VHDL2/mem_instructions$ ./mem.sh
+mem_instructions_testbench.vhd:225:9:@47ns:(report note): RES_OUT = 6
+mem_instructions_testbench.vhd:245:5:@147ns:(report note): RES_OUT (A+B xnor A) = 2
+mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) or (A1 and B0) = 1
+</div></code></pre>
+<p><img src="./img/mem_instructions_testbench.png" alt="Résultats de la simulation"></p>
+<hr>
+<h2 id="5%EF%B8%8F%E2%83%A3-minuteur">5️⃣ Minuteur</h2>
+<p>Le module <strong>minuteur</strong> permet de gérer le temps imparti pour répondre à chaque question.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-minuteur">✨ Entité <code>Minuteur</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> Minuteur <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span> (
+        clk      : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic</span>;
+        reset    : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic</span>;
+        start    : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic</span>;
+        sw_level : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+        time_out : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span>
+    );
+<span class="hljs-keyword">end</span> Minuteur;
+</div></code></pre>
+<ul>
+<li>Le temps de réponse dépend de <code>sw_level</code> (niveau de difficulté).</li>
+<li>Le signal <code>time_out</code> passe à '1' lorsque le temps est écoulé.</li>
+</ul>
+<hr>
+<h2 id="6%EF%B8%8F%E2%83%A3-compteur-de-score">6️⃣ Compteur de score</h2>
+<p>Le module <strong>score_compteur</strong> gère le score du joueur.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-scorecompteur">✨ Entité <code>score_compteur</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> score_compteur <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span> (
+        clk       : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- horloge système</span>
+        reset     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">--remise à zéro du score</span>
+        valid_hit : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- indiquant la réussite (1) ou l’échec (0)</span>
+        score     : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- score courant codé sur 4 bits</span>
+        game_over : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span> <span class="hljs-comment">-- signal indiquant la fin du jeu</span>
+    );
+<span class="hljs-keyword">end</span> score_compteur;
+</div></code></pre>
+<ul>
+<li>Le score s’incrémente à chaque bonne réponse (<code>valid_hit = '1'</code>).</li>
+<li><code>game_over</code> passe à '1' lorsque le score atteint 15.</li>
+</ul>
+<hr>
+<h2 id="7%EF%B8%8F%E2%83%A3-v%C3%A9rificateur-de-r%C3%A9ponse">7️⃣ Vérificateur de réponse</h2>
+<p>Le module <strong>verif_resultat</strong> valide si le joueur a appuyé sur le bon bouton dans le temps imparti.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-verifresultat">✨ Entité <code>verif_resultat</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> verif_resultat <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span> (
+        clk       : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- horloge système</span>
+        reset     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- réinitialisation du module</span>
+        timeout   : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- signal de fin de délai</span>
+        led_color : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">2</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- couleur affichée sur LD3 (3 bits, R=100, G=010, B=001)</span>
+        btn_r     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- boutons de réponse (BTN1, BTN2, BTN3)</span>
+        btn_g     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        btn_b     : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>;
+        valid_hit : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span> <span class="hljs-comment">-- passe à '1' si la bonne réponse a été donnée dans les temps</span>
+    );
+<span class="hljs-keyword">end</span> verif_resultat;
+</div></code></pre>
+<ul>
+<li><code>valid_hit</code> passe à '1' uniquement si le bon bouton est pressé avant le timeout.</li>
+<li>Un seul appui est comptabilisé par round.</li>
+</ul>
+<hr>
+<h2 id="8%EF%B8%8F%E2%83%A3-g%C3%A9n%C3%A9rateur-pseudo-al%C3%A9atoire-lfsr">8️⃣ Générateur pseudo-aléatoire (LFSR)</h2>
+<p>Le module <strong>LFSR</strong> (Linear Feedback Shift Register) génère une séquence pseudo-aléatoire de 4 bits, utilisée pour le choix aléatoire des couleurs.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-lfsr">✨ Entité <code>lfsr</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> lfsr <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span>(
+        CLK100MHZ : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic</span>;  <span class="hljs-comment">-- horloge principale (100 MHz)</span>
+        reset : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic</span>;  <span class="hljs-comment">-- réinitialisation du registre à une valeur initiale non nulle «1011»</span>
+        enable : <span class="hljs-keyword">in</span> <span class="hljs-built_in">std_logic</span>;  <span class="hljs-comment">-- active l’évolution du LFSR à chaque front montant</span>
+        rnd : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>)  <span class="hljs-comment">-- vecteur de 4 bits représentant la valeur pseudo-aléatoire courante</span>
+    );
+<span class="hljs-keyword">end</span> lfsr;
+</div></code></pre>
+<ul>
+<li>À chaque front montant de l’horloge, si <code>enable='1'</code>, la sortie <code>rnd</code> change selon le polynôme X⁴ + X³ + 1.</li>
+<li>La valeur initiale est fixée à <code>&quot;1011&quot;</code> pour éviter la séquence nulle.</li>
+</ul>
+<h2 id="9%EF%B8%8F%E2%83%A3-contr%C3%B4leur-principal-fsm">9️⃣ Contrôleur principal (FSM)</h2>
+<p>Le module <strong>FSM</strong> (Finite State Machine) orchestre l’ensemble du jeu LogiGame : il gère la génération du stimulus, le lancement du timer, la vérification de la réponse, l’incrémentation du score et la détection de la fin de partie.</p>
+<h3 id="%E2%9C%A8-entit%C3%A9-fsm">✨ Entité <code>fsm</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">entity</span> fsm <span class="hljs-keyword">is</span>
+    <span class="hljs-keyword">port</span> (
+        clk        : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- horloge système (100 MHz)</span>
+        reset      : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- remise à zéro globale</span>
+        start      : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- bouton de démarrage</span>
+        sw_level   : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- niveau de difficulté</span>
+        btn_r      : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- bouton rouge</span>
+        btn_g      : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- bouton vert</span>
+        btn_b      : <span class="hljs-keyword">in</span>  <span class="hljs-built_in">std_logic</span>; <span class="hljs-comment">-- bouton bleu</span>
+        led_color  : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">2</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- couleur affichée sur LD3</span>
+        score      : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>); <span class="hljs-comment">-- score courant</span>
+        game_over  : <span class="hljs-keyword">out</span> <span class="hljs-built_in">std_logic</span> <span class="hljs-comment">-- signal de fin de partie</span>
+    );
+<span class="hljs-keyword">end</span> fsm;
+</div></code></pre>
+<ul>
+<li>L’état du jeu évolue selon un <strong>automate à états finis</strong> :
+<ul>
+<li><strong>IDLE</strong> : attente du bouton start</li>
+<li><strong>NEW_ROUND</strong> : génération d’un nouveau stimulus et lancement du timer</li>
+<li><strong>WAIT_RESPONSE</strong> : attente de la réponse ou du timeout</li>
+<li><strong>END_GAME</strong> : blocage du jeu en cas de défaite ou score maximal</li>
+</ul>
+</li>
+<li>Le FSM pilote les modules internes : LFSR, minuteur, score_compteur, verif_resultat.</li>
+</ul>
+<hr>
+<h2 id="vivado--installation-et-test-de-lalu">Vivado : Installation et Test de l’ALU</h2>
+<h3 id="%F0%9F%93%A6-installation-de-vivado">📦 Installation de Vivado</h3>
+<ul>
+<li>Installer <strong>Vivado ML Standard</strong> (minimum requis pour ARTY A7).</li>
+</ul>
+<p><img src="/img/installationVivado.png" alt="alt text"></p>
+<hr>
+<h3 id="%F0%9F%8F%97%EF%B8%8F-cr%C3%A9ation-du-projet">🏗️ Création du projet</h3>
+<p>Puis créer un nouveau projet et faire les configurations suivantes :</p>
+<ol>
+<li>
+<p><strong>Créer un projet</strong> :</p>
+<ul>
+<li>Type : RTL Project</li>
+<li>Composant : <code>XC7A35TCSG324-1</code></li>
+<li>Target language : <strong>VHDL</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Ajouter les sources</strong> :</p>
+<ul>
+<li>Contraintes : <code>PRJ_24-25_Entite_TopLevel_Constraints.xdc</code></li>
+<li>Design sources :
+<ul>
+<li><code>MCU_PRJ_2025_TopLevel_vide.vhd</code></li>
+<li><strong>Votre ALU</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>Ajoutez votre entité ALU en tant que composant dans <code>MCU_PRJ_2025_TopLevel_vide</code> :</p>
+<pre class="hljs"><code><div>
+ <span class="hljs-comment">-- Ajout de votre entité alu en tant que component</span>
+    <span class="hljs-keyword">signal</span> My_A,My_B, My_SEL_FCT : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">3</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">signal</span> My_SR_IN_R , My_SR_IN_L, My_SR_OUT_L, My_SR_OUT_R: <span class="hljs-built_in">std_logic</span>;
+    <span class="hljs-keyword">signal</span> My_S  : <span class="hljs-built_in">std_logic_vector</span>(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">0</span>);
+<span class="hljs-keyword">begin</span>
+    MyUALCore : Nom_de_votre_entité
+    <span class="hljs-keyword">Port</span> <span class="hljs-keyword">Map</span>(
+        A=&gt;sw,
+        B =&gt;sw,
+        SR_IN_L =&gt; sw(<span class="hljs-number">3</span>),
+        SR_IN_R=&gt;sw(<span class="hljs-number">0</span>),
+        S=&gt; My_S,
+        SR_OUT_L=&gt;led3_b,
+        SR_OUT_R=&gt;led2_b,
+        SEL_FCT=&gt;btn
+        );
+
+    led &lt;= My_S(<span class="hljs-number">7</span> <span class="hljs-keyword">downto</span> <span class="hljs-number">4</span>);
+    led0_g &lt;= My_S(<span class="hljs-number">0</span>);  led0_b &lt;=<span class="hljs-string">'0'</span>;
+    led1_g &lt;= My_S(<span class="hljs-number">1</span>);  led1_b &lt;=<span class="hljs-string">'0'</span>; led1_r &lt;=<span class="hljs-string">'0'</span>;
+    led2_g &lt;= My_S(<span class="hljs-number">2</span>);  led2_b &lt;=<span class="hljs-string">'0'</span>;led2_r &lt;=<span class="hljs-string">'0'</span>;
+    led3_g &lt;= My_S(<span class="hljs-number">3</span>);  led3_b &lt;=<span class="hljs-string">'0'</span>;led3_r &lt;=<span class="hljs-string">'0'</span>;
+
+
+<span class="hljs-keyword">end</span> MCU_PRJ_2021_TopLevel_Arch;
+</div></code></pre>
+
+</body>
+</html>
