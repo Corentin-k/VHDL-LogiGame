@@ -65,18 +65,19 @@ begin
 
     stim_proc : process
     begin
+
+        report " Test du top_level" severity note;
         -- Initialisation
         sw <= "1111"; -- A = 3, B = 3
-        btn <= "1111";
+     
         wait for 20 ns;
-
-        
+        report "----------------------------";
+        report "Appuie sur le bouton 0 pour réinitialiser" severity note;
         btn <= "0001";
         wait for 1000 ns;
         btn <= "0000";
         wait for 100 ns;
-
-        report "BTN 0 reset:" 
+        report "BTN 0 reset : " 
                & std_ulogic'image(led(3))
             & std_ulogic'image(led(2))
              & std_ulogic'image(led(1))
@@ -87,12 +88,16 @@ begin
              & std_ulogic'image(led0_g)
             & " | sw=" & to_string(sw);
 
+        report "----------------------------";    
+        report "Appuie sur le bouton 1 pour tester la premiere fonction : " severity note;
+
         wait for 300 ns;
         btn <= "0010";
         wait for 500 ns;
         btn <= "0000";
         wait for 100 ns;
-    
+
+
         report "A*B : " 
                & std_ulogic'image(led(3))
             & std_ulogic'image(led(2))
@@ -103,7 +108,10 @@ begin
              & std_ulogic'image(led1_g)
              & std_ulogic'image(led0_g)
             & " | sw=" & to_string(sw);
-            
+
+        report "----------------------------";    
+        report "Appuie sur le bouton 1 pour tester la deuxieme fonction : " severity note;
+    
         wait for 300 ns;
         btn <= "0100";
         wait for 500 ns;
@@ -119,15 +127,18 @@ begin
              & std_ulogic'image(led2_g)
              & std_ulogic'image(led1_g)
              & std_ulogic'image(led0_g)
-           
             & " | sw=" & to_string(sw);
+
+        report "----------------------------";    
+        report "Appuie sur le bouton 3 pour tester la troisieme fonction : " severity note;
+
         wait for 300 ns;
         btn <= "1000";
         wait for 500 ns;
         btn <= "0000";
         wait for 100 ns;
-    
-        report "A + B and A + B ="
+
+        report "(A0 and  B1) or (A1 and B0) ="
             & std_ulogic'image(led(3))
             & std_ulogic'image(led(2))
              & std_ulogic'image(led(1))
@@ -136,8 +147,8 @@ begin
              & std_ulogic'image(led2_g)
              & std_ulogic'image(led1_g)
              & std_ulogic'image(led0_g)
-            
             & " | sw=" & to_string(sw);
+
         assert false report "Fin de simulation à 5000 ns" severity failure;
     end process;
 

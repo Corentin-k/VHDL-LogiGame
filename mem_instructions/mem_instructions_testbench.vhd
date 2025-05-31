@@ -298,6 +298,7 @@ begin
         wait for 2 ns;
 
         report "Début du test de la mémoire d'instructions";
+        report "----------------------------------";
         report "A = " & integer'image(to_integer(signed(A_IN_sim)));
         report "B = " & integer'image(to_integer(signed(B_IN_sim)));
 
@@ -309,13 +310,17 @@ begin
         addr_sim <= "0000010"; wait until rising_edge(clk_sim); -- index 2
         wait until ready_sim = '1';
         wait until rising_edge(clk_sim);
-        report "RES_OUT = " & integer'image(to_integer(unsigned(RES_OUT_sim)));
-
+        report "RES_OUT (A*B) = " & integer'image(to_integer(unsigned(RES_OUT_sim)));
+        
+        
         -- (A+B) xnor A
+        report "----------------------------------";
         reset_sim <= '1'; wait for 10 ns;
         reset_sim <= '0'; wait for 10 ns;
         A_IN_sim <= "1111";
         B_IN_sim <= "0111";
+        report "A = " & integer'image(to_integer(signed(A_IN_sim)));
+        report "B = " & integer'image(to_integer(signed(B_IN_sim)));
         addr_sim <= "0000011"; wait until rising_edge(clk_sim); -- 3
         addr_sim <= "0000100"; wait until rising_edge(clk_sim); -- 4
         addr_sim <= "0000101"; wait until rising_edge(clk_sim); -- 5
@@ -326,13 +331,16 @@ begin
         wait until ready_sim = '1';
         wait until rising_edge(clk_sim);
         report "RES_OUT (A+B xnor A) = " & integer'image(to_integer(signed(RES_OUT_sim)));
+               
 
         -- (A0 and B1) or (A1 and B0)        -- - (A0 and B1) or (A1 and B0)
-     
+        report "----------------------------------";
         reset_sim <= '1'; wait for 10 ns;
         reset_sim <= '0'; wait for 10 ns;
         A_IN_sim <= "1111";
         B_IN_sim <= "1111";
+        report "A = " & integer'image(to_integer(signed(A_IN_sim)));
+        report "B = " & integer'image(to_integer(signed(B_IN_sim)));
         addr_sim <= "0001010"; wait until rising_edge(clk_sim); -- 10
         addr_sim <= "0001011"; wait until rising_edge(clk_sim); -- 11
         addr_sim <= "0001100"; wait until rising_edge(clk_sim); -- 12
@@ -346,9 +354,8 @@ begin
         
         wait until ready_sim = '1';
         wait until rising_edge(clk_sim);
-     
         report "RES_OUT (A0 and B1) or (A1 and B0) = " & integer'image(to_integer(signed(RES_OUT_sim)));
-
+        report "----------------------------------";
         wait;
     end process;
 

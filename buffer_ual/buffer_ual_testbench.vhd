@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-
+use ieee.numeric_std.all;
 entity buffer_ual_tb is
 end buffer_ual_tb;
 
@@ -25,15 +25,6 @@ architecture tb_arch of buffer_ual_tb is
     signal e_sim2    : std_logic_vector(2 downto 0) := (others => '0');
     signal s1_sim1   : std_logic_vector(3 downto 0);
     signal s1_sim2   : std_logic_vector(2 downto 0);
-
-    function slv_to_str(slv : std_logic_vector) return string is
-        variable result : string(1 to slv'length);
-    begin
-        for i in slv'range loop
-            result(i - slv'low + 1) := character'VALUE(std_ulogic'image(slv(i)));
-        end loop;
-        return result;
-    end function;
 
 begin
 
@@ -73,30 +64,52 @@ begin
     stim_proc : process
     begin
        
+        report "Buffer 4 bits sans enable : " severity note;
 
         -- Test buffer avec enable actif
         e_sim1 <= "1010";
         wait for 10 ns;
+        report "e1_sim:" & integer'image(to_integer(unsigned(e_sim1))) severity note;
+        report "s1_sim1: " & integer'image(to_integer(unsigned(s1_sim1))) severity note;
+
         e_sim1 <= "0101";
         wait for 10 ns;
+        report "e1_sim:" & integer'image(to_integer(unsigned(e_sim1))) severity note;
+        report "s1_sim1: " & integer'image(to_integer(unsigned(s1_sim1))) severity note;
 
-        report "Valeur de s1_sim1: " & slv_to_str(s1_sim1) severity note;
-
+        report "-------------------------------" severity note;
         -- Test buffer avec enable inactif (doit rester à 0)
+        report "Buffer 3 bits avec enable : " severity note;
         e_sim2 <= "111";
+         report "e2_sim:" & integer'image(to_integer(unsigned(e_sim2))) severity note;
+        report "s2_sim1: " & integer'image(to_integer(unsigned(s1_sim2))) severity note;
+
         wait for 10 ns;
         e_sim2 <= "001";
         wait for 10 ns;
-        report "Valeur de s1_sim2: " & slv_to_str(s1_sim2) severity note;
+        report "e2_sim:" & integer'image(to_integer(unsigned(e_sim2))) severity note;
+        report "Valeur de s1_sim2: " & integer'image(to_integer(unsigned(s1_sim2)))  severity note;
         
+        report ">>> Activation de enable ! "severity note;
         -- Désactive enable sur buf1, la sortie doit rester inchangée
         enable_sim2 <= '1';
-        e_sim2 <= "101";
+        e_sim2 <= "111";
         wait for 10 ns;
-        report "Valeur de s1_sim2 après activation enable: " & slv_to_str(s1_sim2) severity note;
+        enable_sim2 <= '0';
+        report "e2_sim:" & integer'image(to_integer(unsigned(e_sim2))) severity note;
+        report "Valeur de s1_sim2 après activation enable: " & integer'image(to_integer(unsigned(s1_sim2))) severity note;
        
+        wait for 10 ns;
 
-        assert false report "Fin de simulation" severity failure;
+        report ">>> Remodification de la valeur sans activer enable ! "severity note;
+        wait for 10 ns;
+        e_sim2 <= "001";
+        wait for 10 ns;
+        report "e2_sim:" & integer'image(to_integer(unsigned(e_sim2))) severity note;
+        report "Valeur de s1_sim2: " & integer'image(to_integer(unsigned(s1_sim2)))  severity note;
+
+        wait for 10 ns;
+       wait;
     end process;
 
 end tb_arch;

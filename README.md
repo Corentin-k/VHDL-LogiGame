@@ -286,6 +286,33 @@ entity buffer_ual is
 end buffer_ual;
 ```
 
+## 🧪 Test des buffers avec/sans enable:
+
+```bash
+./run_vhdl.sh buffer_ual --g
+buffer_ual_testbench.vhd:67:9:@0ms:(report note): Buffer 4 bits sans enable :
+buffer_ual_testbench.vhd:72:9:@10ns:(report note): e1_sim:10
+buffer_ual_testbench.vhd:73:9:@10ns:(report note): s1_sim1: 10
+buffer_ual_testbench.vhd:77:9:@20ns:(report note): e1_sim:5
+buffer_ual_testbench.vhd:78:9:@20ns:(report note): s1_sim1: 5
+buffer_ual_testbench.vhd:80:9:@20ns:(report note): -------------------------------
+buffer_ual_testbench.vhd:82:9:@20ns:(report note): Buffer 3 bits avec enable :
+buffer_ual_testbench.vhd:84:10:@20ns:(report note): e2_sim:0
+../../src/ieee/v93/numeric_std-body.vhdl:2098:7:@20ns:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+buffer_ual_testbench.vhd:85:9:@20ns:(report note): s2_sim1: 0
+buffer_ual_testbench.vhd:90:9:@40ns:(report note): e2_sim:1
+../../src/ieee/v93/numeric_std-body.vhdl:2098:7:@40ns:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+buffer_ual_testbench.vhd:91:9:@40ns:(report note): Valeur de s1_sim2: 0
+buffer_ual_testbench.vhd:93:9:@40ns:(report note): >>> Activation de enable !
+buffer_ual_testbench.vhd:99:9:@50ns:(report note): e2_sim:7
+buffer_ual_testbench.vhd:100:9:@50ns:(report note): Valeur de s1_sim2 après activation enable: 7
+buffer_ual_testbench.vhd:104:9:@60ns:(report note): >>> Remodification de la valeur sans activer enable !
+buffer_ual_testbench.vhd:108:9:@80ns:(report note): e2_sim:1
+buffer_ual_testbench.vhd:109:9:@80ns:(report note): Valeur de s1_sim2: 7
+```
+
+On remarque que malgres la tentatvide modifier la valeur de e2_sim sans activer enable, il conserve la valeur précédentes.
+
 ---
 
 ## 3️⃣ Réalisation de l’interconnexion
@@ -329,15 +356,21 @@ entity interconnexion is
 end interconnexion;
 ```
 
-### Test de l'interconnexion
+### 🧪 Test de l'interconnexion
 
 > Fichier de test : [interconnexion_testbench.vhd](./interconnexion_testbench.vhd)
 
 ```bash
 ./run_vhdl.sh interconnexion
-interconnexion_testbench.vhd:86:9:@10ns:(report note): A_IN = 10 Buffer_A: 10
-interconnexion_testbench.vhd:93:9:@20ns:(report note): S = 1 MEM_CACHE_1_out: 1
-interconnexion_testbench.vhd:102:9:@30ns:(report note): S = 3 RES_OUT: 3
+interconnexion_testbench.vhd:84:9:@0ms:(report note): ---------------------------
+interconnexion_testbench.vhd:85:9:@0ms:(report note): Test routage A_IN vers Buffer_A
+interconnexion_testbench.vhd:89:9:@10ns:(report note): SEL_ROUTE = 0 A_IN = 10 Buffer_A: 10
+interconnexion_testbench.vhd:94:9:@10ns:(report note): ---------------------------
+interconnexion_testbench.vhd:95:9:@10ns:(report note): Test S vers MEM_CACHE_1_out
+interconnexion_testbench.vhd:99:9:@20ns:(report note): SEL_ROUTE = 14 S = 1 MEM_CACHE_1_out: 1
+interconnexion_testbench.vhd:104:9:@20ns:(report note): ---------------------------
+interconnexion_testbench.vhd:105:9:@20ns:(report note): Test S vers RES_OUT
+interconnexion_testbench.vhd:111:9:@30ns:(report note): SEL_ROUTE = 0 S = 3 RES_OUT: 3 ready (le calcul est effectué)= '1'
 ```
 
 ### 🔄 Opérations possibles
@@ -384,7 +417,7 @@ end mem_instructions;
 
 **Fonctionnement** : À chaque front montant de `clk`, l’instruction à l’adresse `instruction` est placée sur `donnee`.
 
-### Test de la mémoire d'instructions
+### 🧪 Test de la mémoire d'instructions
 
 > Fichier de test : [mem_instructions_testbench.vhd](./mem_instructions_testbench.vhd)
 
@@ -398,6 +431,32 @@ mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) o
 ![Résultats de la simulation](./img/mem_instructions_testbench.png)
 
 ---
+
+## Top Level
+
+Réunis tous les composants précédents, le top level est l'entité principale qui orchestre le fonctionnement du microcontrôleur.
+
+### 🧪 Test du Top Level
+
+> Fichier de test : [MCU_PRJ_2025_TopLevel_testbench.vhd](./MCU_PRJ_2025_TopLevel_testbench.vhd)
+
+```bash
+./test_top.sh
+top_level_testbench.vhd:69:9:@0ms:(report note):  Test du top_level
+top_level_testbench.vhd:74:9:@20ns:(report note): ----------------------------
+top_level_testbench.vhd:75:9:@20ns:(report note): Appuie sur le bouton 0 pour réinitialiser
+top_level_testbench.vhd:80:9:@1120ns:(report note): BTN 0 reset : '0''0''0''0''0''0''0''0' | sw=1111
+top_level_testbench.vhd:91:9:@1120ns:(report note): ----------------------------
+top_level_testbench.vhd:92:9:@1120ns:(report note): Appuie sur le bouton 1 pour tester la premiere fonction :
+top_level_testbench.vhd:101:9:@2020ns:(report note): A*B : '0''0''0''0''0''0''0''1' | sw=1111
+top_level_testbench.vhd:112:9:@2020ns:(report note): ----------------------------
+top_level_testbench.vhd:113:9:@2020ns:(report note): Appuie sur le bouton 1 pour tester la deuxieme fonction :
+top_level_testbench.vhd:121:9:@2920ns:(report note): (A + B) xnor  A ='0''0''0''0''1''1''1''0' | sw=1111
+top_level_testbench.vhd:132:9:@2920ns:(report note): ----------------------------
+top_level_testbench.vhd:133:9:@2920ns:(report note): Appuie sur le bouton 3 pour tester la troisieme fonction :
+top_level_testbench.vhd:141:9:@3820ns:(report note): (A0 and  B1) or (A1 and B0) ='0''0''0''0''0''1''1''1' | sw=1111
+top_level_testbench.vhd:152:9:@3820ns:(assertion failure): Fin de simulation à 5000 ns
+```
 
 ## 5️⃣ Minuteur
 

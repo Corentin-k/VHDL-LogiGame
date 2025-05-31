@@ -79,30 +79,39 @@ begin
         );
     process
     begin
+
         -- Test routage A_IN vers Buffer_A
+        report "---------------------------";
+        report "Test routage A_IN vers Buffer_A"  severity note;
         A_IN_sim <= "1010";
         SEL_ROUTE_sim <= "0000";
         wait for 10 ns;
-        report "A_IN = " & integer'image(to_integer(unsigned(A_IN_sim))) & 
-               " Buffer_A: " & integer'image(to_integer(unsigned(Buffer_A_sim)));
+        report "SEL_ROUTE = " & integer'image(to_integer(unsigned(SEL_ROUTE_sim)))
+                & " A_IN = " & integer'image(to_integer(unsigned(A_IN_sim))) 
+                & " Buffer_A: " & integer'image(to_integer(unsigned(Buffer_A_sim)));
 
         -- Test S vers MEM_CACHE_1_out
+        report "---------------------------";
+        report "Test S vers MEM_CACHE_1_out"  severity note;
         S_sim <= "00000001";
         SEL_ROUTE_sim <= "1110";
         wait for 10 ns;
-        report "S = " & integer'image(to_integer(unsigned(S_sim))) & 
-               " MEM_CACHE_1_out: " & integer'image(to_integer(unsigned(MEM_CACHE_1_out_sim)));
+        report "SEL_ROUTE = " & integer'image(to_integer(unsigned(SEL_ROUTE_sim)))
+               & " S = " & integer'image(to_integer(unsigned(S_sim))) 
+               & " MEM_CACHE_1_out: " & integer'image(to_integer(unsigned(MEM_CACHE_1_out_sim)));
 
         -- Test S vers RES_OUT
+        report "---------------------------";
+        report "Test S vers RES_OUT"  severity note;
         SEL_ROUTE_sim <= "0000";
         S_sim <= "00000011";
         
         SEL_OUT_sim <= "11";
         wait for 10 ns;
-        report "S = " & integer'image(to_integer(unsigned(S_sim))) & 
+        report "SEL_ROUTE = " & integer'image(to_integer(unsigned(SEL_ROUTE_sim)))
+               & " S = " & integer'image(to_integer(unsigned(S_sim))) & 
                " RES_OUT: " & integer'image(to_integer(unsigned(RES_OUT_sim))) & 
-               " ready = " & std_logic'image(ready_sim);
-
+               " ready (le calcul est effectué)= " & std_logic'image(ready_sim);
         wait;
     end process;
 
