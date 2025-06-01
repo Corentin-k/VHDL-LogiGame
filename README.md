@@ -6,6 +6,8 @@
 
 Projet réaliser dans le cadre du cours de VHDL 2 à l'**EFREI Paris** en 2025.
 
+A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGame](https://github.com/Corentin-k/VHDL-LogiGame)
+
 ---
 
 ## 🗂️ Sommaire
@@ -373,6 +375,12 @@ L’avertissement “metavalue” provient de s1_sim2 qui est encore indéfini t
 
 L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.
 
+En fonction de la valeur de `SEL_ROUTE`, elle détermine quelles données sont transférées vers les buffers, les mémoires cache ou la sortie finale. Ainsi, elle permet de router les données entre les différentes unités de l'ALU et de gérer les entrées/sorties des buffers et mémoires cache. De plus en fonction de la valeur de `SEL_OUT`, elle permet de sélectionner la sortie finale de l'interconnexion.
+
+De plus, nous avons fait en sorte que pour chaque cas de routage, l'interconnexion envoie la valeur des entrée vers les bonne mémoires cache ou buffers mais envoie également '0' par défaut vers les autres buffers et mémoires pour éviter tous problemes de routage, les signaux 'enable' étant désactivés pour les buffers non utilisés, leur valeurs ne sont pas modifiées.
+
+Par la suite pour valider une opération, nous avons ajouté un signal `ready` qui est mis à '1' lorsque le calcul est effectué et que la sortie est valide. L'interconnexion envoie donc une valeur de 1 au signal 'ready' qui indique que le calcul a été effectué et que la sortie est valide. Ce signal sera utilisé dans le top level pour indiquer que le résultat est prêt à être utilisé. Ainsi comme nous le verrons dans la memoire d'instruction, tous instruction finnissant par 11, RES_OUT=S permettra de finir une opération car le signal `ready` sera à '1' et la sortie `RES_OUT` sera valide.
+
 ### ✨ Entité `interconnexion`
 
 ```vhdl
@@ -403,9 +411,9 @@ entity interconnexion is
         Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
 
         SEL_OUT : in std_logic_vector(1 downto 0); -- Sélecteur de sortie
-        RES_OUT : out std_logic_vector(7 downto 0) -- Sortie
+        RES_OUT : out std_logic_vector(7 downto 0); -- Sortie
 
-
+        ready : out std_logic
     );
 end interconnexion;
 ```
@@ -418,7 +426,7 @@ L'interconnexion permet ainsi de réaliser les opérations suivantes :
 - **MEM_CACHE_1 -> Buffer_A** (4 bits de poids faible)
 - **MEM_CACHE_1 -> Buffer_A** (4 bits de poids fort)
 - **MEM_CACHE_2 -> Buffer_A** (4 bits de poids faible)
-- **MEM*CACHE_2 -> Buffer***A (4 bits de poids fort)
+- **MEM_CACHE_2 -> Buffer_A** (4 bits de poids fort)
 - **S -> Buffer_A** (4 bits de poids faible)
 - **S -> Buffer_A** (4 bits de poids fort)
 
@@ -453,7 +461,7 @@ SEL_ROUTE = 0 S = 3 RES_OUT: 3 ready (le calcul est effectué)= '1'
 ![Résultats de la simulation](./interconnexion/interconnexion_waves.png)
 
 Sur le schéma de simulation, on peut voir que les signaux sont correctement routés en fonction de la valeur de `SEL_ROUTE`. Au niveau de la ligne rouge, SEL_ROUTE est à 1110, ce qui correspond à l'opération de routage de S vers MEM_CACHE_1_out. On peut voir que la valeur de S est bien transmise à MEM_CACHE_1_out.
-De plus buffer \_A et Buffer_B sont modifié puisque l'on envoie 0 comme valeur par défaut mais puisque l'on a pas activé les signaux d'activation `Buffer_A_enable` et `Buffer_B_enable`, ils ne sont pas modifiés.
+De plus buffer_A et Buffer_B sont modifié puisque l'on envoie 0 comme valeur par défaut mais puisque l'on a pas activé les signaux d'activation `Buffer_A_enable` et `Buffer_B_enable`, ils ne sont pas modifiés.
 La sortie est donc bien à 01.
 
 De plus sur le test 3, on remarque un signal `ready` qui est à '1'. Ce signal indique que le calcul a été effectué et que la sortie `RES_OUT` est valide. Il sera utilisé dans le top level pour indiquer que le résultat est prêt à être utilisé.
@@ -467,10 +475,10 @@ La mémoire d’instructions contient le programme à exécuter (suite d’instr
 ```vhdl
 entity mem_instructions is
     port (
-        clk         : in  std_logic;
-        reset       : in  std_logic;
-        instruction : in  unsigned(6 downto 0); -- Adresse (7 bits)
-        donnee      : out std_logic_vector(9 downto 0) -- Instruction lue
+        clk      : in  std_logic;
+        reset    : in  std_logic;
+        instruction : in std_logic_vector(6 downto 0);-- 7 bits pour 128 instructions
+        donnee : out std_logic_vector(9 downto 0)
     );
 end mem_instructions;
 ```
@@ -488,7 +496,7 @@ mem_instructions_testbench.vhd:245:5:@147ns:(report note): RES_OUT (A+B xnor A) 
 mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) or (A1 and B0) = 1
 ```
 
-![Résultats de la simulation](./img/mem_instructions_testbench.png)
+![Résultats de la simulation](./mem_instructions/mem_instructions_waves.png)
 
 ---
 
