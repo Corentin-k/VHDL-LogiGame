@@ -40,7 +40,7 @@ A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGam
 
 ## 📝 Introduction
 
-Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur, les quatres switces et les quatres boutons de la carte
+Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur, les quatres switch et les quatres boutons de la carte
 L’ensemble du projet a été développé sous **VS Code** avec **WSL** et simulé avec **GHDL** et **GTKWave**.
 
 <p align="center">
@@ -200,7 +200,8 @@ Les 4 bits de poids faible reprennent la valeur d’origine.
         grand_B(3 downto 0) := B;
 ```
 
-Un autre probleme rencontrée durant les différents tests est la gestions de l'affichage des signaux quel fonction utiliser. Voici un récapitulatif des fonctions que nous avons utilisées pour afficher les signaux en fonction des types de données:
+Un autre problème rencontrée durant les différents tests est la gestions de l'affichage des signaux : savoir comment afficher les signaux en fonction de leur type (std_logic, std_logic_vector, etc.).
+Voici un récapitulatif des fonctions que nous avons utilisées pour afficher les signaux en fonction des types de données:
 
 | Type de données  | Fonction utilisée                                       | Format de sortie     |
 | ---------------- | ------------------------------------------------------- | -------------------- |
