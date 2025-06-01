@@ -4,29 +4,33 @@
 
 [Corentin KERVAGORET](https://github.com/Corentin-k) • [Arnaud GRIVEL](https://github.com/Arn7516) • [Mathias BENOIT](https://github.com/mat15tc)
 
+Projet réaliser dans le cadre du cours de VHDL 2 à l'**EFREI Paris** en 2025.
+
 ---
 
 ## 🗂️ Sommaire
 
 ### 🧩 Cœur de contrôleur
 
-1. [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
-2. [2️⃣ Buffers](#2️⃣-buffers)
-3. [3️⃣ Réalisation de l’interconnexion](#3️⃣-réalisation-de-linterconnexion)
-4. [4️⃣ Mémoire d'instructions](#4️⃣-mémoire-dinstructions)
-5. [5️⃣ Top Level](#5️⃣-top-level)
+1. - [x] [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
+2. - [x] [2️⃣ Buffers](#2️⃣-buffers)
+3. - [x] [3️⃣ Réalisation de l’interconnexion](#3️⃣-réalisation-de-linterconnexion)
+4. - [x] [4️⃣ Mémoire d'instructions](#4️⃣-mémoire-dinstructions)
+5. - [x] [5️⃣ Top Level](#5️⃣-top-level)
 
 ### 🎮 Le jeu
 
-5. [6️⃣ Minuteur](#6️⃣-minuteur)
-6. [7️⃣ Compteur de score](#7️⃣-compteur-de-score)
-7. [8️⃣ Vérificateur de réponse](#8️⃣-vérificateur-de-réponse)
-8. [9️⃣ Générateur pseudo-aléatoire (LFSR)](#9️⃣-générateur-pseudo-aléatoire-lfsr)
-9. [🔟 Contrôleur principal (FSM)](#🔟-contrôleur-principal-fsm)
+5. - [ ] [6️⃣ Minuteur](#6️⃣-minuteur)
+6. - [ ] [7️⃣ Compteur de score](#7️⃣-compteur-de-score)
+7. - [ ] [8️⃣ Vérificateur de réponse](#8️⃣-vérificateur-de-réponse)
+8. - [ ] [9️⃣ Générateur pseudo-aléatoire (LFSR)](#9️⃣-générateur-pseudo-aléatoire-lfsr)
+9. - [ ] [🔟 Contrôleur principal (FSM)](#🔟-contrôleur-principal-fsm)
 
 ### 📎 Annexes
 
 10. [Vivado : Installation et Test de l’ALU](#vivado--installation-et-test-de-lalu)
+
+> Tous les composants `[x]` ont été testés avec des testbenchs VHDL et simulés avec GHDL et tester sur la carte ARTY A7 avec Vivado. Les autres composants `[ ]` ont été créés mais pas encore testés.
 
 ---
 
@@ -34,12 +38,26 @@
 
 ## 📝 Introduction
 
-Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur.
+Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur, les quatres switces et les quatres boutons de la carte
 L’ensemble du projet a été développé sous **VS Code** avec **WSL** et simulé avec **GHDL** et **GTKWave**.
 
-![Carte ARTY A7](./img/71YKkVSeLqL.webp)
+<p align="center">
+  <img src="./img/71YKkVSeLqL.webp" alt="Carte ARTY A7" width="300"/>
+</p>
 
-Les composants réalisés : ALU, Buffers, Interconnexion, Mémoire d'instructions et un top Level qui réunis tous les composants.
+Le projet est divisé en deux parties :
+
+- La premiere partie du projet consiste à réaliser le cœur du microcontrôleur, c'est-à-dire l'ALU et les composants associés, afin de réaliser trois fonctions qui seront controlé par les trois boutons grâce à la réalisation d'un automate à états finis (FSM) dans le top level.
+  Nous avons donc réalisé les composants suivants : ALU, Buffers, Interconnexion, Mémoire d'instructions et un top Level qui réunis tous les composants.
+
+- La seconde partie du projets consiste à réaliser les composants spécifiques au jeu, à savoir : un minuteur, un compteur de score, un vérificateur de réponse, un générateur pseudo-aléatoire (LFSR) et un contrôleur principal (FSM).
+  Tous ces composants ont été réalisés mais pas encore testés.
+
+Pour chaque entité VHDL créée, nous avons développé un **testbench** complet pour valider son bon fonctionnement. Ce testbench permet de simuler l'entité et de vérifier que les sorties correspondent aux attentes en fonction des entrées fournies. Nous avons utilisé **GHDL** pour la simulation et **GTKWave** pour visualiser les signaux.
+Nous avons également utilisé **Vivado** pour la synthèse et la programmation de la carte ARTY A7. Vivado nous a permis de vérifier le bon fonctionnement de l'ALU et de l'ensemble du microcontrôleur sur la carte.
+
+Le projet est structuré de la manière suivante : un dossier pour chaque entité VHDL nommé `nom_entité` contenant l'entité `nom_entité.vhd` ( avec l'entité `nom_entité` et son architecture `nom_entité_arch`), son testbench `nom_entité_testbench.vhd`, le fichier de simulation `nom_entité_gtkwave.vcd` et le resultat de la simulation `nom_entité_waves.png`.
+Dans la partie [Démarrage rapide](#🚀-démarrage-rapide), nous avons créér des scripts bash pour faciliter la simulation et la compilation des différents modules. Ces scripts permettent de lancer la simulation d'un module en particulier et d'ouvrir automatiquement GTKWave pour visualiser les signaux.
 
 ---
 
@@ -50,7 +68,7 @@ Les composants réalisés : ALU, Buffers, Interconnexion, Mémoire d'instruction
 ### Prérequis
 
 - **Windows 10/11 avec WSL** (Windows Subsystem for Linux)
-- **VS Code** avec l’extension Remote - WSL
+- **VS Code** avec l’extension - WSL
 - **GHDL** installé sous WSL (`sudo apt install ghdl gtkwave`)
 - **GTKWave** pour visualiser les signaux (`sudo apt install gtkwave`)
 - **Vivado** (pour la synthèse sur carte, voir : [Installation de Vivado](#vivado--installation-et-test-de-lalu))
@@ -159,7 +177,7 @@ L'ALU est capable de réaliser les opérations suivantes :
 | 1110 | A-B                 |
 | 1111 | A\*B                |
 
-### 🛠️ Variables internes
+### 🛠️ Variables internes et affichage des types
 
 Pour certaines opérations (addition, soustraction, multiplication), il est nécessaire de travailler sur des vecteurs plus larges que les entrées d’origine pour éviter les erreurs de débordement et permettre une gestion correcte du signe (signed/unsigned).
 
@@ -178,6 +196,27 @@ Les 4 bits de poids faible reprennent la valeur d’origine.
         grand_A(3 downto 0) := A;
         grand_B(7 downto 4) := (others => B(3));
         grand_B(3 downto 0) := B;
+```
+
+Un autre probleme rencontrée durant les différents tests est la gestions de l'affichage des signaux quel fonction utiliser. Voici un récapitulatif des fonctions que nous avons utilisées pour afficher les signaux en fonction des types de données:
+
+| Type de données  | Fonction utilisée                                       | Format de sortie     |
+| ---------------- | ------------------------------------------------------- | -------------------- |
+| std_logic        | `std_logic'image(signal)` ou` std_ulogic'image(signal)` | binaire              |
+| std_logic_vector | `to_string(signal)`                                     | binaire              |
+| std_logic_vector | `integer'image(to_integer(unsigned(signal)))`           | décimal signé ou non |
+
+Cependant la fonction `to_string(signal)` n'est pas disponible dans la version ghld utilisé, il a donc fallu créer une fonction pour afficher les signaux de type `std_logic_vector` en binaire.
+
+```vhdl
+        function to_string(slv : std_logic_vector) return string is
+                variable result : string(1 to slv'length);
+            begin
+                for i in slv'range loop
+                    result(slv'length - (i - slv'low)) := character'VALUE(std_ulogic'image(slv(i)));
+                end loop;
+                return result;
+            end function;
 ```
 
 ## 🧪 Test de l'ALU
@@ -225,7 +264,7 @@ end procedure;
 ![testbench](./hearth_ual/hearth_ual_waves.png)
 
 Ici nous avons un exemple de test de l'ALU :
-sel_s = "1000" se qui correspond à l'opération shift droit de A avec une entrée de retenue qui vaut 1. On peut voir que le résultat est bien le bon. A vaut 10 soit 1010 et le résultat est donc 0D soit 1101.
+sel_s = "1000" se qui correspond à l'opération shift droit de A avec une entrée de retenue qui vaut 1. On peut voir que le résultat est bien le bon. A vaut 10 en hexadécimal soit 1010 en binaire et le résultat est donc 0D soit 1101.
 
 Ou directement par les asserts :
 
@@ -250,7 +289,7 @@ Test: Soustraction A-B | A=7 B=3 SR_IN_L='0' SR_IN_R='0' SEL_FCT=14 S=4 SR_OUT_L
 Tous les tests passés avec succès.
 ```
 
-> Note : pour la lecutre nous avons supprimé chqaue 'hearth_ual_testbench.vhd:50:13:@60ns:(report note):' devant les tests pour une meilleure lisibilité.
+> **Note : pour la lecutre nous avons supprimé chaque 'hearth_ual_testbench.vhd:50:13:@60ns:(report note):' devant les tests pour une meilleure lisibilité.**
 
 ## 🗺️ Schéma de l’ALU
 
@@ -266,7 +305,7 @@ Tous les tests passés avec succès.
 
 ### ✨ Entité `buffer_ual`
 
-Au début du projet, deux types de buffers étaient envisagés :
+Au début du projet, nous avons envisagé deux types de buffers :
 
 - **Buffer avec signal d’activation (`enable`)** : la sortie **est modifiée uniquement si `enable` est à '1'** ; sinon, la valeur précédente est conservée (la modification est empêchée).
 - **Buffer sans signal d’activation** : la sortie **est modifiée à chaque front d’horloge**, sans condition.
@@ -298,8 +337,10 @@ end buffer_ual;
 
 ## 🧪 Test des buffers avec/sans enable:
 
+> Fichier de test : [buffer_ual_testbench.vhd](./buffer_ual/buffer_ual_testbench.vhd)
+
 ```bash
-./run_vhdl.sh buffer_ual --g
+./run_vhdl.sh buffer_ual
 Buffer 4 bits sans enable :
 e1_sim:10
 s1_sim1: 10
@@ -321,8 +362,10 @@ e2_sim:1
 Valeur de s1_sim2: 7
 ```
 
-On remarque que malgres la tentatvide modifier la valeur de e2_sim sans activer enable, il conserve la valeur précédentes.
-De plus l'erreur de metavalue nous indique que la valeur de e2_sim n'est pas définie, ce qui est normal car nous n'avons pas activé le signal d'activation `enable`.
+On constate que, malgré la modification de e2_sim avec enable = ’0’, la sortie s1_sim2 reste figée sur sa valeur précédente.
+L’avertissement “metavalue” provient de s1_sim2 qui est encore indéfini tant que enable n’a pas été activé, ce qui est attendu.
+
+![Résultats de la simulation](./buffer_ual/buffer_ual_waves.png)
 
 ---
 
