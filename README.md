@@ -4,9 +4,9 @@
 
 [Corentin KERVAGORET](https://github.com/Corentin-k) • [Arnaud GRIVEL](https://github.com/Arn7516) • [Mathias BENOIT](https://github.com/mat15tc)
 
-Projet réaliser dans le cadre du cours de VHDL 2 à l'**EFREI Paris** en 2025.
+Projet réalisé dans le cadre du cours de VHDL 2 à l'**EFREI Paris** en 2025.
 
-A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGame](https://github.com/Corentin-k/VHDL-LogiGame)
+Remarque : l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGame](https://github.com/Corentin-k/VHDL-LogiGame)
 
 ---
 
@@ -32,7 +32,7 @@ A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGam
 
 10. [Vivado : Installation et Test de l’ALU](#vivado--installation-et-test-de-lalu)
 
-> Tous les composants `[x]` ont été testés avec des testbenchs VHDL et simulés avec GHDL et tester sur la carte ARTY A7 avec Vivado. Les autres composants `[ ]` ont été créés mais pas encore testés.
+> Tous les composants `[x]` ont été testés avec des testbenchs VHDL, simulés avec GHDL et à nouveau testés sur la carte ARTY A7 avec Vivado. Les autres composants `[ ]` ont été créés mais pas encore testés.
 
 ---
 
@@ -40,7 +40,7 @@ A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGam
 
 ## 📝 Introduction
 
-Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur, les quatres switch et les quatres boutons de la carte
+Ce projet consiste à réaliser un mini-jeu de type **Simon Game** sur la carte **ARTY A7** en utilisant les huit LEDs du microcontrôleur, les quatres switchs et les quatres boutons de la carte.
 L’ensemble du projet a été développé sous **VS Code** avec **WSL** et simulé avec **GHDL** et **GTKWave**.
 
 <p align="center">
@@ -49,17 +49,18 @@ L’ensemble du projet a été développé sous **VS Code** avec **WSL** et simu
 
 Le projet est divisé en deux parties :
 
-- La premiere partie du projet consiste à réaliser le cœur du microcontrôleur, c'est-à-dire l'ALU et les composants associés, afin de réaliser trois fonctions qui seront controlé par les trois boutons grâce à la réalisation d'un automate à états finis (FSM) dans le top level.
-  Nous avons donc réalisé les composants suivants : ALU, Buffers, Interconnexion, Mémoire d'instructions et un top Level qui réunis tous les composants.
+- La premiere partie du projet consiste à réaliser le cœur du microcontrôleur : l'ALU et les composants associés, afin de réaliser trois fonctions qui seront controlées par trois boutons grâce à la réalisation d'un automate à états finis (FSM) dans le top level.
+  Nous avons donc réalisé les composants suivants : ALU, Buffers, Interconnexion, Mémoire d'instructions et un top Level qui réuni tous les composants.
 
-- La seconde partie du projets consiste à réaliser les composants spécifiques au jeu, à savoir : un minuteur, un compteur de score, un vérificateur de réponse, un générateur pseudo-aléatoire (LFSR) et un contrôleur principal (FSM).
+- La seconde partie du projet consiste à réaliser les composants spécifiques au jeu : un minuteur, un compteur de score, un vérificateur de réponse, un générateur pseudo-aléatoire (LFSR) et un contrôleur principal (FSM).
   Tous ces composants ont été réalisés mais pas encore testés.
 
-Pour chaque entité VHDL créée, nous avons développé un **testbench** complet pour valider son bon fonctionnement. Ce testbench permet de simuler l'entité et de vérifier que les sorties correspondent aux attentes en fonction des entrées fournies. Nous avons utilisé **GHDL** pour la simulation et **GTKWave** pour visualiser les signaux.
+Pour chaque entité VHDL créée, nous avons développé un **testbench** complet pour valider son bon fonctionnement. Ce testbench permet de simuler l'entité et de vérifier les sorties en fonction des entrées fournies. Nous avons utilisé **GHDL** pour la simulation et **GTKWave** pour visualiser les signaux.
 Nous avons également utilisé **Vivado** pour la synthèse et la programmation de la carte ARTY A7. Vivado nous a permis de vérifier le bon fonctionnement de l'ALU et de l'ensemble du microcontrôleur sur la carte.
 
-Le projet est structuré de la manière suivante : un dossier pour chaque entité VHDL nommé `nom_entité` contenant l'entité `nom_entité.vhd` ( avec l'entité `nom_entité` et son architecture `nom_entité_arch`), son testbench `nom_entité_testbench.vhd`, le fichier de simulation `nom_entité_gtkwave.vcd` et le resultat de la simulation `nom_entité_waves.png`.
-Dans la partie [Démarrage rapide](#🚀-démarrage-rapide), nous avons créér des scripts bash pour faciliter la simulation et la compilation des différents modules. Ces scripts permettent de lancer la simulation d'un module en particulier et d'ouvrir automatiquement GTKWave pour visualiser les signaux.
+Le projet est structuré de la manière suivante : 
+Vous trouverez un dossier pour chaque entité VHDL nommé `nom_entité` contenant l'entité `nom_entité.vhd` (soit l'entité `nom_entité` et son architecture `nom_entité_arch`) ; son testbench `nom_entité_testbench.vhd`, un fichier de simulation `nom_entité_gtkwave.vcd` et le resultat de la simulation `nom_entité_waves.png`.
+Dans la partie [Démarrage rapide](#🚀-démarrage-rapide), nous avons créé des scripts bash pour faciliter la simulation et la compilation des différents modules. Ces scripts permettent de lancer la simulation d'un module en particulier et d'ouvrir automatiquement GTKWave pour visualiser les signaux.
 
 ---
 
@@ -89,7 +90,7 @@ Dans la partie [Démarrage rapide](#🚀-démarrage-rapide), nous avons créér 
    Plusieurs scripts bash sont fournis pour faciliter la simulation et la compilation des différents modules :
 
    - Dans le dossier racine du projet.
-   - Pour tester un component qui ne dépend pas d'autres modules, utilisez :
+   - Pour tester un component qui ne dépend pas d'autres modules :
 
      ```bash
      ./run_vhdl.sh nom_module
@@ -107,7 +108,7 @@ Dans la partie [Démarrage rapide](#🚀-démarrage-rapide), nous avons créér 
      ./run_vhdl.sh interconnexion --g
      ```
 
-- Pour le test de la mémoire d'instruction et le top level deux scripts ont été réalisé :
+- Pour le test de la mémoire d'instruction et le top level, deux scripts ont été réalisés. 
 
   Les scripts compilent tous les modules nécessaires et lancent la simulation avec génération d’un fichier VCD pour GTKWave.
 
@@ -122,8 +123,8 @@ Dans la partie [Démarrage rapide](#🚀-démarrage-rapide), nous avons créér 
 
 ## 1️⃣ Réalisation d'un ALU
 
-L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Il est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
-Il est composé de plusieurs unités fonctionnelles, chacune étant responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection `SEL_FCT` qui détermine quelle opération doit être effectuée sur les entrées `A` et `B` .
+L'ALU (Arithmetic and Logic Unit) est l'unité de calcul du microcontroleur. Elle est capable de réaliser des opérations arithmétiques et logiques sur des entiers de 8 bits.
+Elle est composée de plusieurs unités fonctionnelles, où chaque unité est responsable d'une opération spécifique. L'ALU est contrôlée par un signal de sélection `SEL_FCT` qui détermine quelle opération doit être effectuée sur les entrées `A` et `B` .
 
 ### ✨ Entité `Hearth_UAL`
 
@@ -183,11 +184,11 @@ L'ALU est capable de réaliser les opérations suivantes :
 
 Pour certaines opérations (addition, soustraction, multiplication), il est nécessaire de travailler sur des vecteurs plus larges que les entrées d’origine pour éviter les erreurs de débordement et permettre une gestion correcte du signe (signed/unsigned).
 
-On a donc créé des variables internes grand_A et grand_B :
+Nous avons donc créé des variables internes grand_A et grand_B :
 
 Ces variables étendent A et B de 4 à 8 bits.
-Les 4 bits de poids fort sont remplis avec le bit de signe (A(3) ou B(3)), ce qui permet de conserver le signe lors des opérations arithmétiques (extension de signe pour signed).
-Les 4 bits de poids faible reprennent la valeur d’origine.
+Les 4 bits de poids forts sont remplis avec le bit de signe (A(3) ou B(3)), ce qui permet de conserver le signe lors des opérations arithmétiques (extension de signe pour signed).
+Les 4 bits de poids faibles reprennent la valeur d’origine.
 
 ```vhdl
 
@@ -200,8 +201,8 @@ Les 4 bits de poids faible reprennent la valeur d’origine.
         grand_B(3 downto 0) := B;
 ```
 
-Un autre problème rencontrée durant les différents tests est la gestions de l'affichage des signaux : savoir comment afficher les signaux en fonction de leur type (std_logic, std_logic_vector, etc.).
-Voici un récapitulatif des fonctions que nous avons utilisées pour afficher les signaux en fonction des types de données:
+Un autre problème que nous avons rencontré durant les différents tests est la gestion de l'affichage des signaux. Dès lors, nous devions déterminer une façon d'afficher les signaux en fonction de leur type (std_logic, std_logic_vector, etc.).
+Vous trouverez ci dessous un récapitulatif des fonctions que nous avons utilisées pour y parvenir :
 
 | Type de données  | Fonction utilisée                                       | Format de sortie     |
 | ---------------- | ------------------------------------------------------- | -------------------- |
@@ -209,7 +210,7 @@ Voici un récapitulatif des fonctions que nous avons utilisées pour afficher le
 | std_logic_vector | `to_string(signal)`                                     | binaire              |
 | std_logic_vector | `integer'image(to_integer(unsigned(signal)))`           | décimal signé ou non |
 
-Cependant la fonction `to_string(signal)` n'est pas disponible dans la version ghld utilisé, il a donc fallu créer une fonction pour afficher les signaux de type `std_logic_vector` en binaire.
+Cependant la fonction `to_string(signal)` n'est pas disponible dans la version ghld utilisé. Il a donc fallu créer une fonction pour afficher les signaux de type `std_logic_vector` en binaire.
 
 ```vhdl
         function to_string(slv : std_logic_vector) return string is
@@ -267,9 +268,9 @@ end procedure;
 ![testbench](./hearth_ual/hearth_ual_waves.png)
 
 Ici nous avons un exemple de test de l'ALU :
-sel_s = "1000" se qui correspond à l'opération shift droit de A avec une entrée de retenue qui vaut 1. On peut voir que le résultat est bien le bon. A vaut 10 en hexadécimal soit 1010 en binaire et le résultat est donc 0D soit 1101.
+sel_s = "1000" correspond à l'opération shift droit de A avec une entrée de retenue qui vaut 1. On peut donc voir qu'on retrouve le résultat attendu : A vaut 10 en hexadécimal soit 1010 en binaire et le résultat est donc 0D soit 1101.
 
-Ou directement par les asserts :
+Nous retrouvons également ce résultat par les asserts :
 
 ```bash
 ghdl -r --std=08 --ieee=synopsys ual_testbench --wave=ual_testbench.ghw
@@ -313,8 +314,8 @@ Au début du projet, nous avons envisagé deux types de buffers :
 - **Buffer avec signal d’activation (`enable`)** : la sortie **est modifiée uniquement si `enable` est à '1'** ; sinon, la valeur précédente est conservée (la modification est empêchée).
 - **Buffer sans signal d’activation** : la sortie **est modifiée à chaque front d’horloge**, sans condition.
 
-Après expérimentation, il s’est avéré plus simple et flexible d’utiliser uniquement le buffer avec signal `enable`.  
-Pour obtenir le comportement d’un buffer "sans enable", il suffit de connecter `enable` à `'1'` lors de l’instanciation.
+Après expérimentation, il était plus simple et plus flexible d’utiliser uniquement le buffer avec signal `enable`.  
+Dans ce cas, pour obtenir le comportement d’un buffer sans enable, il nous suffit de connecter `enable` à `'1'` lors de l’instanciation.
 
 Le composant `buffer_ual` est **générique** grâce au paramètre `N`, ce qui permet de créer des buffers de n’importe quelle taille (4 bits, 8 bits, etc.) selon les besoins du module (`Buffer_A`, `Buffer_B`, `MEM_CACHE_1`, `MEM_CACHE_2`…).
 
@@ -366,7 +367,7 @@ Valeur de s1_sim2: 7
 ```
 
 On constate que, malgré la modification de e2_sim avec enable = ’0’, la sortie s1_sim2 reste figée sur sa valeur précédente.
-L’avertissement “metavalue” provient de s1_sim2 qui est encore indéfini tant que enable n’a pas été activé, ce qui est attendu.
+L’avertissement “metavalue” est attendu. Il provient de s1_sim2 qui est encore indéfinie tant que enable n’a pas été activée.
 
 ![Résultats de la simulation](./buffer_ual/buffer_ual_waves.png)
 
@@ -378,9 +379,9 @@ L'interconnexion est responsable de la gestion des données entre les différent
 
 En fonction de la valeur de `SEL_ROUTE`, elle détermine quelles données sont transférées vers les buffers, les mémoires cache ou la sortie finale. Ainsi, elle permet de router les données entre les différentes unités de l'ALU et de gérer les entrées/sorties des buffers et mémoires cache. De plus en fonction de la valeur de `SEL_OUT`, elle permet de sélectionner la sortie finale de l'interconnexion.
 
-De plus, nous avons fait en sorte que pour chaque cas de routage, l'interconnexion envoie la valeur des entrée vers les bonne mémoires cache ou buffers mais envoie également '0' par défaut vers les autres buffers et mémoires pour éviter tous problemes de routage, les signaux 'enable' étant désactivés pour les buffers non utilisés, leur valeurs ne sont pas modifiées.
+De plus, nous avons fait en sorte que pour chaque cas de routage, l'interconnexion envoie non seulement les valeurs des entrées vers les bonnes mémoires cache ou buffers, mais aussi '0' par défaut vers les autres buffers et mémoires, afin d'éviter tout problème de routage. Par ailleurs, les signaux 'enable' étant désactivés pour les buffers non utilisés, leurs valeurs ne sont pas modifiées.
 
-Par la suite pour valider une opération, nous avons ajouté un signal `ready` qui est mis à '1' lorsque le calcul est effectué et que la sortie est valide. L'interconnexion envoie donc une valeur de 1 au signal 'ready' qui indique que le calcul a été effectué et que la sortie est valide. Ce signal sera utilisé dans le top level pour indiquer que le résultat est prêt à être utilisé. Ainsi comme nous le verrons dans la memoire d'instruction, tous instruction finnissant par 11, RES_OUT=S permettra de finir une opération car le signal `ready` sera à '1' et la sortie `RES_OUT` sera valide.
+Par la suite, pour valider une opération, nous avons ajouté un signal `ready` qui est mis à '1' lorsque le calcul est effectué et que la sortie est valide. L'interconnexion envoie une valeur de 1 au signal 'ready' qui indique que le calcul a été effectué et que la sortie est valide. Ce signal sera utilisé dans le top level pour indiquer que le résultat est prêt à être utilisé. Ainsi, comme nous le verrons dans la memoire d'instruction, toute instruction finnissant par 11 (RES_OUT=S), permettra de finir une opération car le signal `ready` sera à '1' et la sortie `RES_OUT` sera valide.
 
 ### ✨ Entité `interconnexion`
 
@@ -461,8 +462,8 @@ SEL_ROUTE = 0 S = 3 RES_OUT: 3 ready (le calcul est effectué)= '1'
 
 ![Résultats de la simulation](./interconnexion/interconnexion_waves.png)
 
-Sur le schéma de simulation, on peut voir que les signaux sont correctement routés en fonction de la valeur de `SEL_ROUTE`. Au niveau de la ligne rouge, SEL_ROUTE est à 1110, ce qui correspond à l'opération de routage de S vers MEM_CACHE_1_out. On peut voir que la valeur de S est bien transmise à MEM_CACHE_1_out.
-De plus buffer_A et Buffer_B sont modifié puisque l'on envoie 0 comme valeur par défaut mais puisque l'on a pas activé les signaux d'activation `Buffer_A_enable` et `Buffer_B_enable`, ils ne sont pas modifiés.
+Sur le schéma de simulation, on peut voir que les signaux sont correctement routés en fonction de la valeur de `SEL_ROUTE`. Au niveau de la ligne rouge, SEL_ROUTE = 1110 correspond à l'opération de routage de S vers MEM_CACHE_1_out. On peut voir que la valeur de S est bien transmise à MEM_CACHE_1_out.
+Buffer_A et Buffer_B sont modifiés car on envoie 0 comme valeur par défaut. Mais lorsqu'on n'active pas les signaux d'activation `Buffer_A_enable` et `Buffer_B_enable`, ils ne sont pas modifiés.
 La sortie est donc bien à 01.
 
 De plus sur le test 3, on remarque un signal `ready` qui est à '1'. Ce signal indique que le calcul a été effectué et que la sortie `RES_OUT` est valide. Il sera utilisé dans le top level pour indiquer que le résultat est prêt à être utilisé.
@@ -498,6 +499,8 @@ mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) o
 ```
 
 ![Résultats de la simulation](./mem_instructions/mem_instructions_waves.png)
+
+test
 
 ---
 
