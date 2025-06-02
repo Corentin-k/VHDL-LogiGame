@@ -709,7 +709,7 @@ Le signal ready indique quand le résultat est disponible.
 
 ### 🧪 Test du Top Level
 
-> Fichier de test : [MCU_PRJ_2025_TopLevel_testbench.vhd](./MCU_PRJ_2025_TopLevel_testbench.vhd)
+> Fichier de test : [MCU_PRJ_2025_TopLevel_testbench.vhd](./top_level/top_level_testbench.vhd)
 
 ```bash
 ./test_top.sh
@@ -721,7 +721,7 @@ top_level_testbench.vhd:91:9:@1120ns:(report note): ----------------------------
 top_level_testbench.vhd:92:9:@1120ns:(report note): Appuie sur le bouton 1 pour tester la premiere fonction :
 top_level_testbench.vhd:101:9:@2020ns:(report note): A*B : '0''0''0''0''0''0''0''1' | sw=1111
 top_level_testbench.vhd:112:9:@2020ns:(report note): ----------------------------
-top_level_testbench.vhd:113:9:@2020ns:(report note): Appuie sur le bouton 1 pour tester la deuxieme fonction :
+top_level_testbench.vhd:113:9:@2020ns:(report note): Appuie sur le bouton 2 pour tester la deuxieme fonction :
 top_level_testbench.vhd:121:9:@2920ns:(report note): (A + B) xnor  A ='0''0''0''0''1''1''1''0' | sw=1111
 top_level_testbench.vhd:132:9:@2920ns:(report note): ----------------------------
 top_level_testbench.vhd:133:9:@2920ns:(report note): Appuie sur le bouton 3 pour tester la troisieme fonction :
@@ -729,10 +729,29 @@ top_level_testbench.vhd:141:9:@3820ns:(report note): (A0 and  B1) or (A1 and B0)
 top_level_testbench.vhd:152:9:@3820ns:(assertion failure): Fin de simulation à 5000 ns
 ```
 
+![Résultats de la simulation toplevel](./top_level/top_level_waves.png)
+
+Le chronogramme nous permet d’observer la simulation de l’utilisation du microcontrôleur, mais surtout de contrôler son bon fonctionnement.
+
+Pour chaque bouton simulé, nous observons le comportement des leds qui indiquent le résultat.
+Nous avons effectué ce test avec différentes valeurs de A et B `(sw)`, en refaisant les calculs à la main afin de détecter les potentielles erreurs.
+
+Par exemple, au niveau du curseur rouge : 
+
+- A et B `(sw)` sont fixés à `"1111"`
+- le bouton simulé est le bouton 1 `(btn = 2)`, ce qui correspond à la multiplication A*B
+- on remarque que le résultat affiché sur les leds est `"0001"`
+
+Ce résultat de simulation est donc cohérent car :
+- 1111<sub>2</sub> = 15<sub>10</sub>
+- 15 × 15 = 225
+- 225<sub>10</sub> = 1110 0001<sub>2</sub>
+- en se limitant aux 4 bits de poids faible, on trouve bien `0001`.
+
 ## Partie 2 - LogiGame
 
-La partie deux vise à implementer les entités utile au fonctionnement du jeu en exploitant l'alu pprécedemment réalisé.
-Nous avons réaliser les composants suivant sans effectué de test sur la carte ni en réalisant des test poussé sur chaque entité pour confirmer son bon fonctionnement. C'est pour cela que nous avons mis tous les code dans le dossier : [Partie_jeu/](./Partie_jeu/)
+La partie deux vise à implementer les entités utiles au fonctionnement du jeu en exploitant l'ALU précedemment réalisé.
+Nous avons réalisé les composants suivants sans effectuer de test sur la carte ni en réalisant des test poussés sur chaque entité pour confirmer son bon fonctionnement. C'est pour cela que nous avons mis tous les codes dans le dossier : [Partie_jeu/](./Partie_jeu/)
 
 ## 9️⃣Générateur pseudo-aléatoire (LFSR)
 

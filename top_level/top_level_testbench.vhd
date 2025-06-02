@@ -110,7 +110,7 @@ begin
             & " | sw=" & to_string(sw);
 
         report "----------------------------";    
-        report "Appuie sur le bouton 1 pour tester la deuxieme fonction : " severity note;
+        report "Appuie sur le bouton 2 pour tester la deuxieme fonction : " severity note;
     
         wait for 300 ns;
         btn <= "0100";
