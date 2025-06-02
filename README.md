@@ -513,7 +513,50 @@ mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) o
 
 ![Résultats de la simulation](./mem_instructions/mem_instructions_waves.png)
 
-test
+Le chronogramme nous permet d’observer la simulation de l’exécution de la série d'instructions. Nous allons analyser trois séquences d'opérations distinctes.
+Remarque : le signal reset_sim qui n'apparaît pas ici, est mis à '1' puis à '0' pour réinitialiser le système.
+
+Phase 1 : La multiplication (A * B)  
+Initialisation et chargement des entrées (jusqu'à environ 30 ns) :  
+Les entrées A_in_sim et B_in_sim sont initialisées à "0011" (3 en décimal).  
+addr_sim est mis à "0000000" (instruction 0) au premier front montant de clk_sim.   Conformément à l'instruction 0 ("0000000000"), la valeur de A_in_sim ("0011") est chargée dans buffer_a_sim. On observe que buffer_a_sim devient "0011".  
+Au cycle suivant, addr_sim passe à "0000001" (instruction 1). L'instruction 1 ("0000011100") charge B_in_sim ("0011") dans buffer_b_sim. On voit buffer_b_sim passer à "0011".  
+Opération de multiplication (environ 30 ns à 60 ns) :  
+addr_sim est mis à "0000010" (instruction 2). L'instruction 2 ("1111000011") indique une opération de multiplication et la sortie du résultat sur s_sim (qui correspond à res_out_sim dans le testbench).  
+Pendant cette phase, s_sim passe à "00001001" (9 en décimal), ce qui correspond au résultat de 3 * 3.  
+Le signal ready_sim passe à '1', indiquant que le résultat est prêt.  
+
+Phase 2 : L’opération (A + B) XNOR A  
+Réinitialisation et chargement des nouvelles entrées (environ 70 ns à 90 ns) :  
+Un nouveau cycle de réinitialisation est effectué via reset_sim.  
+A_in_sim est fixé à "1111" (-1 en décimal pour un nombre signé sur 4 bits) et B_in_sim à "0111" (7 en décimal).  
+addr_sim passe successivement par les adresses correspondant aux instructions 3, 4, 5, 6, 7, 8 et 9.  
+Instruction 3 ("0000000000") : A_IN_sim ("1111") est chargé dans buffer_a_sim. buffer_a_sim devient "1111".  
+Instruction 4 ("0000011100") : B_IN_sim ("0111") est chargé dans buffer_b_sim. buffer_b_sim devient "0111".  
+Instruction 5 ("1101111000") : Effectue l'opération + des valeurs stockées dans les deux buffers et stocke le résultat dans mem_cache_1_sim. Ici, "1111" (-1) + "0111" (7) = "0110" (6). On observe que mem_cache_1_sim prend bien la valeur "0110".  
+Instruction 6 ("0000100000") : Pas d'opération, et mem_cache_1_sim ("0110") est transféré à buffer_b_sim. buffer_b_sim devient "0110".  
+Instruction 7 ("0111111100") : Effectue l'opération XOR sur les valeurs stockées dans les deux buffers et stocke le résultat dans mem_cache_2_sim. Soit "1111" XOR "0110" = "1001". On observe que mem_cache_2_sim prend la valeur "1001".  
+Instruction 8 ("0000001100") : pas d'opération, et mem_cache_2_sim ("1001") est transféré à buffer_a_sim. buffer_a_sim devient "1001".  
+Instruction 9 ("0011000011") : Effectue l'opération NOT sur la valeur dans buffer_a_sim et sort le résultat sur s_sim. Soit NOT "1001" = "0110". On observe que s_sim (et res_out_sim) prend la valeur "0110".  
+Le signal ready_sim passe à '1', indiquant que le résultat est prêt.  
+
+Phase 3 : Opération (A0 AND B1) OR (A1 AND B0)  
+Réinitialisation et chargement des nouvelles entrées (environ 150 ns à 170 ns) :   
+Une nouvelle réinitialisation est effectuée.  
+A_in_sim et B_in_sim sont fixés à "1111".  
+addr_sim passe successivement par les adresses correspondant aux instructions 10 à 19.  
+Instruction 10 ("0000000000") : A_IN_sim ("1111") est chargé dans buffer_a_sim. buffer_a_sim devient "1111".  
+Instruction 11 ("0000011100") : B_IN_sim ("1111") est chargé dans buffer_b_sim. buffer_b_sim devient "1111".    
+Instruction 12 ("1010110000") : Effectue l'opération décalage à droite de la valeur stockée dans buffer_b_sim et stocke le résultat dans buffer_b_sim. "1111" décalé à droite devient "0111". buffer_b_sim devient "0111".    
+Instruction 13 ("0101111000") : Effectue l'opération AND des valeurs stockées dans les deux buffers et stocke le résultat dans mem_cache_1_sim. Soit "1111" AND "0111" = "0111". mem_cache_1_sim devient "0111".  
+Instruction 14 ("0000000000") : A_IN_sim ("1111") est à nouveau chargé dans buffer_a_sim. buffer_a_sim redevient "1111". (Note : le testbench recharge A_IN_sim, ce qui écrase la valeur de A_in_sim avant l'instruction 16).  
+Instruction 15 ("0000011100") : B_IN_sim ("1111") est chargé dans buffer_b_sim. buffer_b_sim redevient "1111".  
+Instruction 16 ("1000010100") : Effectue l'opération décalage à droite de la valeur stockée dans buffer_a_sim et stocke le résultat dans buffer_a_sim. "1111" décalé à droite devient "0111". buffer_a_sim devient "0111".  
+Instruction 17 ("0101010100") : Effectue l'opération AND sur les valeurs dans les deux buffers et stocke le résultat dans buffer_a_sim. Soit "0111" AND "1111" = "0111". buffer_a_sim reste "0111".  
+Instruction 18 ("0000100000") : Pas d'opération et mem_cache_1_sim ("0111") est transféré à buffer_b_sim. buffer_b_sim devient "0111".  
+Instruction 19 ("0110111011") : Effectue l'opération OR sur les valeurs des deux buffers, stocke le résultat dans mem_cache_1_sim et sort le résultat sur s_sim. Soit "0111" OR "0111" = "0111". On observe que s_sim prend la valeur "0111".  
+Le signal ready_sim passe à '1', indiquant que le résultat est prêt  
+
 
 ---
 
