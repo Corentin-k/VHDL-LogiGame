@@ -471,7 +471,22 @@ De plus sur le test 3, on remarque un signal `ready` qui est à '1'. Ce signal i
 
 ### ✨ Entité `mem_instructions`
 
-La mémoire d’instructions contient le programme à exécuter (suite d’instructions codées sur 10 bits).
+La mémoire d’instructions contient la séquence d’opérations à exécuter par le microcontrôleur, chaque instruction étant codée sur 10 bits.
+Elle permet de stocker jusqu’à 128 instructions différentes (indexées de 0 à 127).
+
+Chaque instruction encode :
+
+- Les 4 premiers bits : l’opération à effectuer (ex : addition, multiplication, etc.)
+- Les 4 bits suivants : le routage des données (ex : vers quel buffer ou mémoire cache transférer le résultat)
+- Les 2 derniers bits : sélection de la sortie ou d’autres paramètres (ex : validation du résultat)
+
+L’entité mem_instructions reçoit en entrée un index d’instruction (instruction sur 7 bits) et renvoie en sortie la donnée binaire associée (donnee sur 10 bits).
+
+Nous avons donc coder les instructions pour réaliser les trois fonctions demandées :
+
+- A\*B
+- (A+B) xnor A
+- (A0 and B1) or (A1 and B0)
 
 ```vhdl
 entity mem_instructions is
@@ -483,8 +498,6 @@ entity mem_instructions is
     );
 end mem_instructions;
 ```
-
-**Fonctionnement** : À chaque front montant de `clk`, l’instruction à l’adresse `instruction` est placée sur `donnee`.
 
 ### 🧪 Test de la mémoire d'instructions
 
@@ -503,7 +516,39 @@ mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) o
 
 ## 5️⃣ Top Level
 
-Réunis tous les composants précédents, le top level est l'entité principale qui orchestre le fonctionnement du microcontrôleur.
+Le Top Level réunit tous les composants précédents : ALU, buffers, interconnexion, mémoire d’instructions, etc.
+C’est l’entité principale qui orchestre le fonctionnement du microcontrôleur et du jeu.
+
+### ✨ Entité `TopLevel`
+
+L’entité top_level gère :
+
+- Les entrées utilisateur (boutons, switches)
+- Le séquencement des instructions via la mémoire d’instructions
+- Le routage des données entre les différents modules (buffers, caches, ALU…)
+- L’affichage des résultats sur les LEDs
+
+```vhdl
+entity top_level is
+    Port (
+        CLK100MHZ : in STD_LOGIC;
+        sw        : in STD_LOGIC_VECTOR(3 downto 0);
+        btn       : in STD_LOGIC_VECTOR(3 downto 0);
+        led       : out STD_LOGIC_VECTOR(3 downto 0);
+        led0_r, led0_g, led0_b : out STD_LOGIC;
+        led1_r, led1_g, led1_b : out STD_LOGIC;
+        led2_r, led2_g, led2_b : out STD_LOGIC;
+        led3_r, led3_g, led3_b : out STD_LOGIC
+    );
+end top_level;
+```
+
+**Fonctionnement** :
+
+À chaque front d’horloge, le top level lit les entrées utilisateur et pilote la mémoire d’instructions pour déterminer quelle opération exécuter.
+Il gère un automate d’états pour sélectionner la fonction à exécuter selon le bouton pressé.
+Les résultats des calculs sont affichés sur les LEDs (vertes pour le résultat et rouges pour indiquer que le résultat est diponible).
+Le signal ready indique quand le résultat est disponible.
 
 ### 🧪 Test du Top Level
 
@@ -526,6 +571,8 @@ top_level_testbench.vhd:133:9:@2920ns:(report note): Appuie sur le bouton 3 pour
 top_level_testbench.vhd:141:9:@3820ns:(report note): (A0 and  B1) or (A1 and B0) ='0''0''0''0''0''1''1''1' | sw=1111
 top_level_testbench.vhd:152:9:@3820ns:(assertion failure): Fin de simulation à 5000 ns
 ```
+
+# Partie 2 - LogiGame
 
 ## 6️⃣ Minuteur
 
