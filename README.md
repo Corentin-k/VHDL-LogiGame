@@ -12,6 +12,10 @@ A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGam
 
 ## 🗂️ Sommaire
 
+- [📝 Introduction](#📝-introduction)
+
+Partie 1
+
 ### 🧩 Cœur de contrôleur
 
 1. - [x] [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
@@ -20,6 +24,8 @@ A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGam
 4. - [x] [4️⃣ Mémoire d'instructions](#4️⃣-mémoire-dinstructions)
 5. - [x] [5️⃣ Top Level](#5️⃣-top-level)
 
+Partie 2
+
 ### 🎮 Le jeu
 
 5. - [ ] [6️⃣ Minuteur](#6️⃣-minuteur)
@@ -27,6 +33,8 @@ A noter que l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGam
 7. - [ ] [8️⃣ Vérificateur de réponse](#8️⃣-vérificateur-de-réponse)
 8. - [ ] [9️⃣ Générateur pseudo-aléatoire (LFSR)](#9️⃣-générateur-pseudo-aléatoire-lfsr)
 9. - [ ] [🔟 Contrôleur principal (FSM)](#🔟-contrôleur-principal-fsm)
+
+- [📝Conclusion](#conclusion)
 
 ### 📎 Annexes
 
@@ -572,30 +580,111 @@ top_level_testbench.vhd:141:9:@3820ns:(report note): (A0 and  B1) or (A1 and B0)
 top_level_testbench.vhd:152:9:@3820ns:(assertion failure): Fin de simulation à 5000 ns
 ```
 
-# Partie 2 - LogiGame
+## Partie 2 - LogiGame
 
-## 6️⃣ Minuteur
+La partie deux vise à implementer les entités utile au fonctionnement du jeu en exploitant l'alu pprécedemment réalisé.
+Nous avons réaliser les composants suivant sans effectué de test sur la carte ni en réalisant des test poussé sur chaque entité pour confirmer son bon fonctionnement. C'est pour cela que nous avons mis tous les code dans le dossier : [Partie_jeu/](./Partie_jeu/)
 
-Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
+## 9️⃣Générateur pseudo-aléatoire (LFSR)
 
-### ✨ Entité `Minuteur`
+Le module LFSR (Linear Feedback Shift Register) génère une séquence pseudo-aléatoire de 4 bits, utilisée pour le choix aléatoire des couleurs dans le jeu.
+
+### ✨ Entité `lfsr`
 
 ```vhdl
-entity Minuteur is
-    port (
-        clk      : in std_logic;
-        reset    : in std_logic;
-        start    : in std_logic;
-        sw_level : in std_logic_vector(1 downto 0);
-        time_out : out std_logic
+entity lfsr is
+    port(
+        CLK100MHZ : in std_logic;  -- horloge principale (100 MHz)
+        reset : in std_logic;  -- réinitialisation du registre à une valeur initiale non nulle «1011»
+        enable : in std_logic;  -- active l’évolution du LFSR à chaque front montant
+        rnd : out std_logic_vector(3 downto 0)  -- vecteur de 4 bits représentant la valeur pseudo-aléatoire courante
     );
-end Minuteur;
+end lfsr;
 ```
 
-- Le temps de réponse dépend de `sw_level` (niveau de difficulté).
-- Le signal `time_out` passe à '1' lorsque le temps est écoulé.
+**Fonctionnement** :
 
----
+- À chaque front montant de l’horloge, si `enable='1'`, la sortie `rnd` change selon le polynôme X⁴ + X³ + 1.
+- La valeur initiale est fixée à `"1011"` pour éviter la séquence nulle.
+
+Le LFSR décale les bits à droite et calcule le nouveau bit de poids faible comme le XOR des bits 3 et 2. Cela permet de générer une séquence pseudo-aléatoire de 15 valeurs différentes avant de boucler.
+
+Pour implementer le LFSR, nous n'avons pas utilisé l'ALu créé dans la partie 1 par amnque de temps. Pour une meilleur gestion de ce composant il aurait donc fallu créé les instruction nécessaire afin de les ajouté dans la memoire d'instruciton.
+
+### 🧪 Test du LFSR
+
+> Fichier de test : [lfsr_testbench.vhd](./Partie_jeu/lfsr/lfsr_testbench.vhd)
+
+```bash
+lfsr_testbench.vhd:76:13:@25ns:(report note): rnd = 11
+lfsr_testbench.vhd:76:13:@35ns:(report note): rnd = 7
+lfsr_testbench.vhd:76:13:@45ns:(report note): rnd = 15
+lfsr_testbench.vhd:76:13:@55ns:(report note): rnd = 14
+lfsr_testbench.vhd:76:13:@65ns:(report note): rnd = 12
+lfsr_testbench.vhd:76:13:@75ns:(report note): rnd = 8
+lfsr_testbench.vhd:76:13:@85ns:(report note): rnd = 1
+lfsr_testbench.vhd:76:13:@95ns:(report note): rnd = 2
+lfsr_testbench.vhd:76:13:@105ns:(report note): rnd = 4
+lfsr_testbench.vhd:76:13:@115ns:(report note): rnd = 9
+lfsr_testbench.vhd:76:13:@125ns:(report note): rnd = 3
+lfsr_testbench.vhd:76:13:@135ns:(report note): rnd = 6
+lfsr_testbench.vhd:76:13:@145ns:(report note): rnd = 13
+lfsr_testbench.vhd:76:13:@155ns:(report note): rnd = 10
+lfsr_testbench.vhd:76:13:@165ns:(report note): rnd = 5
+lfsr_testbench.vhd:76:13:@175ns:(report note): rnd = 11
+lfsr_testbench.vhd:76:13:@185ns:(report note): rnd = 7
+lfsr_testbench.vhd:76:13:@195ns:(report note): rnd = 15
+lfsr_testbench.vhd:76:13:@205ns:(report note): rnd = 14
+lfsr_testbench.vhd:76:13:@215ns:(report note): rnd = 12
+lfsr_testbench.vhd:76:13:@225ns:(report note): rnd = 8
+lfsr_testbench.vhd:76:13:@235ns:(report note): rnd = 1
+lfsr_testbench.vhd:76:13:@245ns:(report note): rnd = 2
+lfsr_testbench.vhd:76:13:@255ns:(report note): rnd = 4
+lfsr_testbench.vhd:76:13:@265ns:(report note): rnd = 9
+lfsr_testbench.vhd:76:13:@275ns:(report note): rnd = 3
+lfsr_testbench.vhd:76:13:@285ns:(report note): rnd = 6
+lfsr_testbench.vhd:76:13:@295ns:(report note): rnd = 13
+lfsr_testbench.vhd:76:13:@305ns:(report note): rnd = 10
+lfsr_testbench.vhd:76:13:@315ns:(report note): rnd = 5
+lfsr_testbench.vhd:76:13:@365ns:(report note): rnd = 11
+lfsr_testbench.vhd:76:13:@375ns:(report note): rnd = 7
+lfsr_testbench.vhd:76:13:@385ns:(report note): rnd = 15
+lfsr_testbench.vhd:76:13:@395ns:(report note): rnd = 14
+lfsr_testbench.vhd:76:13:@405ns:(report note): rnd = 12
+lfsr_testbench.vhd:76:13:@415ns:(report note): rnd = 8
+lfsr_testbench.vhd:76:13:@425ns:(report note): rnd = 1
+lfsr_testbench.vhd:76:13:@435ns:(report note): rnd = 2
+lfsr_testbench.vhd:76:13:@445ns:(report note): rnd = 4
+lfsr_testbench.vhd:76:13:@455ns:(report note): rnd = 9
+lfsr_testbench.vhd:76:13:@465ns:(report note): rnd = 3
+lfsr_testbench.vhd:76:13:@475ns:(report note): rnd = 6
+lfsr_testbench.vhd:76:13:@485ns:(report note): rnd = 13
+lfsr_testbench.vhd:76:13:@495ns:(report note): rnd = 10
+lfsr_testbench.vhd:76:13:@505ns:(report note): rnd = 5
+lfsr_testbench.vhd:76:13:@515ns:(report note): rnd = 11
+lfsr_testbench.vhd:76:13:@525ns:(report note): rnd = 7
+lfsr_testbench.vhd:76:13:@535ns:(report note): rnd = 15
+lfsr_testbench.vhd:76:13:@545ns:(report note): rnd = 14
+lfsr_testbench.vhd:76:13:@555ns:(report note): rnd = 12
+lfsr_testbench.vhd:76:13:@565ns:(report note): rnd = 8
+lfsr_testbench.vhd:76:13:@575ns:(report note): rnd = 1
+lfsr_testbench.vhd:76:13:@585ns:(report note): rnd = 2
+lfsr_testbench.vhd:76:13:@595ns:(report note): rnd = 4
+lfsr_testbench.vhd:76:13:@605ns:(report note): rnd = 9
+lfsr_testbench.vhd:76:13:@615ns:(report note): rnd = 3
+lfsr_testbench.vhd:76:13:@625ns:(report note): rnd = 6
+lfsr_testbench.vhd:76:13:@635ns:(report note): rnd = 13
+lfsr_testbench.vhd:76:13:@645ns:(report note): rnd = 10
+lfsr_testbench.vhd:76:13:@655ns:(report note): rnd = 5
+```
+
+![Résultats de la simulation](./Partie_jeu/lfsr/lfsr_waves.png)
+
+On observe que rnd_sim change à chaque front montant de l’horloge lorsque enable_sim est à '1'.
+Après un reset, la valeur revient bien à "1011" (soit 11 en décimal).
+La séquence de valeurs produites (11, 7, 15, 14, 12, 8, 1, 2, 4, 9, 3, 6, 13, 10, 5, ...) correspond exactement à la séquence attendue pour un LFSR 4 bits avec le polynôme X⁴ + X³ + 1. De plus, comme convenu, le LFSR génère 15 valeurs différentes avant de revenir à la valeur initiale.
+
+# A partir d'ici plus aucun testbench n'a été réaliser pour vérifier le bon fonctionnement des entités cependant les composant ont été réaliser
 
 ## 7️⃣ Compteur de score
 
@@ -617,6 +706,10 @@ end score_compteur;
 
 - Le score s’incrémente à chaque bonne réponse (`valid_hit = '1'`).
 - `game_over` passe à '1' lorsque le score atteint 15.
+
+### 🧪 Test du score_compteur
+
+Pas de test efffectué sur ce composant
 
 ---
 
@@ -644,27 +737,34 @@ end verif_resultat;
 - `valid_hit` passe à '1' uniquement si le bon bouton est pressé avant le timeout.
 - Un seul appui est comptabilisé par round.
 
----
+### 🧪 Test du verif_resultat
 
-## 9️⃣ Générateur pseudo-aléatoire (LFSR)
+Pas de test efffectué sur ce composant
 
-Le module **LFSR** (Linear Feedback Shift Register) génère une séquence pseudo-aléatoire de 4 bits, utilisée pour le choix aléatoire des couleurs.
+## 6️⃣ Minuteur
 
-### ✨ Entité `lfsr`
+Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
+
+### ✨ Entité `minuteur`
 
 ```vhdl
-entity lfsr is
-    port(
-        CLK100MHZ : in std_logic;  -- horloge principale (100 MHz)
-        reset : in std_logic;  -- réinitialisation du registre à une valeur initiale non nulle «1011»
-        enable : in std_logic;  -- active l’évolution du LFSR à chaque front montant
-        rnd : out std_logic_vector(3 downto 0)  -- vecteur de 4 bits représentant la valeur pseudo-aléatoire courante
+entity minuteur is
+    port (
+        clk      : in std_logic;
+        reset    : in std_logic;
+        start    : in std_logic;
+        sw_level : in std_logic_vector(1 downto 0);
+        time_out : out std_logic
     );
-end lfsr;
+end Minuteur;
 ```
 
-- À chaque front montant de l’horloge, si `enable='1'`, la sortie `rnd` change selon le polynôme X⁴ + X³ + 1.
-- La valeur initiale est fixée à `"1011"` pour éviter la séquence nulle.
+- Le temps de réponse dépend de `sw_level` (niveau de difficulté).
+- Le signal `time_out` passe à '1' lorsque le temps est écoulé.
+
+### 🧪 Test du Minuteur
+
+Pas de test efffectué sur ce composant
 
 ## 🔟 Contrôleur principal (FSM)
 
@@ -695,6 +795,28 @@ end fsm;
   - **WAIT_RESPONSE** : attente de la réponse ou du timeout
   - **END_GAME** : blocage du jeu en cas de défaite ou score maximal
 - Le FSM pilote les modules internes : LFSR, minuteur, score_compteur, verif_resultat.
+
+### 🧪 Test du fsm
+
+Pas de test efffectué sur ce composant
+
+## Conclusion
+
+Ce projet VHDL nous a permis de mettre en pratique l’ensemble des notions vues en cours autour de la conception matérielle et de la programmation d’un microcontrôleur simple.
+
+Nous avons appris à :
+
+- Modéliser et structurer un projet matériel en séparant chaque fonctionnalité dans des entités VHDL claires et réutilisables (ALU, buffers, interconnexion, mémoire d’instructions, etc.).
+
+- Écrire des testbenchs efficaces pour valider chaque composant individuellement, automatiser les tests et interpréter les résultats de simulation avec GHDL et GTKWave.
+
+- Gérer la complexité d’un projet VHDL : gestion des signaux, synchronisation, états, routage des données, et intégration de tous les modules dans un top level cohérent.
+
+- Comprendre l’importance de la vérification : chaque composant testé séparément, puis intégré et validé dans un système complet.
+
+Tous ces points nous ont permis de réaliser un coeur de controlleur fonctionnel sur la carte ARTY A7, capable d’exécuter des opérations arithmétiques et logiques de base:
+
+Vous pouvez retoruvé la vidéo du résultat final sur la carte ARTY A7 ici : [Vidéo de démonstration](./video/VID_20250530_170818.mp4).
 
 ---
 
