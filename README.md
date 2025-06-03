@@ -381,6 +381,8 @@ L’avertissement “metavalue” est attendu. Il provient de s1_sim2 qui est en
 
 ---
 
+<div class="page"/>
+
 ## 3️⃣ Réalisation de l’interconnexion
 
 L'interconnexion est responsable de la gestion des données entre les différentes unités de l'ALU. Elle permet de sélectionner les entrées et les sorties des différentes unités en fonction du signal de sélection.
@@ -476,6 +478,8 @@ La sortie est donc bien à 01.
 
 De plus sur le test 3, on remarque un signal `ready` qui est à '1'. Ce signal indique que le calcul a été effectué et que la sortie `RES_OUT` est valide. Il sera utilisé dans le top level pour indiquer que le résultat est prêt à être utilisé.
 
+<div class="page"/>
+
 ## 4️⃣ Mémoire d'instructions
 
 ### ✨ Entité `mem_instructions`
@@ -522,6 +526,7 @@ mem_instructions_testbench.vhd:260:5:@237ns:(report note): RES_OUT (A0 and B1) o
 ![Résultats de la simulation](./mem_instructions/mem_instructions_waves.png)
 
 Le chronogramme nous permet d’observer la simulation de l’exécution de la série d’instructions. Nous allons analyser trois séquences d’opérations distinctes.
+
 _Remarque : le signal_ `reset_sim`, *qui n'apparaît pas ici, est mis à* `'1'` *puis à* `'0'` _pour réinitialiser le système._
 
 ---
@@ -671,6 +676,8 @@ _Remarque : le signal_ `reset_sim`, *qui n'apparaît pas ici, est mis à* `'1'
 
 ---
 
+<div class="page"/>
+
 ## 5️⃣ Top Level
 
 Le Top Level réunit tous les composants précédents : ALU, buffers, interconnexion, mémoire d’instructions, etc.
@@ -713,20 +720,20 @@ Le signal ready indique quand le résultat est disponible.
 
 ```bash
 ./test_top.sh
-top_level_testbench.vhd:69:9:@0ms:(report note):  Test du top_level
-top_level_testbench.vhd:74:9:@20ns:(report note): ----------------------------
-top_level_testbench.vhd:75:9:@20ns:(report note): Appuie sur le bouton 0 pour réinitialiser
-top_level_testbench.vhd:80:9:@1120ns:(report note): BTN 0 reset : '0''0''0''0''0''0''0''0' | sw=1111
-top_level_testbench.vhd:91:9:@1120ns:(report note): ----------------------------
-top_level_testbench.vhd:92:9:@1120ns:(report note): Appuie sur le bouton 1 pour tester la premiere fonction :
-top_level_testbench.vhd:101:9:@2020ns:(report note): A*B : '0''0''0''0''0''0''0''1' | sw=1111
-top_level_testbench.vhd:112:9:@2020ns:(report note): ----------------------------
-top_level_testbench.vhd:113:9:@2020ns:(report note): Appuie sur le bouton 2 pour tester la deuxieme fonction :
-top_level_testbench.vhd:121:9:@2920ns:(report note): (A + B) xnor  A ='0''0''0''0''1''1''1''0' | sw=1111
-top_level_testbench.vhd:132:9:@2920ns:(report note): ----------------------------
-top_level_testbench.vhd:133:9:@2920ns:(report note): Appuie sur le bouton 3 pour tester la troisieme fonction :
-top_level_testbench.vhd:141:9:@3820ns:(report note): (A0 and  B1) or (A1 and B0) ='0''0''0''0''0''1''1''1' | sw=1111
-top_level_testbench.vhd:152:9:@3820ns:(assertion failure): Fin de simulation à 5000 ns
+Test du top_level
+----------------------------
+Appuie sur le bouton 0 pour réinitialiser
+ BTN 0 reset : '0''0''0''0''0''0''0''0' | sw=1111
+----------------------------
+ Appuie sur le bouton 1 pour tester la premiere fonction :
+A*B : '0''0''0''0''0''0''0''1' | sw=1111
+----------------------------
+Appuie sur le bouton 2 pour tester la deuxieme fonction :
+(A + B) xnor  A ='0''0''0''0''1''1''1''0' | sw=1111
+----------------------------
+Appuie sur le bouton 3 pour tester la troisieme fonction :
+(A0 and  B1) or (A1 and B0) ='0''0''0''0''0''1''1''1' | sw=1111
+Fin de simulation à 5000 ns
 ```
 
 ![Résultats de la simulation toplevel](./top_level/top_level_waves.png)
@@ -736,22 +743,25 @@ Le chronogramme nous permet d’observer la simulation de l’utilisation du mic
 Pour chaque bouton simulé, nous observons le comportement des leds qui indiquent le résultat.
 Nous avons effectué ce test avec différentes valeurs de A et B `(sw)`, en refaisant les calculs à la main afin de détecter les potentielles erreurs.
 
-Par exemple, au niveau du curseur rouge : 
+Par exemple, au niveau du curseur rouge :
 
-- A et B `(sw)` sont fixés à `"1111"`
-- le bouton simulé est le bouton 1 `(btn = 2)`, ce qui correspond à la multiplication A*B
+- A et B `(sw)` sont fixés à `"1111"` soit -1 pour un nombre signé sur 4 bits.
+- le bouton simulé est le bouton 1 `(btn = 2)`, ce qui correspond à la multiplication A\*B
 - on remarque que le résultat affiché sur les leds est `"0001"`
 
 Ce résultat de simulation est donc cohérent car :
-- 1111<sub>2</sub> = 15<sub>10</sub>
-- 15 × 15 = 225
-- 225<sub>10</sub> = 1110 0001<sub>2</sub>
-- en se limitant aux 4 bits de poids faible, on trouve bien `0001`.
+
+- 1111<sub>2</sub> = -1<sub>10</sub>
+- -1 × -1 = 1
+- 1<sub>10</sub> = 0000 0001<sub>2</sub>
+- On retrouve bien 0001 sur les led de bits de poids faible ledX_g.
+
+<div class="page"/>
 
 ## Partie 2 - LogiGame
 
-La partie deux vise à implementer les entités utiles au fonctionnement du jeu en exploitant l'ALU précedemment réalisé.
-Nous avons réalisé les composants suivants sans effectuer de test sur la carte ni en réalisant des test poussés sur chaque entité pour confirmer son bon fonctionnement. C'est pour cela que nous avons mis tous les codes dans le dossier : [Partie_jeu/](./Partie_jeu/)
+La partie deux vise à implémenter les entités utiles au fonctionnement du jeu en exploitant l'ALU précedemment réalisée.
+Nous avons réalisé les composants suivants sans effectuer de test sur la carte ni en réalisant des test poussés sur chaque entité pour confirmer son bon fonctionnement (à part le LFSR). C'est pour cela que nous avons mis tous les codes dans le dossier : [Partie_jeu/](./Partie_jeu/)
 
 ## 9️⃣Générateur pseudo-aléatoire (LFSR)
 
@@ -777,7 +787,7 @@ end lfsr;
 
 Le LFSR décale les bits à droite et calcule le nouveau bit de poids faible comme le XOR des bits 3 et 2. Cela permet de générer une séquence pseudo-aléatoire de 15 valeurs différentes avant de boucler.
 
-Pour implementer le LFSR, nous n'avons pas utilisé l'ALu créé dans la partie 1 par amnque de temps. Pour une meilleur gestion de ce composant il aurait donc fallu créé les instruction nécessaire afin de les ajouté dans la memoire d'instruciton.
+Pour implémenter le LFSR, nous n'avons pas utilisé l'ALU créé dans la partie 1 par manque de temps. Pour une meilleure gestion de ce composant, il aurait donc fallu créer les instructions nécessaires afin de les ajouter dans la mémoire d'instruction.
 
 ### 🧪 Test du LFSR
 
@@ -854,6 +864,8 @@ La séquence de valeurs produites (11, 7, 15, 14, 12, 8, 1, 2, 4, 9, 3, 6, 13, 1
 
 # A partir d'ici plus aucun testbench n'a été réaliser pour vérifier le bon fonctionnement des entités cependant les composant ont été réaliser
 
+<div class="page"/>
+
 ## 7️⃣ Compteur de score
 
 Le module **score_compteur** gère le score du joueur.
@@ -877,7 +889,7 @@ end score_compteur;
 
 ### 🧪 Test du score_compteur
 
-Pas de test efffectué sur ce composant
+Pas de test effectué sur ce composant
 
 ---
 
@@ -907,7 +919,7 @@ end verif_resultat;
 
 ### 🧪 Test du verif_resultat
 
-Pas de test efffectué sur ce composant
+Pas de test effectué sur ce composant
 
 ## 6️⃣ Minuteur
 
@@ -932,7 +944,7 @@ end Minuteur;
 
 ### 🧪 Test du Minuteur
 
-Pas de test efffectué sur ce composant
+Pas de test effectué sur ce composant
 
 ## 🔟 Contrôleur principal (FSM)
 
@@ -966,7 +978,9 @@ end fsm;
 
 ### 🧪 Test du fsm
 
-Pas de test efffectué sur ce composant
+Pas de test effectué sur ce composant
+
+<div class="page"/>
 
 ## Conclusion
 
