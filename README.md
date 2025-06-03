@@ -398,13 +398,9 @@ Par la suite, pour valider une opération, nous avons ajouté un signal `ready` 
 ```vhdl
 entity interconnexion is
     port(
-        -- SEL_ROUTE permet de définir le transfert de données qui sera effectué lors du prochain cycle horloge (prochain front montant de l’horloge).
-        SEL_ROUTE : in std_logic_vector(3 downto 0); -- Sélecteur de route
-
         A_IN      : in std_logic_vector(3 downto 0); -- Entrée A
         B_IN      : in std_logic_vector(3 downto 0); -- Entrée B
         S         : in std_logic_vector(7 downto 0); -- Entrée S
-
 
         MEM_CACHE_1_in: in std_logic_vector(7 downto 0); -- Mémoire cache 1
         MEM_CACHE_1_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_1_ou
@@ -414,14 +410,12 @@ entity interconnexion is
         MEM_CACHE_2_out_enable : out std_logic; -- Signal d'activation pour MEM_CACHE_2_out_enable
         MEM_CACHE_2_out : out std_logic_vector(7 downto 0); -- Sortie vers MEM_CACHE_2_out
 
-        -- Les mémoires Buffer_A, Buffer_B permettent de stocker les données directement liées au cœur de l’UAL, c'est-à-dire à la sous-fonction arithmétique et logique.
-        -- Elles seront chargées (activées sur front montant de l’entrée clk) suivant les valeurs de l’entrée SEL_ROUTE
         Buffer_A  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer A
         Buffer_A_enable : out std_logic; -- Signal d'activation pour Buffer A
-
         Buffer_B  : out std_logic_vector(3 downto 0); -- Sortie vers Buffer B
         Buffer_B_enable : out std_logic; -- Signal d'activation pour Buffer B
 
+        SEL_ROUTE : in std_logic_vector(3 downto 0); -- Sélecteur de route
         SEL_OUT : in std_logic_vector(1 downto 0); -- Sélecteur de sortie
         RES_OUT : out std_logic_vector(7 downto 0); -- Sortie
 
@@ -887,10 +881,6 @@ end score_compteur;
 - Le score s’incrémente à chaque bonne réponse (`valid_hit = '1'`).
 - `game_over` passe à '1' lorsque le score atteint 15.
 
-### 🧪 Test du score_compteur
-
-Pas de test effectué sur ce composant
-
 ---
 
 ## 8️⃣ Vérificateur de réponse
@@ -917,10 +907,6 @@ end verif_resultat;
 - `valid_hit` passe à '1' uniquement si le bon bouton est pressé avant le timeout.
 - Un seul appui est comptabilisé par round.
 
-### 🧪 Test du verif_resultat
-
-Pas de test effectué sur ce composant
-
 ## 6️⃣ Minuteur
 
 Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
@@ -941,10 +927,6 @@ end Minuteur;
 
 - Le temps de réponse dépend de `sw_level` (niveau de difficulté).
 - Le signal `time_out` passe à '1' lorsque le temps est écoulé.
-
-### 🧪 Test du Minuteur
-
-Pas de test effectué sur ce composant
 
 ## 🔟 Contrôleur principal (FSM)
 
@@ -976,10 +958,6 @@ end fsm;
   - **END_GAME** : blocage du jeu en cas de défaite ou score maximal
 - Le FSM pilote les modules internes : LFSR, minuteur, score_compteur, verif_resultat.
 
-### 🧪 Test du fsm
-
-Pas de test effectué sur ce composant
-
 <div class="page"/>
 
 ## Conclusion
@@ -1002,13 +980,15 @@ Vous pouvez retoruvé la vidéo du résultat final sur la carte ARTY A7 ici : [V
 
 ---
 
+<div class="page"/>
+
 ## Vivado : Installation et Test de l’ALU
 
 ### 📦 Installation de Vivado
 
 - Installer **Vivado ML Standard** (minimum requis pour ARTY A7).
 
-![alt text](/img/installationVivado.png)
+![alt text](./img/installationVivado.png)
 
 ---
 
@@ -1031,7 +1011,6 @@ Puis créer un nouveau projet et faire les configurations suivantes :
 Ajoutez votre entité ALU en tant que composant dans `MCU_PRJ_2025_TopLevel_vide` :
 
 ```vhdl
-
  -- Ajout de votre entité alu en tant que component
     signal My_A,My_B, My_SEL_FCT : std_logic_vector(3 downto 0);
     signal My_SR_IN_R , My_SR_IN_L, My_SR_OUT_L, My_SR_OUT_R: std_logic;
@@ -1048,13 +1027,10 @@ begin
         SR_OUT_R=>led2_b,
         SEL_FCT=>btn
         );
-
     led <= My_S(7 downto 4);
     led0_g <= My_S(0);  led0_b <='0';
     led1_g <= My_S(1);  led1_b <='0'; led1_r <='0';
     led2_g <= My_S(2);  led2_b <='0';led2_r <='0';
     led3_g <= My_S(3);  led3_b <='0';led3_r <='0';
-
-
 end MCU_PRJ_2021_TopLevel_Arch;
 ```
