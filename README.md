@@ -562,43 +562,43 @@ _Remarque : le signal_ `reset_sim`, *qui n'apparaît pas ici, est mis à* `'1'
     et `B_in_sim` à `"0111"` (7 en décimal).
   - `addr_sim` passe successivement par les adresses correspondant aux instructions 3 à 9 :
 
-    1. **Instruction 3** (`"0000000000"`) :
+1. **Instruction 3** (`"0000000000"`) :
 
-       - `A_in_sim` (`"1111"`) est chargé dans `buffer_a_sim`.
-       - `buffer_a_sim` devient `"1111"`.
+   - `A_in_sim` (`"1111"`) est chargé dans `buffer_a_sim`.
+   - `buffer_a_sim` devient `"1111"`.
 
-    2. **Instruction 4** (`"0000011100"`) :
+2. **Instruction 4** (`"0000011100"`) :
 
-       - `B_in_sim` (`"0111"`) est chargé dans `buffer_b_sim`.
-       - `buffer_b_sim` devient `"0111"`.
+   - `B_in_sim` (`"0111"`) est chargé dans `buffer_b_sim`.
+   - `buffer_b_sim` devient `"0111"`.
 
-    3. **Instruction 5** (`"1101111000"`) :
+3. **Instruction 5** (`"1101111000"`) :
 
-       - Effectue l’opération _addition_ des valeurs stockées dans les deux buffers et stocke le résultat dans `mem_cache_1_sim`.
-       - Ici, `"1111"` (–1) + `"0111"` (7) = `"0110"` (6) → `mem_cache_1_sim` devient `"0110"`.
+   - Effectue l’opération _addition_ des valeurs stockées dans les deux buffers et stocke le résultat dans `mem_cache_1_sim`.
+   - Ici, `"1111"` (–1) + `"0111"` (7) = `"0110"` (6) → `mem_cache_1_sim` devient `"0110"`.
 
-    4. **Instruction 6** (`"0000100000"`) :
+4. **Instruction 6** (`"0000100000"`) :
 
-       - Pas d’opération, et `mem_cache_1_sim` (`"0110"`) est transféré à `buffer_b_sim`.
-       - `buffer_b_sim` devient `"0110"`.
+   - Pas d’opération, et `mem_cache_1_sim` (`"0110"`) est transféré à `buffer_b_sim`.
+   - `buffer_b_sim` devient `"0110"`.
 
-    5. **Instruction 7** (`"0111111100"`) :
+5. **Instruction 7** (`"0111111100"`) :
 
-       - Effectue l’opération _XOR_ sur les valeurs stockées dans les deux buffers et stocke le résultat dans `mem_cache_2_sim`.
-       - Soit `"1111"` XOR `"0110"` = `"1001"` → `mem_cache_2_sim` devient `"1001"`.
+   - Effectue l’opération _XOR_ sur les valeurs stockées dans les deux buffers et stocke le résultat dans `mem_cache_2_sim`.
+   - Soit `"1111"` XOR `"0110"` = `"1001"` → `mem_cache_2_sim` devient `"1001"`.
 
-    6. **Instruction 8** (`"0000001100"`) :
+6. **Instruction 8** (`"0000001100"`) :
 
-       - Pas d’opération, et `mem_cache_2_sim` (`"1001"`) est transféré à `buffer_a_sim`.
-       - `buffer_a_sim` devient `"1001"`.
+   - Pas d’opération, et `mem_cache_2_sim` (`"1001"`) est transféré à `buffer_a_sim`.
+   - `buffer_a_sim` devient `"1001"`.
 
-    7. **Instruction 9** (`"0011000011"`) :
+7. **Instruction 9** (`"0011000011"`) :
 
-       - Effectue l’opération _NOT_ sur la valeur dans `buffer_a_sim` et sort le résultat sur `s_sim`.
-       - Soit `NOT "1001" = "0110"`.
-       - On observe que `s_sim` (et `res_out_sim`) prend la valeur `"0110"`.
+   - Effectue l’opération _NOT_ sur la valeur dans `buffer_a_sim` et sort le résultat sur `s_sim`.
+   - Soit `NOT "1001" = "0110"`.
+   - On observe que `s_sim` (et `res_out_sim`) prend la valeur `"0110"`.
 
-  - Le signal `ready_sim` passe à `'1'`, indiquant que le résultat est prêt.
+- Le signal `ready_sim` passe à `'1'`, indiquant que le résultat est prêt.
 
 ---
 
@@ -610,63 +610,63 @@ _Remarque : le signal_ `reset_sim`, *qui n'apparaît pas ici, est mis à* `'1'
   - `A_in_sim` et `B_in_sim` sont fixés à `"1111"`.
   - `addr_sim` passe successivement par les adresses correspondant aux instructions 10 à 19 :
 
-    1. **Instruction 10** (`"0000000000"`) :
+1. **Instruction 10** (`"0000000000"`) :
 
-       - `A_in_sim` (`"1111"`) est chargé dans `buffer_a_sim`.
-       - `buffer_a_sim` devient `"1111"`.
+   - `A_in_sim` (`"1111"`) est chargé dans `buffer_a_sim`.
+   - `buffer_a_sim` devient `"1111"`.
 
-    2. **Instruction 11** (`"0000011100"`) :
+2. **Instruction 11** (`"0000011100"`) :
 
-       - `B_in_sim` (`"1111"`) est chargé dans `buffer_b_sim`.
-       - `buffer_b_sim` devient `"1111"`.
+   - `B_in_sim` (`"1111"`) est chargé dans `buffer_b_sim`.
+   - `buffer_b_sim` devient `"1111"`.
 
-    3. **Instruction 12** (`"1010110000"`) :
+3. **Instruction 12** (`"1010110000"`) :
 
-       - Effectue l’opération _décalage à droite_ de la valeur stockée dans `buffer_b_sim` et stocke le résultat dans `buffer_b_sim`.
-       - `"1111"` décalé à droite devient `"0111"`.
-       - `buffer_b_sim` devient `"0111"`.
+   - Effectue l’opération _décalage à droite_ de la valeur stockée dans `buffer_b_sim` et stocke le résultat dans `buffer_b_sim`.
+   - `"1111"` décalé à droite devient `"0111"`.
+   - `buffer_b_sim` devient `"0111"`.
 
-    4. **Instruction 13** (`"0101111000"`) :
+4. **Instruction 13** (`"0101111000"`) :
 
-       - Effectue l’opération _AND_ des valeurs stockées dans les deux buffers et stocke le résultat dans `mem_cache_1_sim`.
-       - Soit `"1111"` AND `"0111"` = `"0111"`.
-       - `mem_cache_1_sim` devient `"0111"`.
+   - Effectue l’opération _AND_ des valeurs stockées dans les deux buffers et stocke le résultat dans `mem_cache_1_sim`.
+   - Soit `"1111"` AND `"0111"` = `"0111"`.
+   - `mem_cache_1_sim` devient `"0111"`.
 
-    5. **Instruction 14** (`"0000000000"`) :
+5. **Instruction 14** (`"0000000000"`) :
 
-       - `A_in_sim` (`"1111"`) est à nouveau chargé dans `buffer_a_sim`.
-       - `buffer_a_sim` redevient `"1111"`.
-         _(Note : le testbench recharge `A_in_sim`, ce qui écrase la valeur précédente dans `buffer_a_sim` avant l’instruction 16.)_
+   - `A_in_sim` (`"1111"`) est à nouveau chargé dans `buffer_a_sim`.
+   - `buffer_a_sim` redevient `"1111"`.
+     _(Note : le testbench recharge `A_in_sim`, ce qui écrase la valeur précédente dans `buffer_a_sim` avant l’instruction 16.)_
 
-    6. **Instruction 15** (`"0000011100"`) :
+6. **Instruction 15** (`"0000011100"`) :
 
-       - `B_in_sim` (`"1111"`) est chargé dans `buffer_b_sim`.
-       - `buffer_b_sim` redevient `"1111"`.
+   - `B_in_sim` (`"1111"`) est chargé dans `buffer_b_sim`.
+   - `buffer_b_sim` redevient `"1111"`.
 
-    7. **Instruction 16** (`"1000010100"`) :
+7. **Instruction 16** (`"1000010100"`) :
 
-       - Effectue l’opération _décalage à droite_ de la valeur stockée dans `buffer_a_sim` et stocke le résultat dans `buffer_a_sim`.
-       - `"1111"` décalé à droite devient `"0111"`.
-       - `buffer_a_sim` devient `"0111"`.
+   - Effectue l’opération _décalage à droite_ de la valeur stockée dans `buffer_a_sim` et stocke le résultat dans `buffer_a_sim`.
+   - `"1111"` décalé à droite devient `"0111"`.
+   - `buffer_a_sim` devient `"0111"`.
 
-    8. **Instruction 17** (`"0101010100"`) :
+8. **Instruction 17** (`"0101010100"`) :
 
-       - Effectue l’opération _AND_ sur les valeurs dans les deux buffers et stocke le résultat dans `buffer_a_sim`.
-       - Soit `"0111"` AND `"1111"` = `"0111"`.
-       - `buffer_a_sim` reste `"0111"`.
+   - Effectue l’opération _AND_ sur les valeurs dans les deux buffers et stocke le résultat dans `buffer_a_sim`.
+   - Soit `"0111"` AND `"1111"` = `"0111"`.
+   - `buffer_a_sim` reste `"0111"`.
 
-    9. **Instruction 18** (`"0000100000"`) :
+9. **Instruction 18** (`"0000100000"`) :
 
-       - Pas d’opération et `mem_cache_1_sim` (`"0111"`) est transféré à `buffer_b_sim`.
-       - `buffer_b_sim` devient `"0111"`.
+   - Pas d’opération et `mem_cache_1_sim` (`"0111"`) est transféré à `buffer_b_sim`.
+   - `buffer_b_sim` devient `"0111"`.
 
-    10. **Instruction 19** (`"0110111011"`) :
+10. **Instruction 19** (`"0110111011"`) :
 
-        - Effectue l’opération _OR_ sur les valeurs des deux buffers, stocke le résultat dans `mem_cache_1_sim` et sort le résultat sur `s_sim`.
-        - Soit `"0111"` OR `"0111"` = `"0111"`.
-        - On observe que `s_sim` prend la valeur `"0111"`.
+    - Effectue l’opération _OR_ sur les valeurs des deux buffers, stocke le résultat dans `mem_cache_1_sim` et sort le résultat sur `s_sim`.
+    - Soit `"0111"` OR `"0111"` = `"0111"`.
+    - On observe que `s_sim` prend la valeur `"0111"`.
 
-  - Le signal `ready_sim` passe à `'1'`, indiquant que le résultat est prêt.
+- Le signal `ready_sim` passe à `'1'`, indiquant que le résultat est prêt.
 
 ---
 
