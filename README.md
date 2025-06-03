@@ -796,46 +796,7 @@ lfsr_testbench.vhd:76:13:@65ns:(report note): rnd = 12
 lfsr_testbench.vhd:76:13:@75ns:(report note): rnd = 8
 lfsr_testbench.vhd:76:13:@85ns:(report note): rnd = 1
 lfsr_testbench.vhd:76:13:@95ns:(report note): rnd = 2
-lfsr_testbench.vhd:76:13:@105ns:(report note): rnd = 4
-lfsr_testbench.vhd:76:13:@115ns:(report note): rnd = 9
-lfsr_testbench.vhd:76:13:@125ns:(report note): rnd = 3
-lfsr_testbench.vhd:76:13:@135ns:(report note): rnd = 6
-lfsr_testbench.vhd:76:13:@145ns:(report note): rnd = 13
-lfsr_testbench.vhd:76:13:@155ns:(report note): rnd = 10
-lfsr_testbench.vhd:76:13:@165ns:(report note): rnd = 5
-lfsr_testbench.vhd:76:13:@175ns:(report note): rnd = 11
-lfsr_testbench.vhd:76:13:@185ns:(report note): rnd = 7
-lfsr_testbench.vhd:76:13:@195ns:(report note): rnd = 15
-lfsr_testbench.vhd:76:13:@205ns:(report note): rnd = 14
-lfsr_testbench.vhd:76:13:@215ns:(report note): rnd = 12
-lfsr_testbench.vhd:76:13:@225ns:(report note): rnd = 8
-lfsr_testbench.vhd:76:13:@235ns:(report note): rnd = 1
-lfsr_testbench.vhd:76:13:@245ns:(report note): rnd = 2
-lfsr_testbench.vhd:76:13:@255ns:(report note): rnd = 4
-lfsr_testbench.vhd:76:13:@265ns:(report note): rnd = 9
-lfsr_testbench.vhd:76:13:@275ns:(report note): rnd = 3
-lfsr_testbench.vhd:76:13:@285ns:(report note): rnd = 6
-lfsr_testbench.vhd:76:13:@295ns:(report note): rnd = 13
-lfsr_testbench.vhd:76:13:@305ns:(report note): rnd = 10
-lfsr_testbench.vhd:76:13:@315ns:(report note): rnd = 5
-lfsr_testbench.vhd:76:13:@365ns:(report note): rnd = 11
-lfsr_testbench.vhd:76:13:@375ns:(report note): rnd = 7
-lfsr_testbench.vhd:76:13:@385ns:(report note): rnd = 15
-lfsr_testbench.vhd:76:13:@395ns:(report note): rnd = 14
-lfsr_testbench.vhd:76:13:@405ns:(report note): rnd = 12
-lfsr_testbench.vhd:76:13:@415ns:(report note): rnd = 8
-lfsr_testbench.vhd:76:13:@425ns:(report note): rnd = 1
-lfsr_testbench.vhd:76:13:@435ns:(report note): rnd = 2
-lfsr_testbench.vhd:76:13:@445ns:(report note): rnd = 4
-lfsr_testbench.vhd:76:13:@455ns:(report note): rnd = 9
-lfsr_testbench.vhd:76:13:@465ns:(report note): rnd = 3
-lfsr_testbench.vhd:76:13:@475ns:(report note): rnd = 6
-lfsr_testbench.vhd:76:13:@485ns:(report note): rnd = 13
-lfsr_testbench.vhd:76:13:@495ns:(report note): rnd = 10
-lfsr_testbench.vhd:76:13:@505ns:(report note): rnd = 5
-lfsr_testbench.vhd:76:13:@515ns:(report note): rnd = 11
-lfsr_testbench.vhd:76:13:@525ns:(report note): rnd = 7
-lfsr_testbench.vhd:76:13:@535ns:(report note): rnd = 15
+... (continue)
 lfsr_testbench.vhd:76:13:@545ns:(report note): rnd = 14
 lfsr_testbench.vhd:76:13:@555ns:(report note): rnd = 12
 lfsr_testbench.vhd:76:13:@565ns:(report note): rnd = 8
@@ -976,7 +937,7 @@ Nous avons appris à :
 
 Tous ces points nous ont permis de réaliser un coeur de controlleur fonctionnel sur la carte ARTY A7, capable d’exécuter des opérations arithmétiques et logiques de base:
 
-Vous pouvez retoruvé la vidéo du résultat final sur la carte ARTY A7 ici : [Vidéo de démonstration](./video/VID_20250530_170818.mp4).
+Vous pouvez retoruvé la vidéo du résultat final sur la carte ARTY A7 ici : [Vidéo de démonstration](https://efrei365net-my.sharepoint.com/personal/corentin_kervagoret_efrei_net/_layouts/15/stream.aspx?id=%2Fpersonal%2Fcorentin%5Fkervagoret%5Fefrei%5Fnet%2FDocuments%2FEFREI%2FL3%2FSemestre%206%2FVHDL2%2Fvideo%2FVID%5F20250530%5F170818%2Emp4&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&ga=1&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E11e1a17a%2Df19c%2D43c1%2D9c91%2D520e4fe9ed3f).
 
 ---
 
