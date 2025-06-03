@@ -14,9 +14,7 @@ Remarque : l'ensemble de notre projet est disponible sur Github : [VHDL-LogiGame
 
 - [📝 Introduction](#📝-introduction)
 
-Partie 1
-
-### 🧩 Cœur de contrôleur
+### 🧩 Partie 1 : Cœur de contrôleur
 
 1. - [x] [1️⃣ Réalisation d'un ALU](#1️⃣-réalisation-dun-alu)
 2. - [x] [2️⃣ Buffers](#2️⃣-buffers)
@@ -24,14 +22,12 @@ Partie 1
 4. - [x] [4️⃣ Mémoire d'instructions](#4️⃣-mémoire-dinstructions)
 5. - [x] [5️⃣ Top Level](#5️⃣-top-level)
 
-Partie 2
+### 🎮 Partie 2 : Le jeu
 
-### 🎮 Le jeu
-
-5. - [ ] [6️⃣ Minuteur](#6️⃣-minuteur)
+5. - [ ] [6️⃣ Générateur pseudo-aléatoire (LFSR)](#6️⃣-générateur-pseudo-aléatoire-lfsr)
 6. - [ ] [7️⃣ Compteur de score](#7️⃣-compteur-de-score)
 7. - [ ] [8️⃣ Vérificateur de réponse](#8️⃣-vérificateur-de-réponse)
-8. - [ ] [9️⃣ Générateur pseudo-aléatoire (LFSR)](#9️⃣-générateur-pseudo-aléatoire-lfsr)
+8. - [ ] [9️⃣ Minuteur](#9️⃣-minuteur)
 9. - [ ] [🔟 Contrôleur principal (FSM)](#🔟-contrôleur-principal-fsm)
 
 - [📝Conclusion](#conclusion)
@@ -817,7 +813,7 @@ On observe que rnd_sim change à chaque front montant de l’horloge lorsque ena
 Après un reset, la valeur revient bien à "1011" (soit 11 en décimal).
 La séquence de valeurs produites (11, 7, 15, 14, 12, 8, 1, 2, 4, 9, 3, 6, 13, 10, 5, ...) correspond exactement à la séquence attendue pour un LFSR 4 bits avec le polynôme X⁴ + X³ + 1. De plus, comme convenu, le LFSR génère 15 valeurs différentes avant de revenir à la valeur initiale.
 
-# A partir d'ici plus aucun testbench n'a été réaliser pour vérifier le bon fonctionnement des entités cependant les composant ont été réaliser
+# A partir d'ici plus aucun testbench n'a été réalisé pour vérifier le bon fonctionnement des entités.
 
 <div class="page"/>
 
@@ -868,7 +864,9 @@ end verif_resultat;
 - `valid_hit` passe à '1' uniquement si le bon bouton est pressé avant le timeout.
 - Un seul appui est comptabilisé par round.
 
-## 6️⃣ Minuteur
+---
+
+## 9️⃣ Minuteur
 
 Le module **minuteur** permet de gérer le temps imparti pour répondre à chaque question.
 
